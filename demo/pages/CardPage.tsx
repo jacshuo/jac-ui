@@ -1,0 +1,111 @@
+import {
+  Button,
+  Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter,
+  HorizontalCard,
+} from '../../src';
+import { Section, PageTitle } from './helpers';
+import {
+  Rocket, Heart, Share2, ExternalLink, BookOpen,
+  Music, UserCircle,
+} from 'lucide-react';
+
+export default function CardPage() {
+  return (
+    <div className="space-y-8">
+      <PageTitle>Card</PageTitle>
+
+      <Section title="Intent variants">
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardTitle>Default</CardTitle>
+              <CardDescription>Standard bordered card.</CardDescription>
+            </CardHeader>
+            <CardContent>Body content goes here.</CardContent>
+            <CardFooter><Button size="sm">Action</Button></CardFooter>
+          </Card>
+          <Card intent="elevated">
+            <CardHeader>
+              <CardTitle>Elevated</CardTitle>
+              <CardDescription>Shadow on hover.</CardDescription>
+            </CardHeader>
+            <CardContent>Hover to see the shadow lift.</CardContent>
+          </Card>
+          <Card intent="outlined">
+            <CardHeader>
+              <CardTitle>Outlined</CardTitle>
+              <CardDescription>Thicker border, transparent bg.</CardDescription>
+            </CardHeader>
+            <CardContent>Clean outlined look.</CardContent>
+          </Card>
+          <Card intent="ghost">
+            <CardHeader>
+              <CardTitle>Ghost</CardTitle>
+              <CardDescription>Subtle background tinting.</CardDescription>
+            </CardHeader>
+            <CardContent>Minimal feel.</CardContent>
+          </Card>
+        </div>
+      </Section>
+
+      <Section title="Horizontal &mdash; image left">
+        <HorizontalCard
+          media={{ src: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&h=300&fit=crop', alt: 'Mountain trail', width: '10rem' }}
+        >
+          <CardTitle>Mountain Trail</CardTitle>
+          <CardDescription>A scenic hike through alpine meadows.</CardDescription>
+          <CardContent className="mt-2">Difficulty: Moderate &middot; 12&nbsp;km</CardContent>
+          <CardFooter className="justify-between">
+            <div className="flex gap-2">
+              <Button size="sm" intent="ghost"><Heart className="h-4 w-4" /> Like</Button>
+              <Button size="sm" intent="ghost"><Share2 className="h-4 w-4" /> Share</Button>
+            </div>
+            <Button size="sm"><ExternalLink className="h-4 w-4" /> Read</Button>
+          </CardFooter>
+        </HorizontalCard>
+
+        <HorizontalCard
+          className="mt-4"
+          media={{ src: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=400&h=300&fit=crop', alt: 'Urban photography', width: '10rem' }}
+        >
+          <CardTitle>Urban Photography</CardTitle>
+          <CardDescription>Capturing city life at golden hour.</CardDescription>
+          <CardContent className="mt-2">Shot on 35mm film &middot; Published Mar 2026</CardContent>
+          <CardFooter>
+            <span className="text-primary-500 dark:text-primary-400 flex items-center gap-1 text-sm"><Heart className="h-4 w-4" /> 42</span>
+            <Button size="sm" intent="ghost"><BookOpen className="h-4 w-4" /> Full article</Button>
+          </CardFooter>
+        </HorizontalCard>
+      </Section>
+
+      <Section title="Horizontal &mdash; image right">
+        <HorizontalCard
+          mediaPosition="right"
+          media={{ src: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=400&h=300&fit=crop', alt: 'Live session', width: '12rem' }}
+        >
+          <CardTitle>Live Session</CardTitle>
+          <CardDescription>Acoustic set recorded in Berlin.</CardDescription>
+          <CardContent className="mt-2">Duration: 45&nbsp;min &middot; 3 tracks</CardContent>
+          <CardFooter>
+            <Button size="sm" intent="ghost"><Music className="h-4 w-4" /> Play</Button>
+            <Button size="sm" intent="ghost"><Share2 className="h-4 w-4" /> Share</Button>
+          </CardFooter>
+        </HorizontalCard>
+      </Section>
+
+      <Section title="Horizontal &mdash; icon / avatar">
+        <HorizontalCard
+          className="max-w-md"
+          media={{ icon: <UserCircle className="h-10 w-10" />, width: '5rem' }}
+        >
+          <CardTitle>Jane Doe</CardTitle>
+          <CardDescription>Product Designer &middot; San Francisco</CardDescription>
+          <CardContent className="mt-2">Passionate about design systems and accessible UI.</CardContent>
+          <CardFooter>
+            <Button size="sm"><ExternalLink className="h-4 w-4" /> View profile</Button>
+          </CardFooter>
+        </HorizontalCard>
+      </Section>
+    </div>
+  );
+}

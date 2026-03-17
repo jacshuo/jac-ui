@@ -1,0 +1,344 @@
+@theme {
+  --color-primary-50: var(--color-slate-50);
+  --color-primary-100: var(--color-slate-100);
+  --color-primary-200: var(--color-slate-200);
+  --color-primary-300: var(--color-slate-300);
+  --color-primary-400: var(--color-slate-400);
+  --color-primary-500: var(--color-slate-500);
+  --color-primary-600: var(--color-slate-600);
+  --color-primary-700: var(--color-slate-700);
+  --color-primary-800: var(--color-slate-800);
+  --color-primary-900: var(--color-slate-900);
+
+  --color-secondary-50: var(--color-gray-50);
+  --color-secondary-100: var(--color-gray-100);
+  --color-secondary-200: var(--color-gray-200);
+  --color-secondary-300: var(--color-gray-300);
+  --color-secondary-400: var(--color-gray-400);
+  --color-secondary-500: var(--color-gray-500);
+  --color-secondary-600: var(--color-gray-600);
+  --color-secondary-700: var(--color-gray-700);
+  --color-secondary-800: var(--color-gray-800);
+  --color-secondary-900: var(--color-gray-900);
+
+  --color-success-50: var(--color-emerald-50);
+  --color-success-100: var(--color-emerald-100);
+  --color-success-200: var(--color-emerald-200);
+  --color-success-300: var(--color-emerald-300);
+  --color-success-400: var(--color-emerald-400);
+  --color-success-500: var(--color-emerald-500);
+  --color-success-600: var(--color-emerald-600);
+  --color-success-700: var(--color-emerald-700);
+  --color-success-800: var(--color-emerald-800);
+  --color-success-900: var(--color-emerald-900);
+
+  --color-danger-50: var(--color-rose-50);
+  --color-danger-100: var(--color-rose-100);
+  --color-danger-200: var(--color-rose-200);
+  --color-danger-300: var(--color-rose-300);
+  --color-danger-400: var(--color-rose-400);
+  --color-danger-500: var(--color-rose-500);
+  --color-danger-600: var(--color-rose-600);
+  --color-danger-700: var(--color-rose-700);
+  --color-danger-800: var(--color-rose-800);
+  --color-danger-900: var(--color-rose-900);
+
+  --color-warning-50: var(--color-orange-50);
+  --color-warning-100: var(--color-orange-100);
+  --color-warning-200: var(--color-orange-200);
+  --color-warning-300: var(--color-orange-300);
+  --color-warning-400: var(--color-orange-400);
+  --color-warning-500: var(--color-orange-500);
+  --color-warning-600: var(--color-orange-600);
+  --color-warning-700: var(--color-orange-700);
+  --color-warning-800: var(--color-orange-800);
+  --color-warning-900: var(--color-orange-900);
+
+  --animate-fade-in: fade-in 150ms ease-out;
+  --animate-scale-in: scale-in 200ms ease-out;
+  --animate-slide-in-right: slide-in-right 300ms ease-out;
+  --animate-slide-in-left: slide-in-left 300ms ease-out;
+  --animate-slide-in-top: slide-in-top 300ms ease-out;
+  --animate-slide-in-bottom: slide-in-bottom 300ms ease-out;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-top {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in-bottom {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes light-sweep {
+  0% {
+    transform: translateX(-100%) skewX(-15deg);
+  }
+  100% {
+    transform: translateX(200%) skewX(-15deg);
+  }
+}
+
+@utility animate-light-sweep {
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.08) 40%,
+    rgba(255, 255, 255, 0.25) 50%,
+    rgba(255, 255, 255, 0.08) 60%,
+    transparent 70%
+  );
+  animation: light-sweep 0.8s ease-in-out;
+}
+
+/* ── FilmReel: cinematic gallery animations ─────────── */
+
+@keyframes film-grain-shift {
+  0%, 100% { transform: translate(0, 0); }
+  20% { transform: translate(-2%, 3%); }
+  40% { transform: translate(3%, -2%); }
+  60% { transform: translate(-1%, -3%); }
+  80% { transform: translate(2%, 2%); }
+}
+
+@keyframes lightbox-backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes lightbox-photo-in {
+  from { opacity: 0; transform: scale(0.88); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes reveal-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── MiniPlayer animations ──────────────────────────── */
+
+@keyframes mp-enter-bottom {
+  from { opacity: 0; transform: translateY(100%) scale(0.92); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes mp-exit-bottom {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to   { opacity: 0; transform: translateY(100%) scale(0.92); }
+}
+@keyframes mp-enter-top {
+  from { opacity: 0; transform: translateY(-100%) scale(0.92); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes mp-exit-top {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to   { opacity: 0; transform: translateY(-100%) scale(0.92); }
+}
+@keyframes mp-enter-left {
+  from { opacity: 0; transform: translateX(-100%) scale(0.92); }
+  to   { opacity: 1; transform: translateX(0) scale(1); }
+}
+@keyframes mp-exit-left {
+  from { opacity: 1; transform: translateX(0) scale(1); }
+  to   { opacity: 0; transform: translateX(-100%) scale(0.92); }
+}
+@keyframes mp-enter-right {
+  from { opacity: 0; transform: translateX(100%) scale(0.92); }
+  to   { opacity: 1; transform: translateX(0) scale(1); }
+}
+@keyframes mp-exit-right {
+  from { opacity: 1; transform: translateX(0) scale(1); }
+  to   { opacity: 0; transform: translateX(100%) scale(0.92); }
+}
+@keyframes mp-vinyl-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes mp-pulse-ring {
+  0%   { transform: scale(1); opacity: 0.5; }
+  70%  { transform: scale(1.25); opacity: 0; }
+  100% { transform: scale(1.25); opacity: 0; }
+}
+@keyframes mp-progress-glow {
+  0%, 100% { filter: brightness(1); }
+  50%      { filter: brightness(1.4); }
+}
+
+@keyframes mp-eq-bar {
+  0%   { transform: scaleY(0.3); }
+  100% { transform: scaleY(1); }
+}
+
+/* ── CinePlayer ─────────────────────────── */
+@keyframes cp-controls-up {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+@keyframes cp-curtain-open {
+  from { clip-path: inset(0 50% 0 50%); opacity: 0; }
+  to   { clip-path: inset(0 0 0 0); opacity: 1; }
+}
+@keyframes cp-curtain-close {
+  from { clip-path: inset(0 0 0 0); opacity: 1; }
+  to   { clip-path: inset(0 50% 0 50%); opacity: 0; }
+}
+@keyframes cp-cinema-in {
+  from { background: rgba(0,0,0,0); }
+  to   { background: rgba(0,0,0,0.92); }
+}
+@keyframes cp-cinema-out {
+  from { background: rgba(0,0,0,0.92); }
+  to   { background: rgba(0,0,0,0); }
+}
+@keyframes cp-playlist-in {
+  from { transform: translateX(100%); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
+}
+@keyframes cp-playlist-out {
+  from { transform: translateX(0); opacity: 1; }
+  to   { transform: translateX(100%); opacity: 0; }
+}
+@keyframes cp-track-transition {
+  0%   { filter: brightness(0); transform: scale(1.05); }
+  50%  { filter: brightness(0); }
+  100% { filter: brightness(1); transform: scale(1); }
+}
+@keyframes cp-volume-wave {
+  0%   { transform: scaleX(0); opacity: 1; }
+  100% { transform: scaleX(1); opacity: 0; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Extras – Component-level design tokens
+   Override any of these to customise CinePlayer, MiniPlayer,
+   and FileExplorer without touching component code.
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── CinePlayer tokens ──────────────────── */
+:root {
+  --cp-bg:             #000000;
+  --cp-panel-bg:       rgba(0,0,0,0.85);
+  --cp-text:           rgba(255,255,255,0.75);
+  --cp-text-muted:     rgba(255,255,255,0.50);
+  --cp-text-strong:    #ffffff;
+  --cp-border:         rgba(255,255,255,0.10);
+  --cp-surface:        rgba(255,255,255,0.05);
+  --cp-surface-hover:  rgba(255,255,255,0.10);
+  --cp-overlay:        rgba(0,0,0,0.30);
+  --cp-seek-track:     rgba(255,255,255,0.20);
+  --cp-seek-buffer:    rgba(255,255,255,0.15);
+}
+
+/* ── MiniPlayer tokens ──────────────────── */
+:root {
+  --mp-bg:             rgba(255,255,255,0.90);
+  --mp-text:           var(--color-primary-900);
+  --mp-text-muted:     var(--color-primary-500);
+  --mp-border:         rgba(148,163,184,0.60);
+  --mp-surface:        rgba(148,163,184,0.50);
+  --mp-surface-hover:  rgba(241,245,249,0.60);
+  --mp-dock-strip:     rgba(148,163,184,0.40);
+}
+.dark {
+  --mp-bg:             rgba(26,22,37,0.95);
+  --mp-text:           #ffffff;
+  --mp-text-muted:     rgba(255,255,255,0.50);
+  --mp-border:         rgba(255,255,255,0.10);
+  --mp-surface:        rgba(255,255,255,0.10);
+  --mp-surface-hover:  rgba(255,255,255,0.05);
+  --mp-dock-strip:     rgba(255,255,255,0.20);
+}
+
+/* ── FileExplorer tokens ────────────────── */
+:root {
+  --fe-bg:             linear-gradient(145deg, rgba(255,255,255,0.99), rgba(248,248,252,0.98));
+  --fe-shadow:         0 4px 30px rgba(0,0,0,0.10), 0 0 0 1px rgba(0,0,0,0.04);
+  --fe-text:           var(--color-primary-600);
+  --fe-text-strong:    var(--color-primary-900);
+  --fe-text-muted:     var(--color-primary-400);
+  --fe-border:         rgba(0,0,0,0.06);
+  --fe-surface:        rgba(0,0,0,0.015);
+  --fe-surface-hover:  rgba(0,0,0,0.04);
+  --fe-input-bg:       var(--color-primary-50);
+  --fe-input-border:   var(--color-primary-200);
+  --fe-btn-color:      rgba(0,0,0,0.45);
+  --fe-btn-hover:      rgba(0,0,0,0.80);
+  --fe-btn-hover-bg:   rgba(0,0,0,0.06);
+  --fe-badge-bg:       var(--color-primary-100);
+  --fe-dock-bg:        linear-gradient(135deg, color-mix(in srgb, var(--fe-accent, #8b5cf6) 12%, white), rgba(255,255,255,0.95));
+  --fe-dock-shadow:    0 0 15px color-mix(in srgb, var(--fe-accent, #8b5cf6) 15%, transparent);
+}
+.dark {
+  --fe-bg:             linear-gradient(145deg, rgba(10,10,18,0.97), rgba(15,12,28,0.98));
+  --fe-shadow:         0 4px 60px rgba(0,0,0,0.50), 0 0 1px var(--fe-accent, #8b5cf6), inset 0 1px 0 rgba(255,255,255,0.05);
+  --fe-text:           rgba(255,255,255,0.70);
+  --fe-text-strong:    #ffffff;
+  --fe-text-muted:     rgba(255,255,255,0.30);
+  --fe-border:         rgba(255,255,255,0.06);
+  --fe-surface:        rgba(255,255,255,0.02);
+  --fe-surface-hover:  rgba(255,255,255,0.06);
+  --fe-input-bg:       rgba(255,255,255,0.05);
+  --fe-input-border:   rgba(255,255,255,0.08);
+  --fe-btn-color:      rgba(255,255,255,0.50);
+  --fe-btn-hover:      rgba(255,255,255,0.90);
+  --fe-btn-hover-bg:   rgba(255,255,255,0.08);
+  --fe-badge-bg:       rgba(255,255,255,0.05);
+  --fe-dock-bg:        linear-gradient(135deg, color-mix(in srgb, var(--fe-accent, #8b5cf6) 20%, black), rgba(0,0,0,0.85));
+  --fe-dock-shadow:    0 0 20px color-mix(in srgb, var(--fe-accent, #8b5cf6) 30%, transparent);
+}
