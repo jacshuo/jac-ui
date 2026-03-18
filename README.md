@@ -737,6 +737,12 @@ jac-ui/
 4. Push to the branch (`git push origin feature/my-feature`)
 5. Open a Pull Request
 
+### Community & Security
+
+- Contribution guide: [CONTRIBUTING.md](./CONTRIBUTING.md)
+- Code of conduct: [CODE_OF_CONDUCT.md](./.github/CODE_OF_CONDUCT.md)
+- Security policy: [SECURITY.md](./.github/SECURITY.md)
+
 ---
 
 ## License

@@ -21,7 +21,7 @@ Thank you for considering a contribution! This document explains how to get star
 
 ## Code of Conduct
 
-Be respectful. We follow the [Contributor Covenant](https://www.contributor-covenant.org/version/2/1/code_of_conduct/) code of conduct.
+Be respectful. Please read and follow this repository's [Code of Conduct](./.github/CODE_OF_CONDUCT.md).
 
 ---
 
