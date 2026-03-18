@@ -1,0 +1,21 @@
+/* ═══════════════════════════════════════════════════════════
+   Tailwind v4 integration — for consumers with their own
+   Tailwind CSS setup.
+   
+   Import this file in your CSS AFTER @import "tailwindcss":
+   
+     @import "tailwindcss";
+     @import "@jacshuo/onyx/styles/tailwind.css";
+   
+   This tells Tailwind to scan the library's JS for class
+   names and includes all theme tokens + custom variants.
+   ═══════════════════════════════════════════════════════════ */
+
+/* Tell Tailwind to scan the library's compiled JS for class names */
+@source "..";
+
+/* Core design tokens (semantic colors, animations) */
+@import "./tokens.css";
+
+/* Class-based dark mode */
+@custom-variant dark (&:where(.dark, .dark *));

@@ -119,11 +119,29 @@ import { Tabs, TabList, TabTrigger } from '@jacshuo/onyx/Tabs';
 |---|---|---|
 | `@jacshuo/onyx/styles.css` | ~102 KB | Full pre-compiled bundle — all utilities + all component CSS. Simplest setup. |
 | `@jacshuo/onyx/styles/base.css` | ~95 KB | Tailwind utilities + core design tokens. No component-specific keyframes. |
-| `@jacshuo/onyx/styles/tokens.css` | ~4 KB | Raw `@theme` tokens only — for projects that already run Tailwind CSS v4. |
+| `@jacshuo/onyx/styles/tailwind.css` | ~4 KB | **For projects with their own Tailwind CSS v4.** Includes `@source` directive, tokens & dark mode variant. |
+| `@jacshuo/onyx/styles/tokens.css` | ~4 KB | Raw `@theme` tokens only — no `@source`, no Tailwind import. |
 | `@jacshuo/onyx/styles/CinePlayer.css` | ~2.5 KB | CinePlayer keyframes & `--cp-*` design tokens |
 | `@jacshuo/onyx/styles/MiniPlayer.css` | ~2.2 KB | MiniPlayer keyframes & `--mp-*` design tokens |
 | `@jacshuo/onyx/styles/FileExplorer.css` | ~1.6 KB | FileExplorer `--fe-*` design tokens |
 | `@jacshuo/onyx/styles/FilmReel.css` | ~0.6 KB | FilmReel keyframes |
+
+#### Using with your own Tailwind CSS v4 setup
+
+If your project already runs Tailwind CSS v4 and you want to import only the tokens (not the full pre-compiled bundle), you **must** use `tailwind.css` so that Tailwind scans the library's JS files for class names:
+
+```css
+/* your app's CSS entry */
+@import "tailwindcss";
+@import "@jacshuo/onyx/styles/tailwind.css";
+
+/* optionally add per-component CSS for CinePlayer, MiniPlayer, etc. */
+@import "@jacshuo/onyx/styles/CinePlayer.css";
+```
+
+> **Why?** Onyx components use Tailwind utility classes defined in JavaScript (via CVA). Without `@source`, your Tailwind build won't know about these classes and they won't be generated. The `tailwind.css` file includes `@source ".."` which tells Tailwind v4 to scan the library's compiled JS.
+>
+> **Do NOT** use `tokens.css` alone — it only provides design tokens without the `@source` directive, so component styles will be incomplete.
 
 **Example — minimal setup with CinePlayer only:**
 

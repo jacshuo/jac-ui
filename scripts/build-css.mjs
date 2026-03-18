@@ -29,6 +29,9 @@ run(`"${postcss}" src/styles/base.css -o dist/styles/base.css --no-map`);
 // 3. Raw tokens (for consumers who have their own Tailwind setup)
 copyFileSync(resolve(root, "src/styles/tokens.css"), resolve(root, "dist/styles/tokens.css"));
 
+// 3b. Tailwind integration file (for own-Tailwind consumers — @source + tokens)
+copyFileSync(resolve(root, "src/styles/tailwind.css"), resolve(root, "dist/styles/tailwind.css"));
+
 // 4. Per-component CSS (pure CSS — no Tailwind processing needed)
 const extras = ["CinePlayer", "MiniPlayer", "FileExplorer", "FilmReel"];
 for (const name of extras) {
