@@ -63,7 +63,7 @@ module.exports = {
   devServer: {
     port: parseInt(process.env.DEV_PORT, 10) || 3001,
     hot: true,
-    open: false,
+    open: true,
     historyApiFallback: true,
     static: {
       directory: path.resolve(__dirname, 'demo'),
