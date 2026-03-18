@@ -32,6 +32,14 @@ export function AlertTitle({ className, ...props }: React.HTMLAttributes<HTMLHea
   );
 }
 
+export function AlertIcon({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) {
+  return <span className={cn("mt-0.5 shrink-0 [&_svg]:h-5 [&_svg]:w-5", className)} {...props} />;
+}
+
+export function AlertContent({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  return <div className={cn("flex-1 min-w-0 space-y-1", className)} {...props} />;
+}
+
 export function AlertDescription({
   className,
   ...props

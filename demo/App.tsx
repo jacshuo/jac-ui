@@ -45,6 +45,12 @@ import MiniPlayerPage from "./pages/MiniPlayerPage";
 import CinePlayerPage from "./pages/CinePlayerPage";
 import FileExplorerPage from "./pages/FileExplorerPage";
 import CodeBlockPage from "./pages/CodeBlockPage";
+import ProgressBarPage from "./pages/ProgressBarPage";
+import SpinPage from "./pages/SpinPage";
+import SwitchPage from "./pages/SwitchPage";
+import CheckboxPage from "./pages/CheckboxPage";
+import RadioPage from "./pages/RadioPage";
+import TextBoxPage from "./pages/TextBoxPage";
 
 /* ── Sidebar nav items ───────────────────────────────── */
 
@@ -58,6 +64,10 @@ const navItems: SideNavItem[] = [
       { label: "Label", path: "label" },
       { label: "Input", path: "input" },
       { label: "Dropdown", path: "dropdown" },
+      { label: "Switch", path: "switch" },
+      { label: "Checkbox", path: "checkbox" },
+      { label: "Radio", path: "radio" },
+      { label: "TextBox", path: "textbox" },
     ],
   },
   {
@@ -108,7 +118,11 @@ const navItems: SideNavItem[] = [
   {
     label: "Feedback",
     icon: <Bell className="h-4 w-4" />,
-    children: [{ label: "Alert / Toast", path: "alert" }],
+    children: [
+      { label: "Alert / Toast", path: "alert" },
+      { label: "ProgressBar", path: "progress-bar" },
+      { label: "Spin", path: "spin" },
+    ],
   },
   {
     label: "Extras",
@@ -231,6 +245,10 @@ export default function App() {
             <Route path="/label" element={<LabelPage />} />
             <Route path="/input" element={<InputPage />} />
             <Route path="/dropdown" element={<DropdownPage />} />
+            <Route path="/switch" element={<SwitchPage />} />
+            <Route path="/checkbox" element={<CheckboxPage />} />
+            <Route path="/radio" element={<RadioPage />} />
+            <Route path="/textbox" element={<TextBoxPage />} />
             <Route path="/card" element={<CardPage />} />
             <Route path="/image-card" element={<ImageCardPage />} />
             <Route path="/panel" element={<PanelPage />} />
@@ -247,6 +265,8 @@ export default function App() {
             <Route path="/dialog" element={<DialogPage />} />
             <Route path="/tooltip" element={<TooltipPage />} />
             <Route path="/alert" element={<AlertPage />} />
+            <Route path="/progress-bar" element={<ProgressBarPage />} />
+            <Route path="/spin" element={<SpinPage />} />
             <Route path="/film-reel" element={<FilmReelPage />} />
             <Route path="/mini-player" element={<MiniPlayerPage />} />
             <Route path="/cine-player" element={<CinePlayerPage />} />

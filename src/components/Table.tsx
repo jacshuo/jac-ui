@@ -1,6 +1,16 @@
 import React, { useMemo, useState, useCallback, useRef, useEffect } from "react";
 import { type VariantProps } from "class-variance-authority";
-import { ArrowUp, ArrowDown, ArrowUpDown, Plus, Trash2, Pencil, Check, X } from "lucide-react";
+import {
+  ArrowUp,
+  ArrowDown,
+  ArrowUpDown,
+  Plus,
+  Trash2,
+  Pencil,
+  Check,
+  X,
+  Inbox,
+} from "lucide-react";
 import { cn } from "../lib/utils";
 import { tableVariants } from "../styles/theme";
 
@@ -68,6 +78,32 @@ export function TableCell({ className, ...props }: React.TdHTMLAttributes<HTMLTa
 }
 
 /* ═══════════════════════════════════════════════════════════
+   Empty state
+   ═══════════════════════════════════════════════════════════ */
+
+export type TableEmptyProps = {
+  /** Custom icon to display. Defaults to Inbox. */
+  icon?: React.ReactNode;
+  /** Text shown below the icon. @default "No data" */
+  text?: React.ReactNode;
+  className?: string;
+};
+
+export function TableEmpty({ icon, text = "No data", className }: TableEmptyProps) {
+  return (
+    <div
+      className={cn(
+        "flex flex-col items-center justify-center gap-3 py-16 text-primary-400 dark:text-primary-500",
+        className,
+      )}
+    >
+      {icon ?? <Inbox className="h-12 w-12 stroke-[1.2]" />}
+      <span className="text-sm">{text}</span>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
    Shared types
    ═══════════════════════════════════════════════════════════ */
 
@@ -110,8 +146,12 @@ type SortableTableProps<T, K extends string = string> = {
   onSortChange?: (sort: SortState<K>) => void;
   defaultSort?: SortState<K>;
   rowKey?: (row: T, index: number) => React.Key;
+  /** Render action buttons for each row. Receives the row data object. */
+  rowActions?: (row: T) => React.ReactNode;
   intent?: VariantProps<typeof tableVariants>["intent"];
   className?: string;
+  /** Custom empty state props (icon, text). Shown when data is empty. */
+  empty?: TableEmptyProps;
 };
 
 export function SortableTable<T, K extends string = string>({
@@ -121,8 +161,10 @@ export function SortableTable<T, K extends string = string>({
   onSortChange,
   defaultSort = null,
   rowKey,
+  rowActions,
   intent,
   className,
+  empty,
 }: SortableTableProps<T, K>) {
   const [internalSort, setInternalSort] = useState<SortState<K>>(defaultSort);
   const sort = controlledSort ?? internalSort;
@@ -191,18 +233,32 @@ export function SortableTable<T, K extends string = string>({
               </TableHead>
             );
           })}
+          {rowActions && <TableHead className="w-20 text-right">Actions</TableHead>}
         </TableRow>
       </TableHeader>
       <TableBody>
-        {sortedData.map((row, i) => (
-          <TableRow key={rowKey ? rowKey(row, i) : i}>
-            {columns.map((col) => (
-              <TableCell key={col.key} className={col.cellClassName}>
-                {col.cell(row)}
-              </TableCell>
-            ))}
-          </TableRow>
-        ))}
+        {sortedData.length === 0 ? (
+          <tr>
+            <td colSpan={columns.length + (rowActions ? 1 : 0)}>
+              <TableEmpty {...empty} />
+            </td>
+          </tr>
+        ) : (
+          sortedData.map((row, i) => (
+            <TableRow key={rowKey ? rowKey(row, i) : i}>
+              {columns.map((col) => (
+                <TableCell key={col.key} className={col.cellClassName}>
+                  {col.cell(row)}
+                </TableCell>
+              ))}
+              {rowActions && (
+                <TableCell className="text-right">
+                  <span className="inline-flex items-center gap-1">{rowActions(row)}</span>
+                </TableCell>
+              )}
+            </TableRow>
+          ))
+        )}
       </TableBody>
     </Table>
   );
@@ -250,8 +306,14 @@ export type DataTableProps<T, K extends string = string> = {
   /** Called when Delete is clicked. Receives currently selected keys. */
   onDelete?: (keys: React.Key[]) => void;
 
+  /* ── Row actions ─────────────────────────────────────── */
+  /** Render action buttons for each row. Receives the row data object. */
+  rowActions?: (row: T) => React.ReactNode;
+
   intent?: VariantProps<typeof tableVariants>["intent"];
   className?: string;
+  /** Custom empty state props (icon, text). Shown when data is empty. */
+  empty?: TableEmptyProps;
 };
 
 /* ── Editable cell ─────────────────────────────────────── */
@@ -326,8 +388,10 @@ export function DataTable<T, K extends string = string>({
   toolbar = false,
   onAdd,
   onDelete,
+  rowActions,
   intent,
   className,
+  empty,
 }: DataTableProps<T, K>) {
   /* ── Sort state ─────────────────────────────────────── */
   const [internalSort, setInternalSort] = useState<SortState<K>>(defaultSort);
@@ -510,82 +574,99 @@ export function DataTable<T, K extends string = string>({
                 </TableHead>
               );
             })}
+            {rowActions && <TableHead className="w-20 text-right">Actions</TableHead>}
           </TableRow>
         </TableHeader>
         <TableBody>
-          {sortedData.map((row, i) => {
-            const rKey = rowKey(row, i);
-            const isSelected = selected.includes(rKey);
-
-            return (
-              <TableRow
-                key={rKey}
-                className={cn(isSelected && "bg-primary-50/60 dark:bg-primary-900/20")}
-                onClick={() => {
-                  if (selectionMode !== "none") toggleRow(rKey);
-                }}
+          {sortedData.length === 0 ? (
+            <tr>
+              <td
+                colSpan={columns.length + (selectionMode !== "none" ? 1 : 0) + (rowActions ? 1 : 0)}
               >
-                {selectionMode === "multiple" && (
-                  <TableCell className="w-10">
-                    <input
-                      type="checkbox"
-                      checked={isSelected}
-                      onChange={() => toggleRow(rKey)}
-                      onClick={(e) => e.stopPropagation()}
-                      className="h-4 w-4 cursor-pointer rounded border-secondary-300 accent-primary-600"
-                      aria-label="Select row"
-                    />
-                  </TableCell>
-                )}
-                {selectionMode === "single" && (
-                  <TableCell className="w-10">
-                    <input
-                      type="radio"
-                      checked={isSelected}
-                      onChange={() => toggleRow(rKey)}
-                      onClick={(e) => e.stopPropagation()}
-                      className="h-4 w-4 cursor-pointer accent-primary-600"
-                      aria-label="Select row"
-                    />
-                  </TableCell>
-                )}
-                {columns.map((col) => {
-                  const isEditing = editingCell?.rowKey === rKey && editingCell?.colKey === col.key;
+                <TableEmpty {...empty} />
+              </td>
+            </tr>
+          ) : (
+            sortedData.map((row, i) => {
+              const rKey = rowKey(row, i);
+              const isSelected = selected.includes(rKey);
 
-                  const rawValue =
-                    col.editValue?.(row) ??
-                    (() => {
-                      const v = col.cell(row);
-                      return typeof v === "string" || typeof v === "number" ? String(v) : "";
-                    })();
-
-                  return (
-                    <TableCell
-                      key={col.key}
-                      className={cn(
-                        col.cellClassName,
-                        editable && col.editable !== false && "cursor-text",
-                      )}
-                      onDoubleClick={(e) => {
-                        e.stopPropagation();
-                        handleDoubleClick(rKey, col.key, col.editable);
-                      }}
-                    >
-                      {isEditing ? (
-                        <EditableCell
-                          value={rawValue}
-                          onCommit={(v) => handleCommit(rKey, col.key, v)}
-                          onCancel={() => setEditingCell(null)}
-                        />
-                      ) : (
-                        col.cell(row)
-                      )}
+              return (
+                <TableRow
+                  key={rKey}
+                  className={cn(isSelected && "bg-primary-50/60 dark:bg-primary-900/20")}
+                  onClick={() => {
+                    if (selectionMode !== "none") toggleRow(rKey);
+                  }}
+                >
+                  {selectionMode === "multiple" && (
+                    <TableCell className="w-10">
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={() => toggleRow(rKey)}
+                        onClick={(e) => e.stopPropagation()}
+                        className="h-4 w-4 cursor-pointer rounded border-secondary-300 accent-primary-600"
+                        aria-label="Select row"
+                      />
                     </TableCell>
-                  );
-                })}
-              </TableRow>
-            );
-          })}
+                  )}
+                  {selectionMode === "single" && (
+                    <TableCell className="w-10">
+                      <input
+                        type="radio"
+                        checked={isSelected}
+                        onChange={() => toggleRow(rKey)}
+                        onClick={(e) => e.stopPropagation()}
+                        className="h-4 w-4 cursor-pointer accent-primary-600"
+                        aria-label="Select row"
+                      />
+                    </TableCell>
+                  )}
+                  {columns.map((col) => {
+                    const isEditing =
+                      editingCell?.rowKey === rKey && editingCell?.colKey === col.key;
+
+                    const rawValue =
+                      col.editValue?.(row) ??
+                      (() => {
+                        const v = col.cell(row);
+                        return typeof v === "string" || typeof v === "number" ? String(v) : "";
+                      })();
+
+                    return (
+                      <TableCell
+                        key={col.key}
+                        className={cn(
+                          col.cellClassName,
+                          editable && col.editable !== false && "cursor-text",
+                        )}
+                        onDoubleClick={(e) => {
+                          e.stopPropagation();
+                          handleDoubleClick(rKey, col.key, col.editable);
+                        }}
+                      >
+                        {isEditing ? (
+                          <EditableCell
+                            value={rawValue}
+                            onCommit={(v) => handleCommit(rKey, col.key, v)}
+                            onCancel={() => setEditingCell(null)}
+                          />
+                        ) : (
+                          col.cell(row)
+                        )}
+                      </TableCell>
+                    );
+                  })}
+                  {rowActions && (
+                    <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
+                      <span className="inline-flex items-center gap-1">{rowActions(row)}</span>
+                    </TableCell>
+                  )}
+                </TableRow>
+              );
+            })
+          )}
         </TableBody>
       </Table>
     </div>

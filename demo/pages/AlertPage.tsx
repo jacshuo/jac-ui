@@ -1,4 +1,12 @@
-import { Button, Alert, AlertTitle, AlertDescription, useAlert } from "../../src";
+import {
+  Button,
+  Alert,
+  AlertIcon,
+  AlertContent,
+  AlertTitle,
+  AlertDescription,
+  useAlert,
+} from "../../src";
 import { Section, PageTitle } from "./helpers";
 import { CheckCircle, AlertTriangle, XCircle, Info, Bell, Pin } from "lucide-react";
 
@@ -12,28 +20,40 @@ export default function AlertPage() {
       <Section title="Static (inline) alerts">
         <div className="space-y-3">
           <Alert intent="success">
-            <AlertTitle>
-              <CheckCircle /> Success
-            </AlertTitle>
-            <AlertDescription>Operation completed successfully.</AlertDescription>
+            <AlertIcon>
+              <CheckCircle />
+            </AlertIcon>
+            <AlertContent>
+              <AlertTitle>Success</AlertTitle>
+              <AlertDescription>Operation completed successfully.</AlertDescription>
+            </AlertContent>
           </Alert>
           <Alert intent="warning">
-            <AlertTitle>
-              <AlertTriangle /> Warning
-            </AlertTitle>
-            <AlertDescription>Please check your input.</AlertDescription>
+            <AlertIcon>
+              <AlertTriangle />
+            </AlertIcon>
+            <AlertContent>
+              <AlertTitle>Warning</AlertTitle>
+              <AlertDescription>Please check your input.</AlertDescription>
+            </AlertContent>
           </Alert>
           <Alert intent="error">
-            <AlertTitle>
-              <XCircle /> Error
-            </AlertTitle>
-            <AlertDescription>Something went wrong.</AlertDescription>
+            <AlertIcon>
+              <XCircle />
+            </AlertIcon>
+            <AlertContent>
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>Something went wrong.</AlertDescription>
+            </AlertContent>
           </Alert>
           <Alert intent="info">
-            <AlertTitle>
-              <Info /> Info
-            </AlertTitle>
-            <AlertDescription>Here is some information.</AlertDescription>
+            <AlertIcon>
+              <Info />
+            </AlertIcon>
+            <AlertContent>
+              <AlertTitle>Info</AlertTitle>
+              <AlertDescription>Here is some information.</AlertDescription>
+            </AlertContent>
           </Alert>
         </div>
       </Section>

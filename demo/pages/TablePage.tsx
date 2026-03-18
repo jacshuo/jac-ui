@@ -11,6 +11,7 @@ import {
   DataTable,
   type ColumnDef,
 } from "../../src";
+import { Pencil, Trash2 } from "lucide-react";
 import { Section, PageTitle } from "./helpers";
 
 interface Person {
@@ -168,6 +169,48 @@ export default function TablePage() {
           Double-click a cell to edit inline. Status column is not editable. Use toolbar to
           add/delete rows.
         </p>
+      </Section>
+
+      <Section title="Row actions (edit / delete per row)">
+        <SortableTable
+          columns={sortableColumns}
+          data={people}
+          defaultSort={{ column: "name", direction: "asc" }}
+          rowKey={(r) => r.id}
+          rowActions={(row) => (
+            <>
+              <button
+                type="button"
+                className="rounded p-1 text-primary-400 hover:text-primary-700 hover:bg-primary-100 dark:text-primary-500 dark:hover:text-primary-300 dark:hover:bg-primary-800 transition-colors"
+                onClick={() => {
+                  const newName = prompt("Rename:", row.name);
+                  if (newName?.trim()) {
+                    setPeople((prev) =>
+                      prev.map((p) => (p.id === row.id ? { ...p, name: newName.trim() } : p)),
+                    );
+                  }
+                }}
+                aria-label={`Edit ${row.name}`}
+              >
+                <Pencil className="h-3.5 w-3.5" />
+              </button>
+              <button
+                type="button"
+                className="rounded p-1 text-danger-400 hover:text-danger-600 hover:bg-danger-50 dark:text-danger-500 dark:hover:text-danger-400 dark:hover:bg-danger-900/30 transition-colors"
+                onClick={() => {
+                  setPeople((prev) => prev.filter((p) => p.id !== row.id));
+                }}
+                aria-label={`Delete ${row.name}`}
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+              </button>
+            </>
+          )}
+        />
+      </Section>
+
+      <Section title="Empty state (no data)">
+        <SortableTable columns={sortableColumns} data={[]} rowKey={(r) => r.id} />
       </Section>
 
       <Section title="Bordered variant (manual primitives)">

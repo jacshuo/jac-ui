@@ -1,0 +1,85 @@
+import { useState } from "react";
+import { Radio, RadioGroup } from "../../src";
+import { Section, PageTitle } from "./helpers";
+
+const intents = ["primary", "secondary", "danger", "warning", "success"] as const;
+
+export default function RadioPage() {
+  const [value, setValue] = useState("b");
+
+  return (
+    <div className="space-y-8">
+      <PageTitle>Radio</PageTitle>
+
+      {/* ── Default ──────────────────────────────────── */}
+      <Section title="Default (RadioGroup)">
+        <RadioGroup defaultValue="opt1">
+          <Radio value="opt1" label="Option 1" />
+          <Radio value="opt2" label="Option 2" />
+          <Radio value="opt3" label="Option 3" />
+        </RadioGroup>
+      </Section>
+
+      {/* ── Horizontal layout ────────────────────────── */}
+      <Section title="Horizontal layout">
+        <RadioGroup defaultValue="h1" className="flex-row">
+          <Radio value="h1" label="Left" />
+          <Radio value="h2" label="Center" />
+          <Radio value="h3" label="Right" />
+        </RadioGroup>
+      </Section>
+
+      {/* ── Sizes ────────────────────────────────────── */}
+      <Section title="Sizes">
+        <div className="flex flex-wrap items-end gap-8">
+          <RadioGroup size="sm" defaultValue="a">
+            <Radio value="a" label="Small A" />
+            <Radio value="b" label="Small B" />
+          </RadioGroup>
+          <RadioGroup size="md" defaultValue="a">
+            <Radio value="a" label="Medium A" />
+            <Radio value="b" label="Medium B" />
+          </RadioGroup>
+          <RadioGroup size="lg" defaultValue="a">
+            <Radio value="a" label="Large A" />
+            <Radio value="b" label="Large B" />
+          </RadioGroup>
+        </div>
+      </Section>
+
+      {/* ── Intents ──────────────────────────────────── */}
+      <Section title="Color intents">
+        <div className="flex flex-wrap items-start gap-8">
+          {intents.map((i) => (
+            <RadioGroup key={i} intent={i} defaultValue="on">
+              <Radio value="on" label={i.charAt(0).toUpperCase() + i.slice(1)} />
+              <Radio value="off" label="Other" />
+            </RadioGroup>
+          ))}
+        </div>
+      </Section>
+
+      {/* ── Disabled ─────────────────────────────────── */}
+      <Section title="Disabled">
+        <RadioGroup disabled defaultValue="d1">
+          <Radio value="d1" label="Disabled selected" />
+          <Radio value="d2" label="Disabled unselected" />
+        </RadioGroup>
+      </Section>
+
+      {/* ── Controlled ───────────────────────────────── */}
+      <Section title="Controlled">
+        <div className="flex items-start gap-8">
+          <RadioGroup value={value} onValueChange={setValue} intent="success">
+            <Radio value="a" label="Alpha" />
+            <Radio value="b" label="Bravo" />
+            <Radio value="c" label="Charlie" />
+          </RadioGroup>
+          <span className="rounded bg-success-100 px-3 py-1 text-sm text-success-800 dark:bg-success-900/30 dark:text-success-400">
+            Selected: <strong>{value}</strong>
+          </span>
+        </div>
+      </Section>
+    </div>
+  );
+}

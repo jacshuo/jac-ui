@@ -89,7 +89,8 @@ export const cardVariants = cva("rounded-lg transition-shadow", {
   variants: {
     intent: {
       default: "border border-primary-200 bg-white dark:border-primary-700 dark:bg-primary-900",
-      elevated: "bg-white shadow-md hover:shadow-lg dark:bg-primary-900",
+      elevated:
+        "bg-white shadow-md hover:shadow-lg dark:bg-primary-800 dark:shadow-primary-300/25 dark:hover:shadow-primary-200/30",
       outlined: "border-2 border-primary-300 bg-transparent dark:border-primary-600",
       ghost: "bg-primary-50 dark:bg-primary-800/50",
     },
@@ -108,7 +109,7 @@ export const panelVariants = cva("rounded-md", {
     intent: {
       default: "border border-primary-200 bg-white dark:border-primary-700 dark:bg-primary-900",
       inset: "bg-primary-50 dark:bg-primary-800/50",
-      elevated: "bg-white shadow-lg dark:bg-primary-900",
+      elevated: "bg-white shadow-lg dark:bg-primary-800 dark:shadow-primary-300/25",
     },
     size: {
       sm: "p-3",
@@ -259,6 +260,185 @@ export const codeBlockVariants = cva(
     defaultVariants: { size: "md" },
   },
 );
+
+// ─── ProgressBar
+export const progressBarVariants = cva(
+  "relative w-full overflow-hidden rounded-full bg-primary-200 dark:bg-primary-700",
+  {
+    variants: {
+      size: {
+        xs: "h-1",
+        sm: "h-2",
+        md: "h-3",
+        lg: "h-4",
+      },
+      intent: {
+        primary: "[&_.progress-fill]:bg-primary-500",
+        success: "[&_.progress-fill]:bg-success-500",
+        warning: "[&_.progress-fill]:bg-warning-500",
+        danger: "[&_.progress-fill]:bg-danger-500",
+      },
+      edge: {
+        none: "rounded-full",
+        top: "fixed top-0 left-0 z-50 rounded-none",
+        bottom: "fixed bottom-0 left-0 z-50 rounded-none",
+      },
+    },
+    defaultVariants: { size: "md", intent: "primary", edge: "none" },
+  },
+);
+
+// ─── Spin
+export const spinVariants = cva("text-primary-500 dark:text-primary-400", {
+  variants: {
+    size: {
+      sm: "text-xs",
+      md: "text-sm",
+      lg: "text-base",
+    },
+  },
+  defaultVariants: { size: "md" },
+});
+
+// ─── Checkbox
+export const checkboxVariants = cva(
+  "relative inline-flex shrink-0 items-center justify-center rounded border-2 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
+  {
+    variants: {
+      intent: {
+        primary: "border-primary-300 dark:border-primary-600 focus-visible:ring-primary-500/40",
+        secondary:
+          "border-secondary-300 dark:border-secondary-600 focus-visible:ring-secondary-500/40",
+        danger: "border-danger-300 dark:border-danger-600 focus-visible:ring-danger-500/40",
+        warning: "border-warning-300 dark:border-warning-600 focus-visible:ring-warning-500/40",
+        success: "border-success-300 dark:border-success-600 focus-visible:ring-success-500/40",
+      },
+      size: {
+        sm: "h-4 w-4 rounded-[3px]",
+        md: "h-5 w-5 rounded",
+        lg: "h-6 w-6 rounded-[5px]",
+      },
+      checked: {
+        on: "",
+        off: "bg-white dark:bg-primary-900",
+      },
+    },
+    compoundVariants: [
+      {
+        intent: "primary",
+        checked: "on",
+        class: "border-primary-500 bg-primary-500 dark:border-primary-500 dark:bg-primary-500",
+      },
+      {
+        intent: "secondary",
+        checked: "on",
+        class:
+          "border-secondary-500 bg-secondary-500 dark:border-secondary-500 dark:bg-secondary-500",
+      },
+      {
+        intent: "danger",
+        checked: "on",
+        class: "border-danger-500 bg-danger-500 dark:border-danger-500 dark:bg-danger-500",
+      },
+      {
+        intent: "warning",
+        checked: "on",
+        class: "border-warning-500 bg-warning-500 dark:border-warning-500 dark:bg-warning-500",
+      },
+      {
+        intent: "success",
+        checked: "on",
+        class: "border-success-500 bg-success-500 dark:border-success-500 dark:bg-success-500",
+      },
+    ],
+    defaultVariants: { intent: "primary", size: "md", checked: "off" },
+  },
+);
+
+// ─── Radio
+export const radioVariants = cva(
+  "relative inline-flex shrink-0 items-center justify-center rounded-full border-2 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
+  {
+    variants: {
+      intent: {
+        primary: "border-primary-300 dark:border-primary-600 focus-visible:ring-primary-500/40",
+        secondary:
+          "border-secondary-300 dark:border-secondary-600 focus-visible:ring-secondary-500/40",
+        danger: "border-danger-300 dark:border-danger-600 focus-visible:ring-danger-500/40",
+        warning: "border-warning-300 dark:border-warning-600 focus-visible:ring-warning-500/40",
+        success: "border-success-300 dark:border-success-600 focus-visible:ring-success-500/40",
+      },
+      size: {
+        sm: "h-4 w-4",
+        md: "h-5 w-5",
+        lg: "h-6 w-6",
+      },
+      checked: {
+        on: "",
+        off: "bg-white dark:bg-primary-900",
+      },
+    },
+    compoundVariants: [
+      {
+        intent: "primary",
+        checked: "on",
+        class: "border-primary-500 bg-primary-500 dark:border-primary-500 dark:bg-primary-500",
+      },
+      {
+        intent: "secondary",
+        checked: "on",
+        class:
+          "border-secondary-500 bg-secondary-500 dark:border-secondary-500 dark:bg-secondary-500",
+      },
+      {
+        intent: "danger",
+        checked: "on",
+        class: "border-danger-500 bg-danger-500 dark:border-danger-500 dark:bg-danger-500",
+      },
+      {
+        intent: "warning",
+        checked: "on",
+        class: "border-warning-500 bg-warning-500 dark:border-warning-500 dark:bg-warning-500",
+      },
+      {
+        intent: "success",
+        checked: "on",
+        class: "border-success-500 bg-success-500 dark:border-success-500 dark:bg-success-500",
+      },
+    ],
+    defaultVariants: { intent: "primary", size: "md", checked: "off" },
+  },
+);
+
+// ─── Switch
+export const switchTrackVariants = cva("", {
+  variants: {
+    intent: {
+      primary: "",
+      secondary: "",
+      danger: "",
+      warning: "",
+      success: "",
+    },
+    size: {
+      sm: "",
+      md: "",
+      lg: "",
+    },
+    checked: {
+      on: "",
+      off: "bg-primary-300 dark:bg-primary-800",
+    },
+  },
+  compoundVariants: [
+    { intent: "primary", checked: "on", class: "bg-primary-500 dark:bg-primary-500" },
+    { intent: "secondary", checked: "on", class: "bg-secondary-500 dark:bg-secondary-500" },
+    { intent: "danger", checked: "on", class: "bg-danger-500 dark:bg-danger-500" },
+    { intent: "warning", checked: "on", class: "bg-warning-500 dark:bg-warning-500" },
+    { intent: "success", checked: "on", class: "bg-success-500 dark:bg-success-500" },
+  ],
+  defaultVariants: { intent: "primary", size: "md", checked: "off" },
+});
 
 // ─── Alert
 export const alertVariants = cva(

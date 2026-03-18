@@ -44,7 +44,7 @@ export function Tree({
   ...props
 }: TreeProps) {
   const [internalKeys, setInternalKeys] = useState<Set<string> | "all">(() => defaultExpandedKeys);
-  const expandedKeys = controlledKeys ?? null;
+  const _expandedKeys = controlledKeys ?? null;
 
   const onToggleKey = useCallback(
     (key: string) => {
@@ -127,6 +127,8 @@ type TreeItemProps = {
   nodeKey?: string;
   label: React.ReactNode;
   icon?: React.ReactNode;
+  /** Action buttons shown on hover at the right side of the item row. */
+  actions?: React.ReactNode;
   defaultExpanded?: boolean;
   expanded?: boolean;
   onToggle?: (expanded: boolean) => void;
@@ -138,6 +140,7 @@ export function TreeItem({
   nodeKey,
   label,
   icon,
+  actions,
   defaultExpanded = false,
   expanded: controlledExpanded,
   onToggle,
@@ -185,7 +188,7 @@ export function TreeItem({
     >
       <div
         className={cn(
-          "hover:bg-primary-50 dark:hover:bg-primary-800/50 flex items-center gap-1 rounded-md px-1 py-1",
+          "group hover:bg-primary-50 dark:hover:bg-primary-800/50 flex items-center gap-1 rounded-md px-1 py-1",
           hasChildren ? "cursor-pointer" : "cursor-default",
         )}
         onClick={hasChildren ? toggle : undefined}
@@ -201,7 +204,17 @@ export function TreeItem({
           <span className="w-4 shrink-0" />
         )}
         {icon && <span className="shrink-0">{icon}</span>}
-        <span className="text-primary-700 dark:text-primary-300 truncate">{label}</span>
+        <span className="text-primary-700 dark:text-primary-300 min-w-0 flex-1 truncate">
+          {label}
+        </span>
+        {actions && (
+          <span
+            className="ml-auto flex shrink-0 items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {actions}
+          </span>
+        )}
       </div>
       {hasChildren && (
         <div

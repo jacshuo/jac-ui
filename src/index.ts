@@ -22,6 +22,11 @@ export {
   alertVariants,
   navLinkVariants,
   codeBlockVariants,
+  progressBarVariants,
+  spinVariants,
+  switchTrackVariants,
+  checkboxVariants,
+  radioVariants,
 } from "./styles/theme";
 
 // ─── Primitives
@@ -41,6 +46,10 @@ export {
 export { Badge } from "./components/Badge";
 export { Label } from "./components/Label";
 export { Input } from "./components/Input";
+export { TextBox, type TextBoxProps } from "./components/TextBox";
+export { Switch, type SwitchProps } from "./components/Switch";
+export { Checkbox, type CheckboxProps } from "./components/Checkbox";
+export { Radio, RadioGroup, type RadioProps, type RadioGroupProps } from "./components/Radio";
 
 // ─── Layout
 export {
@@ -71,13 +80,15 @@ export {
   TableCell,
   SortableTable,
   DataTable,
+  TableEmpty,
   type ColumnDef,
   type SortState,
   type SortDirection,
   type SelectionMode,
   type DataTableProps,
+  type TableEmptyProps,
 } from "./components/Table";
-export { List, ListItem } from "./components/List";
+export { List, ListItem, type ListItemProps } from "./components/List";
 export { Tree, TreeItem } from "./components/Tree";
 export { Chat, type ChatMessage, type ChatProps } from "./components/Chat";
 export { CodeBlock, type CodeBlockLanguage, type CodeBlockProps } from "./components/CodeBlock";
@@ -122,6 +133,8 @@ export { Tooltip } from "./components/Tooltip";
 // ─── Feedback
 export {
   Alert,
+  AlertIcon,
+  AlertContent,
   AlertTitle,
   AlertDescription,
   useAlert,
@@ -129,6 +142,8 @@ export {
   type AlertPosition,
   type AlertOptions,
 } from "./components/Alert";
+export { ProgressBar, type ProgressBarProps } from "./components/ProgressBar";
+export { Spin, useSpin, type SpinProps } from "./components/Spin";
 
 // ─── Extras
 export {

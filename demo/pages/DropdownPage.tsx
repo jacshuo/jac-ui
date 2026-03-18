@@ -27,6 +27,96 @@ const defaultColors: DropdownOption[] = [
   { value: "purple", label: "Purple" },
 ];
 
+/* ── Cascaded geo data ─────────────────────────────────── */
+
+interface GeoNode {
+  [name: string]: GeoNode | null;
+}
+
+const geoData: GeoNode = {
+  "United States": {
+    California: {
+      "Los Angeles County": {
+        "Los Angeles": null,
+        "Long Beach": null,
+        Pasadena: null,
+      },
+      "San Francisco County": {
+        "San Francisco": null,
+        "Daly City": null,
+      },
+      "San Diego County": {
+        "San Diego": null,
+        "Chula Vista": null,
+        Oceanside: null,
+      },
+    },
+    Texas: {
+      "Harris County": {
+        Houston: null,
+        Pasadena: null,
+        Baytown: null,
+      },
+      "Dallas County": {
+        Dallas: null,
+        Irving: null,
+        Garland: null,
+      },
+    },
+    "New York": {
+      "New York County": {
+        Manhattan: null,
+      },
+      "Kings County": {
+        Brooklyn: null,
+      },
+      "Erie County": {
+        Buffalo: null,
+        Cheektowaga: null,
+      },
+    },
+  },
+  Canada: {
+    Ontario: {
+      "York Region": {
+        Toronto: null,
+        Markham: null,
+        "Richmond Hill": null,
+      },
+      "Ottawa Region": {
+        Ottawa: null,
+        Gatineau: null,
+      },
+    },
+    "British Columbia": {
+      "Metro Vancouver": {
+        Vancouver: null,
+        Burnaby: null,
+        Surrey: null,
+      },
+    },
+  },
+  Australia: {
+    "New South Wales": {
+      "Sydney Region": {
+        Sydney: null,
+        Parramatta: null,
+      },
+    },
+    Victoria: {
+      "Melbourne Region": {
+        Melbourne: null,
+        Geelong: null,
+      },
+    },
+  },
+};
+
+function keysToOptions(obj: GeoNode | null): DropdownOption[] {
+  if (!obj) return [];
+  return Object.keys(obj).map((k) => ({ value: k, label: k }));
+}
+
 export default function DropdownPage() {
   const [basic, setBasic] = useState<string>();
   const [icon, setIcon] = useState("inbox");
@@ -43,6 +133,20 @@ export default function DropdownPage() {
   // Editable single-select with add
   const [editableItems, setEditableItems] = useState<DropdownOption[]>(fruits);
   const [editableSingle, setEditableSingle] = useState<string>();
+
+  // Cascaded selection state
+  const [country, setCountry] = useState<string>();
+  const [state, setState] = useState<string>();
+  const [county, setCounty] = useState<string>();
+  const [city, setCity] = useState<string>();
+
+  const stateOptions = country ? keysToOptions(geoData[country] as GeoNode) : [];
+  const countyOptions =
+    country && state ? keysToOptions((geoData[country] as GeoNode)?.[state] as GeoNode) : [];
+  const cityOptions =
+    country && state && county
+      ? keysToOptions(((geoData[country] as GeoNode)?.[state] as GeoNode)?.[county] as GeoNode)
+      : [];
 
   return (
     <div className="space-y-8">
@@ -80,6 +184,25 @@ export default function DropdownPage() {
             placeholder="Right align…"
             align="right"
           />
+        </Section>
+
+        <Section title="Default value (uncontrolled)">
+          <Dropdown options={fruits} defaultValue="cherry" placeholder="Pick a fruit…" />
+          <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+            Pre-selects &ldquo;Cherry&rdquo; without controlled state.
+          </p>
+        </Section>
+
+        <Section title="Default selected (uncontrolled multi)">
+          <Dropdown
+            options={fruits}
+            multiple
+            defaultSelected={["banana", "elderberry"]}
+            placeholder="Pick fruits…"
+          />
+          <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+            Pre-selects &ldquo;Banana&rdquo; and &ldquo;Elderberry&rdquo; without controlled state.
+          </p>
         </Section>
 
         <Section title="Multi-select with checkboxes">
@@ -132,6 +255,76 @@ export default function DropdownPage() {
           </p>
         </Section>
       </div>
+
+      {/* ── Cascaded selection ───────────────────────── */}
+      <Section title="Cascaded selection (Country → State → County → City)">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-primary-500 dark:text-primary-400">
+              Country
+            </label>
+            <Dropdown
+              options={keysToOptions(geoData)}
+              value={country}
+              onChange={(v) => {
+                setCountry(v);
+                setState(undefined);
+                setCounty(undefined);
+                setCity(undefined);
+              }}
+              placeholder="Select country…"
+            />
+          </div>
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-primary-500 dark:text-primary-400">
+              State / Province
+            </label>
+            <Dropdown
+              options={stateOptions}
+              value={state}
+              onChange={(v) => {
+                setState(v);
+                setCounty(undefined);
+                setCity(undefined);
+              }}
+              placeholder="Select state…"
+              disabled={!country}
+            />
+          </div>
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-primary-500 dark:text-primary-400">
+              County / Region
+            </label>
+            <Dropdown
+              options={countyOptions}
+              value={county}
+              onChange={(v) => {
+                setCounty(v);
+                setCity(undefined);
+              }}
+              placeholder="Select county…"
+              disabled={!state}
+            />
+          </div>
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-primary-500 dark:text-primary-400">
+              City
+            </label>
+            <Dropdown
+              options={cityOptions}
+              value={city}
+              onChange={setCity}
+              placeholder="Select city…"
+              disabled={!county}
+            />
+          </div>
+        </div>
+        {city && (
+          <p className="mt-3 text-sm text-primary-600 dark:text-primary-400">
+            Selected: <strong>{city}</strong>, {county}, {state}, {country}
+          </p>
+        )}
+      </Section>
     </div>
   );
 }

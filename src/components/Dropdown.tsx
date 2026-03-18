@@ -40,10 +40,14 @@ export interface DropdownSingleProps extends DropdownBaseProps {
   multiple?: false;
   /** Currently selected value (controlled, single mode). */
   value?: string;
+  /** Default selected value (uncontrolled, single mode). */
+  defaultValue?: string;
   /** Callback fired when an option is selected (single mode). */
   onChange?: (value: string, option: DropdownOption) => void;
   /** Not used in single mode. */
   selected?: never;
+  /** Not used in single mode. */
+  defaultSelected?: never;
   /** Not used in single mode. */
   onSelectionChange?: never;
 }
@@ -53,10 +57,14 @@ export interface DropdownMultipleProps extends DropdownBaseProps {
   multiple: true;
   /** Currently selected values (controlled, multi mode). */
   selected?: string[];
+  /** Default selected values (uncontrolled, multi mode). */
+  defaultSelected?: string[];
   /** Callback fired when selection changes (multi mode). */
   onSelectionChange?: (selected: string[]) => void;
   /** Not used in multi mode. */
   value?: never;
+  /** Not used in multi mode. */
+  defaultValue?: never;
   /** Not used in multi mode. */
   onChange?: never;
 }
@@ -291,7 +299,18 @@ export function Dropdown(props: DropdownProps) {
   } = props;
 
   const multiple = props.multiple === true;
-  const selectedValues: string[] = multiple ? (props.selected ?? []) : [];
+
+  // Internal state for uncontrolled mode
+  const [internalValue, setInternalValue] = useState<string | undefined>(
+    !multiple ? (props as DropdownSingleProps).defaultValue : undefined,
+  );
+  const [internalSelected, setInternalSelected] = useState<string[]>(
+    multiple ? ((props as DropdownMultipleProps).defaultSelected ?? []) : [],
+  );
+
+  const selectedValues: string[] = multiple
+    ? ((props as DropdownMultipleProps).selected ?? internalSelected)
+    : [];
 
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -299,7 +318,9 @@ export function Dropdown(props: DropdownProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Single-select: find current option
-  const singleValue = !multiple ? props.value : undefined;
+  const singleValue = !multiple
+    ? ((props as DropdownSingleProps).value ?? internalValue)
+    : undefined;
   const singleSelected = useMemo(
     () => (singleValue ? findOption(options, singleValue) : undefined),
     [options, singleValue],
@@ -335,6 +356,7 @@ export function Dropdown(props: DropdownProps) {
   const handleSelect = useCallback(
     (val: string, opt: DropdownOption) => {
       if (!multiple) {
+        if ((props as DropdownSingleProps).value === undefined) setInternalValue(val);
         (props as DropdownSingleProps).onChange?.(val, opt);
       }
       setOpen(false);
@@ -348,13 +370,13 @@ export function Dropdown(props: DropdownProps) {
   const handleToggle = useCallback(
     (val: string) => {
       if (!multiple) return;
-      const next = selectedValues.includes(val)
-        ? selectedValues.filter((v) => v !== val)
-        : [...selectedValues, val];
+      const prev = (props as DropdownMultipleProps).selected ?? internalSelected;
+      const next = prev.includes(val) ? prev.filter((v) => v !== val) : [...prev, val];
+      if ((props as DropdownMultipleProps).selected === undefined) setInternalSelected(next);
       (props as DropdownMultipleProps).onSelectionChange?.(next);
     },
 
-    [multiple, selectedValues, props],
+    [multiple, internalSelected, props],
   );
 
   /* ── Can add? ───────────────────────────────────────── */

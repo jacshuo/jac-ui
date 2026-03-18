@@ -66,6 +66,10 @@
   --animate-slide-in-left: slide-in-left 300ms ease-out;
   --animate-slide-in-top: slide-in-top 300ms ease-out;
   --animate-slide-in-bottom: slide-in-bottom 300ms ease-out;
+  --animate-progress-indeterminate: progress-indeterminate 1.5s ease-in-out infinite;
+  --animate-progress-shine: progress-shine 2s ease-in-out infinite;
+  --animate-spin-rotate: spin-rotate 1.4s linear infinite;
+  --animate-spin-dash: spin-dash 1.4s ease-in-out infinite;
 
   /* ── Syntax highlighting (semantic) ─────────────────── */
   --color-syntax-keyword: var(--color-primary-600);
@@ -145,4 +149,39 @@
     transparent 70%
   );
   animation: light-sweep 0.8s ease-in-out;
+}
+
+/* ── Spin animations ─────────────────────────────────── */
+
+@keyframes spin-rotate {
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes spin-dash {
+  0%   { stroke-dasharray: 1, 150; stroke-dashoffset: 0; }
+  50%  { stroke-dasharray: 90, 150; stroke-dashoffset: -35; }
+  100% { stroke-dasharray: 90, 150; stroke-dashoffset: -124; }
+}
+
+/* ── ProgressBar animations ──────────────────────────── */
+
+@keyframes progress-indeterminate {
+  0%   { left: -40%; width: 40%; }
+  50%  { left: 30%;  width: 50%; }
+  100% { left: 100%; width: 10%; }
+}
+
+@keyframes progress-shine {
+  0% { background-image: none; }
+  50% {
+    background-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.35) 50%,
+      transparent 100%
+    );
+    background-size: 50% 100%;
+    background-position: -100% 0;
+  }
+  100% { background-image: none; }
 }

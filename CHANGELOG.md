@@ -6,6 +6,51 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 ---
 
+## [0.2.0] — 2026-03-18
+
+### Added
+
+- **6 new form / feedback components** — `Checkbox`, `Radio` (with `RadioGroup`), `Switch`, `TextBox`, `ProgressBar`, `Spin`.
+  - **Checkbox** — Controlled & uncontrolled, indeterminate state, 5 color intents, 3 sizes.
+  - **Radio / RadioGroup** — Context-based grouping, controlled & uncontrolled, intents, sizes, disabled per-item or group-wide.
+  - **Switch** — Toggle with optional `checkedContent` / `uncheckedContent` labels inside the track, intents, sizes.
+  - **TextBox** — Multi-line textarea with live word count, `maxWords` limit, CJK-aware counting (each CJK character = 1 word), error state, 3 sizes.
+  - **ProgressBar** — Determinate & indeterminate modes, animated shine effect, `showLabel`, 4 sizes (xs/sm/md/lg), 4 intents, `edge="top"|"bottom"` for page-fixed positioning.
+  - **Spin** — Overlay spinner with portal support, wraps children and dims them while `spinning`, optional `tip` text, 3 sizes.
+- **`NavLink` component** — Styled anchor / button for navigation bars with `active` state support.
+- **`CodeBlock` component** — Syntax-highlighted code viewer with built-in copy button, line numbers, collapsible blocks, filename header, and theme support (`dark` / `light` / `system`). Zero external dependencies — uses a custom token-based highlighter supporting JSX, TypeScript, CSS, HTML, JSON, bash, SQL, Python, Go, Rust, C#, Java, and YAML.
+- **16 new unit tests** — Added test coverage for all previously untested components: Card, Chat, CinePlayer, Dropdown, DropdownButton, FileExplorer, FilmReel, Header, ImageCard, List, MiniPlayer, Panel, SideNav, Table, TextBox, Tree. Total tests: 309.
+- **Demo pages** for all new components: Checkbox, Radio, Switch, TextBox, ProgressBar, Spin.
+
+### Enhanced
+
+- **Alert** — New `AlertIcon` and `AlertContent` sub-components for flexible icon + content layouts.
+- **Dropdown** — `defaultValue` (single mode) and `defaultSelected` (multiple mode) props for uncontrolled usage; internal state management when running uncontrolled.
+- **Table (`SortableTable` / `DataTable`)** — `rowActions` render prop to display action buttons per row; `TableEmpty` sub-component with customizable icon and text.
+- **Tree** — `actions` prop on `TreeItem` for hover-revealed action buttons on each node.
+- **List** — `ListItem` now supports an `actions` slot for inline action buttons.
+
+### Changed
+
+- Design tokens expanded in `tokens.css` for checkbox, radio, switch, progress bar, and spin components.
+- Variant definitions added to `theme.ts` for all new components (`checkboxVariants`, `radioVariants`, `switchTrackVariants`, `progressBarVariants`, `spinVariants`).
+
+---
+
+## [0.1.9] — 2026-03-18
+
+### Added
+
+- **`NavLink` component** — Navigation link with active state styling.
+- **`CodeBlock` component** — Syntax-highlighted code viewer with copy button, line numbers, collapsible sections, and zero-dependency custom tokenizer.
+
+### Fixed
+
+- Flaky `Tooltip` test — wrapped timer advances in `act()`.
+- Added `@source` directive for consumers using their own Tailwind setup.
+
+---
+
 ## [0.1.8] — 2026-03-18
 
 ### Added
