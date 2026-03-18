@@ -2,17 +2,19 @@ import { useState } from "react";
 import { Header, type HeaderNavItem, type HeaderAction } from "../../src";
 import { Section, PageTitle } from "./helpers";
 import {
-  Sun,
-  Moon,
-  Search,
-  Globe,
-  LogIn,
-  LogOut,
-  User,
-  Bell,
+  SunDim,
+  MoonStar,
+  ScanSearch,
+  Languages,
+  KeyRound,
+  Power,
+  CircleUser,
+  BellDot,
   Github,
-  Rocket,
-  Menu,
+  Zap,
+  GitBranch,
+  Grip,
+  Sparkles,
 } from "lucide-react";
 
 export default function HeaderPage() {
@@ -67,32 +69,38 @@ export default function HeaderPage() {
       <Section title="Basic — brand + nav + actions">
         <div className="overflow-hidden rounded-lg border border-primary-200 dark:border-primary-700">
           <Header
-            brand="MyApp"
+            brand={
+              <span className="flex items-center gap-2">
+                <Sparkles className="h-4 w-4 text-violet-500" />
+                <span>MyApp</span>
+              </span>
+            }
             navItems={navItems}
             actions={[
               {
                 key: "theme",
-                icon: dark ? <Sun /> : <Moon />,
+                icon: dark ? <SunDim /> : <MoonStar />,
                 "aria-label": "Toggle theme",
                 onClick: () => setDark((d) => !d),
               },
               {
                 key: "login",
-                icon: <LogIn />,
+                icon: <KeyRound />,
                 "aria-label": "Login",
                 onClick: () => alert("Login clicked"),
               },
             ]}
+            mobileMenu
           />
         </div>
       </Section>
 
-      <Section title="With logo element & search bar">
+      <Section title="With logo element &amp; search bar">
         <div className="overflow-hidden rounded-lg border border-primary-200 dark:border-primary-700">
           <Header
             brand={
               <span className="flex items-center gap-2">
-                <Rocket className="h-5 w-5 text-blue-500" />
+                <Zap className="h-5 w-5 text-amber-400" />
                 <span>SpaceUI</span>
               </span>
             }
@@ -104,13 +112,14 @@ export default function HeaderPage() {
             actions={[
               {
                 key: "search",
-                icon: <Search />,
+                icon: <ScanSearch />,
                 "aria-label": "Search",
                 onClick: () => alert("Search"),
               },
-              { key: "bell", icon: <Bell />, "aria-label": "Notifications" },
-              { key: "user", icon: <User />, "aria-label": "Profile" },
+              { key: "bell", icon: <BellDot />, "aria-label": "Notifications" },
+              { key: "user", icon: <CircleUser />, "aria-label": "Profile" },
             ]}
+            mobileMenu
           />
         </div>
       </Section>
@@ -124,7 +133,7 @@ export default function HeaderPage() {
             actions={[
               {
                 key: "lang",
-                icon: <Globe />,
+                icon: <Languages />,
                 "aria-label": `Language: ${lang}`,
                 onClick: () => setLang((l) => (l === "EN" ? "中文" : "EN")),
               },
@@ -137,17 +146,18 @@ export default function HeaderPage() {
               },
               {
                 key: "theme",
-                icon: dark ? <Sun /> : <Moon />,
+                icon: dark ? <SunDim /> : <MoonStar />,
                 "aria-label": "Toggle theme",
                 onClick: () => setDark((d) => !d),
               },
               {
                 key: "login",
-                icon: <LogIn />,
+                icon: <KeyRound />,
                 "aria-label": "Login",
                 onClick: () => alert("Login clicked"),
               },
             ]}
+            mobileMenu
           />
         </div>
       </Section>
@@ -159,7 +169,7 @@ export default function HeaderPage() {
             actions={[
               {
                 key: "menu",
-                icon: <Menu />,
+                icon: <Grip />,
                 "aria-label": "Menu",
                 onClick: () => alert("Open mobile menu"),
               },
@@ -173,7 +183,7 @@ export default function HeaderPage() {
           <Header
             brand={
               <span className="flex items-center gap-2">
-                <Rocket className="h-5 w-5 text-green-500" />
+                <GitBranch className="h-5 w-5 text-emerald-500" />
                 <span>DevHub</span>
               </span>
             }
@@ -184,15 +194,40 @@ export default function HeaderPage() {
               { label: "Issues", href: "#" },
             ]}
             actions={[
-              { key: "bell", icon: <Bell />, "aria-label": "Notifications" },
-              { key: "user", icon: <User />, "aria-label": "Profile" },
+              { key: "bell", icon: <BellDot />, "aria-label": "Notifications" },
+              { key: "user", icon: <CircleUser />, "aria-label": "Profile" },
               {
                 key: "logout",
-                icon: <LogOut />,
+                icon: <Power />,
                 "aria-label": "Logout",
                 onClick: () => alert("Logged out"),
               },
             ]}
+            mobileMenu
+          />
+        </div>
+      </Section>
+
+      <Section title="Mobile menu (mobileMenu prop)">
+        <p className="mb-3 text-sm text-primary-500 dark:text-primary-400">
+          Below the <code>md</code> breakpoint, nav items collapse into a left hamburger (full-width
+          dropdown) and actions collapse into a right hamburger (right-anchored dropdown with
+          labels). Both close independently on outside click or scroll.
+        </p>
+        <div className="overflow-hidden rounded-lg border border-primary-200 dark:border-primary-700">
+          <Header
+            brand="MyApp"
+            navItems={[
+              { label: "Home", href: "#", active: true },
+              { label: "Features", href: "#" },
+              { label: "Pricing", href: "#" },
+              { label: "Docs", href: "#" },
+            ]}
+            actions={[
+              { key: "bell", icon: <BellDot />, "aria-label": "Notifications" },
+              { key: "user", icon: <CircleUser />, "aria-label": "Profile" },
+            ]}
+            mobileMenu
           />
         </div>
       </Section>

@@ -46,6 +46,30 @@ export default function AccordionPage() {
           </AccordionItem>
         </Accordion>
       </Section>
+
+      <Section title="Sizes">
+        <div className="space-y-6">
+          {(["sm", "md", "lg"] as const).map((size) => (
+            <div key={size}>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-primary-400">
+                {size}
+              </p>
+              <Accordion size={size} defaultValue={[`s-${size}`]}>
+                <AccordionItem value={`s-${size}`}>
+                  <AccordionTrigger>Size &ldquo;{size}&rdquo; trigger</AccordionTrigger>
+                  <AccordionContent>Content area scales with the size prop.</AccordionContent>
+                </AccordionItem>
+                <AccordionItem value={`s-${size}-2`}>
+                  <AccordionTrigger>Another item</AccordionTrigger>
+                  <AccordionContent>
+                    Padding and font size both adjust automatically.
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </div>
+          ))}
+        </div>
+      </Section>
     </div>
   );
 }

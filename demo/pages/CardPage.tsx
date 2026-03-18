@@ -140,6 +140,30 @@ export default function CardPage() {
           </CardFooter>
         </HorizontalCard>
       </Section>
+
+      <Section title="Horizontal &mdash; stacked on mobile">
+        <p className="mb-3 text-sm text-primary-500 dark:text-primary-400">
+          Narrow the window below the <code>sm</code> breakpoint to see the card stack vertically.
+        </p>
+        <HorizontalCard
+          className="max-w-lg"
+          media={{ src: "https://picsum.photos/seed/jac/400/300", alt: "Demo image" }}
+          stackOnMobile
+        >
+          <CardTitle>Responsive Horizontal Card</CardTitle>
+          <CardDescription>
+            Stacks vertically on small screens, side-by-side on larger ones.
+          </CardDescription>
+          <CardContent className="mt-2">
+            Use <code className="text-xs">stackOnMobile</code> to enable this responsive behaviour.
+          </CardContent>
+          <CardFooter>
+            <Button size="sm">
+              <BookOpen className="h-4 w-4" /> Read more
+            </Button>
+          </CardFooter>
+        </HorizontalCard>
+      </Section>
     </div>
   );
 }

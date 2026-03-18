@@ -109,6 +109,29 @@ export default function ListPage() {
           )}
         </List>
       </Section>
+
+      <Section title="Sizes">
+        <div className="grid gap-6 sm:grid-cols-3">
+          {(["sm", "md", "lg"] as const).map((size) => (
+            <div key={size}>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-primary-400">
+                {size}
+              </p>
+              <List size={size} intent="bordered">
+                <ListItem>
+                  <Circle className="text-primary-400" /> Alpha
+                </ListItem>
+                <ListItem>
+                  <Circle className="text-primary-400" /> Bravo
+                </ListItem>
+                <ListItem>
+                  <Circle className="text-primary-400" /> Charlie
+                </ListItem>
+              </List>
+            </div>
+          ))}
+        </div>
+      </Section>
     </div>
   );
 }

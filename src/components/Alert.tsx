@@ -170,7 +170,7 @@ function ToastItem({ alert, onClose }: { alert: AlertItem; onClose: () => void }
         alertVariants({ intent }),
         enterAnimation[position],
         alert.exiting && "opacity-0 transition-opacity duration-200",
-        "w-80",
+        "w-80 max-w-[calc(100vw-2rem)]",
       )}
       role="alert"
     >

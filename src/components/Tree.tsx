@@ -1,6 +1,7 @@
 import React, { createContext, useCallback, useContext, useState } from "react";
 import { ChevronRight } from "lucide-react";
 import { cn } from "../lib/utils";
+import { treeItemVariants } from "../styles/theme";
 
 /* ── Context ───────────────────────────────────────────── */
 
@@ -8,11 +9,13 @@ type TreeCtx = {
   showLines: boolean;
   expandedKeys: Set<string> | null;
   onToggleKey: (key: string) => void;
+  size: "sm" | "md" | "lg";
 };
 const TreeContext = createContext<TreeCtx>({
   showLines: true,
   expandedKeys: null,
   onToggleKey: () => {},
+  size: "md",
 });
 
 /* ── Tree ──────────────────────────────────────────────── */
@@ -31,6 +34,8 @@ type TreeProps = React.HTMLAttributes<HTMLUListElement> & {
   defaultExpandedKeys?: Set<string> | "all";
   /** Fires when a node is toggled. */
   onExpandedKeysChange?: (keys: Set<string>) => void;
+  /** Controls item text and icon sizing. @default 'md' */
+  size?: "sm" | "md" | "lg";
 };
 
 export function Tree({
@@ -39,6 +44,7 @@ export function Tree({
   expandedKeys: controlledKeys,
   defaultExpandedKeys = "all",
   onExpandedKeysChange,
+  size = "md",
   className,
   children,
   ...props
@@ -75,7 +81,7 @@ export function Tree({
   const resolvedKeys = controlledKeys ?? (internalKeys === "all" ? null : internalKeys);
 
   return (
-    <TreeContext.Provider value={{ showLines, expandedKeys: resolvedKeys, onToggleKey }}>
+    <TreeContext.Provider value={{ showLines, expandedKeys: resolvedKeys, onToggleKey, size }}>
       {showRoot ? (
         <ul className={cn("text-sm", className)} role="tree" {...props}>
           {children}
@@ -147,7 +153,7 @@ export function TreeItem({
   children,
   className,
 }: TreeItemProps) {
-  const { showLines, expandedKeys, onToggleKey } = useContext(TreeContext);
+  const { showLines, expandedKeys, onToggleKey, size } = useContext(TreeContext);
   const [internalExpanded, setInternalExpanded] = useState(defaultExpanded);
   const hasChildren = React.Children.count(children) > 0;
 
@@ -188,7 +194,8 @@ export function TreeItem({
     >
       <div
         className={cn(
-          "group hover:bg-primary-50 dark:hover:bg-primary-800/50 flex items-center gap-1 rounded-md px-1 py-1",
+          "group hover:bg-primary-50 dark:hover:bg-primary-800/50 rounded-md px-1",
+          treeItemVariants({ size }),
           hasChildren ? "cursor-pointer" : "cursor-default",
         )}
         onClick={hasChildren ? toggle : undefined}
@@ -209,7 +216,7 @@ export function TreeItem({
         </span>
         {actions && (
           <span
-            className="ml-auto flex shrink-0 items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100"
+            className="ml-auto flex shrink-0 items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100 [@media(hover:none)]:opacity-100 [@media(hover:none)]:[&>button]:min-h-(--row-action-touch-min) [@media(hover:none)]:[&>button]:min-w-(--row-action-touch-min) [@media(hover:none)]:[&>button]:flex [@media(hover:none)]:[&>button]:items-center [@media(hover:none)]:[&>button]:justify-center"
             onClick={(e) => e.stopPropagation()}
           >
             {actions}

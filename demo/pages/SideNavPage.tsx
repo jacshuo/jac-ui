@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { SideNav, Button, type SideNavItem, type SideNavCollapseMode } from "../../src";
 import { Section, PageTitle } from "./helpers";
-import { Home, Settings, User, FileText, Mail, FolderOpen, Database } from "lucide-react";
+import { Home, Settings, User, FileText, Mail, FolderOpen, Database, Menu, X } from "lucide-react";
+import { cn } from "../../src/lib/utils";
 
 const items: SideNavItem[] = [
   { key: "dashboard", label: "Dashboard", path: "#", icon: <Home className="h-4 w-4" /> },
@@ -39,17 +40,20 @@ const allGroupKeys = new Set(["Documents", "Archives", "Data"]);
 export default function SideNavPage() {
   const [mode, setMode] = useState<SideNavCollapseMode>("expanded");
   const [expanded, setExpanded] = useState<Set<string>>(new Set(allGroupKeys));
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
     <div className="space-y-8">
       <PageTitle>SideNav</PageTitle>
 
+      {/* ── With icons and nested groups ─────────────────── */}
       <Section title="With icons and nested groups">
         <div className="w-56 rounded-lg border border-primary-200 p-3 dark:border-primary-700">
-          <SideNav items={items} title="App Navigation" />
+          <SideNav items={items} title="App Navigation" responsive={false} />
         </div>
       </Section>
 
+      {/* ── Collapsible ───────────────────────────────────── */}
       <Section title="Collapsible — click ‹‹ to cycle: expanded → icons → mini">
         <div
           className={`rounded-lg border border-primary-200 dark:border-primary-700 transition-all duration-200 ${
@@ -62,16 +66,19 @@ export default function SideNavPage() {
             collapsible
             collapseMode={mode}
             onCollapseModeChange={setMode}
+            responsive={false}
           />
         </div>
       </Section>
 
+      {/* ── Without indent lines ──────────────────────────── */}
       <Section title="Without indent lines">
         <div className="w-56 rounded-lg border border-primary-200 p-3 dark:border-primary-700">
-          <SideNav items={items} title="App Navigation" showLines={false} />
+          <SideNav items={items} title="App Navigation" showLines={false} responsive={false} />
         </div>
       </Section>
 
+      {/* ── Programmatic expand / collapse ────────────────── */}
       <Section title="Programmatic expand / collapse">
         <div className="mb-3 flex flex-wrap gap-2">
           <Button size="sm" onClick={() => setExpanded(new Set(allGroupKeys))}>
@@ -102,7 +109,78 @@ export default function SideNavPage() {
             title="App Navigation"
             expandedKeys={expanded}
             onExpandedKeysChange={setExpanded}
+            responsive={false}
           />
+        </div>
+      </Section>
+
+      {/* ── Responsive behavior ───────────────────────────── */}
+      <Section title="Responsive behavior">
+        <p className="max-w-prose text-sm text-primary-500 dark:text-primary-400">
+          On viewports wider than the{" "}
+          <code className="text-primary-700 dark:text-primary-300">mobileBreakpoint</code> (default{" "}
+          <code className="text-primary-700 dark:text-primary-300">768px</code>), SideNav renders
+          inline. Below it, the nav collapses off-screen and a FAB toggles a slide-in drawer.
+        </p>
+
+        <div className="flex flex-wrap justify-center gap-6">
+          {/* Desktop frame */}
+          <div className="flex flex-col gap-2">
+            <p className="text-xs font-medium text-primary-400 dark:text-primary-500">
+              ≥768 px — inline sidebar
+            </p>
+            <div className="relative flex h-80 w-72 overflow-hidden rounded-lg border border-primary-200 bg-primary-50 dark:border-primary-700 dark:bg-primary-900/50">
+              {/* Simulated sidebar */}
+              <div className="w-44 shrink-0 border-r border-primary-200 bg-white p-3 dark:border-primary-700 dark:bg-primary-900">
+                <SideNav items={items} title="App Navigation" responsive={false} />
+              </div>
+              {/* Simulated content */}
+              <div className="flex flex-1 items-center justify-center text-xs text-primary-400 dark:text-primary-600">
+                content area
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile frame */}
+          <div className="flex flex-col gap-2">
+            <p className="text-xs font-medium text-primary-400 dark:text-primary-500">
+              &lt;768 px — FAB + slide-in drawer
+            </p>
+            <div className="relative h-80 w-56 overflow-hidden rounded-lg border border-primary-200 bg-primary-50 dark:border-primary-700 dark:bg-primary-900/50">
+              {/* Simulated app content */}
+              <div className="flex h-full items-center justify-center text-xs text-primary-400 dark:text-primary-600">
+                content area
+              </div>
+
+              {/* Backdrop */}
+              {mobileOpen && (
+                <div
+                  className="absolute inset-0 z-40 bg-black/50"
+                  onClick={() => setMobileOpen(false)}
+                />
+              )}
+
+              {/* Slide-in drawer */}
+              <aside
+                className={cn(
+                  "absolute bottom-0 left-0 top-0 z-50 w-44 overflow-y-auto border-r border-primary-200 bg-white p-3 shadow-xl transition-transform duration-200 dark:border-primary-700 dark:bg-primary-900",
+                  mobileOpen ? "translate-x-0" : "-translate-x-full",
+                )}
+              >
+                <SideNav items={items} title="App Navigation" responsive={false} />
+              </aside>
+
+              {/* FAB */}
+              <button
+                type="button"
+                onClick={() => setMobileOpen((o) => !o)}
+                className="absolute bottom-4 left-3 z-50 flex h-9 w-9 items-center justify-center rounded-full bg-primary-800 text-white shadow-lg hover:bg-primary-700 dark:bg-primary-100 dark:text-primary-900 dark:hover:bg-primary-200"
+                aria-label={mobileOpen ? "Close navigation" : "Open navigation"}
+              >
+                {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+              </button>
+            </div>
+          </div>
         </div>
       </Section>
     </div>

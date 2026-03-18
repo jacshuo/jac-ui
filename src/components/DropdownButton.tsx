@@ -41,12 +41,57 @@ export interface DropdownButtonProps
   selected?: string[];
   /** Called when the selection changes (multi-select mode). */
   onSelectionChange?: (selected: string[]) => void;
+
+  /** Enable domino flip-in/flip-out animation for menu items. @default true */
+  animated?: boolean;
 }
 
-/* ── Helpers ───────────────────────────────────────────── */
+/* ── Helpers ───────────────────────────────────────── */
 
 function itemKey(item: DropdownItem, index: number): string {
   return item.key ?? (typeof item.label === "string" ? item.label : String(index));
+}
+
+/* ── Animation helpers ───────────────────────────────── */
+
+const ITEM_STEP_MS = 40;
+const ITEM_OUT_MS = 150;
+const CONTAINER_OUT_MS = 120;
+
+function itemStyle(
+  index: number,
+  total: number,
+  closing: boolean,
+  animated: boolean,
+): React.CSSProperties {
+  if (!animated) return {};
+  if (closing) {
+    const reverseIndex = total - 1 - index;
+    return {
+      animation: `var(--animate-dropdown-item-out)`,
+      animationDelay: `${reverseIndex * ITEM_STEP_MS}ms`,
+    };
+  }
+  return {
+    animation: `var(--animate-dropdown-item-in)`,
+    animationDelay: `${index * ITEM_STEP_MS}ms`,
+  };
+}
+
+function containerAnimStyle(
+  total: number,
+  closing: boolean,
+  animated: boolean,
+): React.CSSProperties {
+  if (!animated) return {};
+  if (closing) {
+    const itemsFinishMs = Math.max(total - 1, 0) * ITEM_STEP_MS + ITEM_OUT_MS;
+    return {
+      animation: `dropdown-container-out ${CONTAINER_OUT_MS}ms ease-in both`,
+      animationDelay: `${itemsFinishMs}ms`,
+    };
+  }
+  return { animation: `var(--animate-dropdown-container-in)` };
 }
 
 /* ── Component ─────────────────────────────────────────── */
@@ -64,51 +109,73 @@ export function DropdownButton({
   multiple = false,
   selected = [],
   onSelectionChange,
+  animated = true,
   ...props
 }: DropdownButtonProps) {
   const [open, setOpen] = useState(false);
+  const [closing, setClosing] = useState(false);
   const [filter, setFilter] = useState("");
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+
+  useEffect(
+    () => () => {
+      if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    },
+    [],
+  );
+
+  const closeMenu = useCallback(() => {
+    if (!animated || !open) {
+      setOpen(false);
+      setFilter("");
+      return;
+    }
+    setClosing(true);
+    const totalItems = Math.max(items.length, 1);
+    const delay = (totalItems - 1) * ITEM_STEP_MS + ITEM_OUT_MS + CONTAINER_OUT_MS + 20;
+    closeTimerRef.current = setTimeout(() => {
+      setOpen(false);
+      setClosing(false);
+      setFilter("");
+    }, delay);
+  }, [animated, open, items.length]);
 
   const toggle = useCallback(() => {
-    if (!disabled) {
-      setOpen((prev) => {
-        const next = !prev;
-        if (next && editable) {
-          requestAnimationFrame(() => inputRef.current?.focus());
-        }
-        if (!next) setFilter("");
-        return next;
-      });
+    if (disabled) return;
+    if (open) {
+      closeMenu();
+    } else {
+      if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+      setClosing(false);
+      setOpen(true);
+      setFilter("");
+      if (editable) requestAnimationFrame(() => inputRef.current?.focus());
     }
-  }, [disabled, editable]);
+  }, [disabled, open, closeMenu, editable]);
 
   // Close on outside click
   useEffect(() => {
     if (!open) return;
     const handler = (e: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setOpen(false);
-        setFilter("");
+        closeMenu();
       }
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
-  }, [open]);
+  }, [open, closeMenu]);
 
   // Close on Escape
   useEffect(() => {
     if (!open) return;
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setOpen(false);
-        setFilter("");
-      }
+      if (e.key === "Escape") closeMenu();
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [open]);
+  }, [open, closeMenu]);
 
   /* ── Filtered items ────────────────────────────────── */
   const lowerFilter = filter.toLowerCase();
@@ -170,6 +237,9 @@ export function DropdownButton({
       label
     );
 
+  const extraCount = (filteredItems.length === 0 && !canAdd) || canAdd ? 1 : 0;
+  const totalRows = filteredItems.length + extraCount;
+
   return (
     <div ref={containerRef} className="relative inline-block">
       <button
@@ -194,9 +264,9 @@ export function DropdownButton({
           className={cn(
             "absolute z-50 mt-1 min-w-44 rounded-md border py-1 shadow-lg",
             "border-primary-200 dark:border-primary-700 dark:bg-primary-800 bg-white",
-            "animate-fade-in",
             align === "right" ? "right-0" : "left-0",
           )}
+          style={containerAnimStyle(totalRows, closing, animated)}
           role={multiple ? "listbox" : "menu"}
           aria-multiselectable={multiple || undefined}
         >
@@ -220,7 +290,6 @@ export function DropdownButton({
             {filteredItems.map((item, i) => {
               const key = itemKey(item, i);
               const isSelected = multiple && selected.includes(key);
-
               return (
                 <React.Fragment key={key}>
                   {item.divider && (
@@ -236,12 +305,15 @@ export function DropdownButton({
                       "text-primary-700 hover:bg-primary-100 dark:text-primary-300 dark:hover:bg-primary-700/50",
                       item.disabled && "pointer-events-none opacity-50",
                     )}
+                    style={itemStyle(i, totalRows, closing, animated)}
                     onClick={() => {
                       if (multiple) {
                         toggleItem(key);
                       } else {
                         item.onClick?.();
+                        if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
                         setOpen(false);
+                        setClosing(false);
                         setFilter("");
                       }
                     }}
@@ -266,7 +338,12 @@ export function DropdownButton({
 
             {/* No results */}
             {filteredItems.length === 0 && !canAdd && (
-              <div className="text-primary-400 px-3 py-2 text-center text-sm">No matches</div>
+              <div
+                className="text-primary-400 px-3 py-2 text-center text-sm"
+                style={itemStyle(0, 1, closing, animated)}
+              >
+                No matches
+              </div>
             )}
 
             {/* Add new item prompt */}
@@ -277,6 +354,7 @@ export function DropdownButton({
                   "flex w-full cursor-pointer items-center gap-2 px-3 py-1.5 text-left text-sm transition-colors",
                   "text-primary-600 hover:bg-primary-50 dark:text-primary-400 dark:hover:bg-primary-900/30",
                 )}
+                style={itemStyle(filteredItems.length, totalRows, closing, animated)}
                 onClick={handleAdd}
               >
                 <span className="flex h-4 w-4 shrink-0 items-center justify-center text-lg leading-none">

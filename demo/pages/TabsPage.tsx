@@ -99,10 +99,58 @@ export default function TabsPage() {
             <TabTrigger value="n1">Tab A</TabTrigger>
             <TabTrigger value="n2">Tab B</TabTrigger>
           </TabList>
-          <TabContent value="n1">Instant switch — no sliding animation.</TabContent>
+          <TabContent value="n1">Instant switch &mdash; no sliding animation.</TabContent>
           <TabContent value="n2">
             TabContent works standalone for backward compatibility.
           </TabContent>
+        </Tabs>
+      </Section>
+
+      <Section title="Scrollable tabs (overflow-x-auto)">
+        <p className="mb-3 text-sm text-primary-500 dark:text-primary-400">
+          Narrow the window to see horizontal scrolling on the tab bar.
+        </p>
+        <Tabs defaultValue="t1">
+          <TabList scrollable>
+            <TabTrigger value="t1">
+              <LayoutDashboard /> Dashboard
+            </TabTrigger>
+            <TabTrigger value="t2">
+              <Sparkles /> Features
+            </TabTrigger>
+            <TabTrigger value="t3">
+              <History /> History
+            </TabTrigger>
+            <TabTrigger value="t4">
+              <ListFilter /> Filters
+            </TabTrigger>
+            <TabTrigger value="t5">
+              <Zap /> Activity
+            </TabTrigger>
+            <TabTrigger value="t6">
+              <Archive /> Archive
+            </TabTrigger>
+            <TabTrigger value="t7">
+              <Settings /> Settings
+            </TabTrigger>
+            <TabTrigger value="t8">
+              <Users /> Team
+            </TabTrigger>
+            <TabTrigger value="t9">
+              <Shield /> Security
+            </TabTrigger>
+          </TabList>
+          <TabPanels>
+            <TabContent value="t1">Dashboard content</TabContent>
+            <TabContent value="t2">Features content</TabContent>
+            <TabContent value="t3">History content</TabContent>
+            <TabContent value="t4">Filters content</TabContent>
+            <TabContent value="t5">Activity content</TabContent>
+            <TabContent value="t6">Archive content</TabContent>
+            <TabContent value="t7">Settings content</TabContent>
+            <TabContent value="t8">Team content</TabContent>
+            <TabContent value="t9">Security content</TabContent>
+          </TabPanels>
         </Tabs>
       </Section>
     </div>

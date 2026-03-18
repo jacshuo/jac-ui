@@ -7,9 +7,9 @@
 
 # @jacshuo/onyx
 
-A cross-platform **React UI component library** built with Tailwind CSS v4 — designed for web browsers and Electron desktop apps. Ships tree-shakeable ESM + CJS bundles with per-component subpath exports, modular CSS, and full TypeScript declarations.
+A **React UI component library** built with Tailwind CSS v4 — crafted for responsive web apps and Electron desktop applications alike. Ships tree-shakeable ESM + CJS bundles with per-component subpath exports, modular CSS, and full TypeScript declarations.
 
-Born out of a personal passion for **cross-platform desktop development**, Onyx focuses on delivering a polished, consistent look and feel across Electron and web — the kind of UI toolkit I always wished existed when building desktop apps with web technologies.
+Born from a passion for **polished cross-platform experiences**, Onyx delivers a consistent look and feel from mobile screens to 4K displays — with dark mode, keyboard navigation, and touch interactions built in from day one.
 
 > **Live Demo →** [jacshuo.github.io/jac-ui](https://jacshuo.github.io/jac-ui)
 
@@ -17,24 +17,27 @@ Born out of a personal passion for **cross-platform desktop development**, Onyx 
 
 ## Why Onyx?
 
-- **Desktop-first philosophy** — Unlike most React UI libraries that target mobile or generic web, Onyx is crafted with desktop and Electron apps as a first-class concern. Components are optimized for pointer interactions, keyboard navigation, and desktop-sized viewports.
-- **Production-ready out of the box** — Dark mode, design tokens, accessibility, and keyboard shortcuts are built in from day one — not bolted on as an afterthought.
+- **Responsive by design** — Every component adapts from a phone screen to a 4K display without a single extra media query from you. Headers fold to hamburger menus, sidebars slide to icon-only or drawer modes, dialogs become bottom sheets — all built in. Size variants (`sm` / `md` / `lg`) and semantic CSS tokens make density adjustments trivial.
+- **Desktop & Electron first-class support** — Onyx is crafted with Electron and desktop apps as a primary use case. Components are optimized for keyboard navigation, pointer interactions, and content-dense layouts that most mobile-first libraries struggle to deliver.
+- **Production-ready out of the box** — Dark mode, design tokens, accessibility, touch gestures, and keyboard shortcuts are built in from day one — not bolted on as an afterthought.
 - **Minimal footprint, maximum control** — No runtime CSS-in-JS. Just Tailwind CSS v4 utility classes and CSS custom properties. Override any token without ejecting or fighting specificity wars.
-- **Rich, specialized components** — Beyond the usual buttons and inputs, Onyx includes `CinePlayer`, `MiniPlayer`, `FileExplorer`, and `DataTable` — components that are hard to find in general-purpose libraries but essential for desktop-class applications.
+- **Rich, specialized components** — Beyond the usual buttons and inputs, Onyx includes `CinePlayer`, `MiniPlayer`, `FileExplorer`, and `DataTable` — components that are hard to find in general-purpose libraries but essential for media-rich and desktop-class applications.
 
 ---
 
 ## Features
 
 - 🎨 **30+ components** — from Button → DataTable → CinePlayer → CodeBlock
+- 📱 **Responsive by default** — built-in breakpoint layouts, touch-friendly tap targets, and adaptive component modes (hamburger nav, drawer sidebar, bottom-sheet dialog)
 - 🌗 **Dark / Light mode** — class-based, works out of the box
-- 🎯 **CSS variable design tokens** — override any color via `--cp-*`, `--mp-*`, `--fe-*` custom properties
+- 🎯 **CSS variable design tokens** — override any design decision via CSS custom properties, including at media query breakpoints
 - ⚡ **Tailwind CSS v4** — zero config, `@theme` tokens, `color-mix()` accent support
 - 📦 **Tree-shakeable** — Per-component ESM entries with code splitting; import only what you use
 - 🗂️ **On-demand imports** — Subpath exports (`@jacshuo/onyx/Button`) for maximum control
 - 🎨 **Modular CSS** — Full bundle, base-only, or per-component CSS — pick exactly what you need
 - 🖥️ **Cross-platform** — built for web & Electron desktop apps
 - ⌨️ **Keyboard-first** — comprehensive keyboard shortcuts for CinePlayer, FileExplorer, and more
+- 👆 **Touch & gesture support** — tap-to-reveal, focus-visible states, and touch-optimized interactions across all interactive components
 - 🔤 **Full TypeScript** — every prop, event, and variant is typed
 - 🧩 **Composable API** — compound component patterns (e.g., `Dialog` → `DialogContent` + `DialogHeader` + `DialogFooter`) let you assemble exactly what you need
 
@@ -317,6 +320,137 @@ All component colors are defined as CSS custom properties in `:root` and `.dark`
 
 ---
 
+## Responsive Design
+
+Onyx components handle responsive behavior internally — you get adaptive layouts without writing media queries yourself.
+
+### Responsive Header
+
+`Header` automatically collapses nav items into a hamburger drawer on mobile. No extra config needed:
+
+```tsx
+import { Header } from '@jacshuo/onyx';
+
+// On ≥md screens: full nav bar + action buttons
+// On <md screens:  hamburger menu (nav) + overflow menu (actions) — automatic
+<Header
+  title="My App"
+  navItems={[
+    { label: 'Home', href: '/' },
+    { label: 'Docs', href: '/docs' },
+    { label: 'Changelog', href: '/changelog' },
+  ]}
+  actions={[
+    <Button size="sm" intent="primary">Sign In</Button>,
+  ]}
+/>
+```
+
+### Responsive Sidebar
+
+`SideNav` ships with three collapse modes. Wire them to a responsive state to get a desktop-to-mobile transition with one state variable:
+
+```tsx
+import { useState } from 'react';
+import { SideNav, type SideNavCollapseMode } from '@jacshuo/onyx';
+
+function AppShell() {
+  const [mode, setMode] = useState<SideNavCollapseMode>('expanded');
+
+  return (
+    <div className="flex h-screen">
+      {/* Hidden on mobile; collapsible on desktop */}
+      <aside className="hidden md:block shrink-0">
+        <SideNav
+          items={navItems}
+          collapsible
+          collapseMode={mode}
+          onCollapseModeChange={setMode}
+        />
+      </aside>
+
+      {/* Slide-over drawer on mobile */}
+      <aside className="md:hidden">
+        <SideNav items={navItems} />
+      </aside>
+
+      <main className="flex-1 overflow-y-auto p-4 md:p-8">
+        {/* page content */}
+      </main>
+    </div>
+  );
+}
+```
+
+### Dialog — Bottom Sheet on Mobile
+
+`Dialog` automatically renders as a bottom sheet on small screens, keeping the dismiss-by-swipe pattern users expect on mobile:
+
+```tsx
+import { Dialog, DialogContent, DialogHeader, DialogTitle, Button } from '@jacshuo/onyx';
+
+// On ≥md screens: centered modal dialog
+// On <md screens: slides up from bottom as a full-width sheet — no extra props
+<Dialog open={open} onOpenChange={setOpen}>
+  <DialogContent size="sm">
+    <DialogHeader>
+      <DialogTitle>Confirm Action</DialogTitle>
+    </DialogHeader>
+    <p>Are you sure you want to proceed?</p>
+    <div className="flex justify-end gap-2">
+      <Button intent="ghost" onClick={() => setOpen(false)}>Cancel</Button>
+      <Button intent="primary" onClick={() => setOpen(false)}>Confirm</Button>
+    </div>
+  </DialogContent>
+</Dialog>
+```
+
+### Size Variants for Density Control
+
+All components expose a `size` prop (`sm` / `md` / `lg`) for adapting density to the target context — tight mobile layouts or spacious desktop dashboards:
+
+```tsx
+import { DataTable, Button, Tabs, TabList, TabTrigger } from '@jacshuo/onyx';
+
+// Compact for mobile
+<DataTable columns={columns} data={rows} size="sm" />
+
+// Comfortable for desktop
+<DataTable columns={columns} data={rows} size="lg" />
+
+// Mix sizes to match your layout density
+<Tabs defaultValue="a">
+  <TabList size="sm">          {/* compact tabs */}
+    <TabTrigger value="a">Tab A</TabTrigger>
+    <TabTrigger value="b">Tab B</TabTrigger>
+  </TabList>
+</Tabs>
+```
+
+### Token Overrides at Breakpoints
+
+All sizing and spacing values are CSS custom properties. Override them at any breakpoint for precisely tuned responsive behavior:
+
+```css
+/* Default (mobile-first) form layout */
+:root {
+  --form-label-w-md: 5rem;
+  --form-item-gap-md: 0.5rem;
+  --form-row-gap-md: 0.75rem;
+}
+
+/* Wider label column and increased spacing on desktop */
+@media (min-width: 768px) {
+  :root {
+    --form-label-w-md: 7rem;
+    --form-item-gap-md: 0.75rem;
+    --form-row-gap-md: 1.25rem;
+  }
+}
+```
+
+---
+
 ## Usage Examples
 
 ### Button
@@ -588,29 +722,6 @@ jac-ui/
 │   └── styles/          # Modular CSS files
 └── dist-demo/           # Demo build output
 ```
-
----
-
-## Roadmap
-
-### Responsiveness & Mobile Support
-
-> **Current status: not supported**
-
-Onyx is a **desktop-first** library. All components are currently designed for desktop-sized viewports and pointer-based interactions. Responsive / mobile layouts are **not yet available**.
-
-This is a personal side project, and my day job keeps me quite busy. My primary interest lies in **cross-platform desktop application development** (Electron + web), which is where I spend most of my limited spare time. As a result, responsive design and mobile device support have not been prioritized — and there is **no concrete timeline** for adding them.
-
-That said, responsiveness is absolutely a worthwhile direction. If this is something you need, **pull requests are very welcome!** The rough areas that would benefit from community contributions include:
-
-- **Fluid layouts** — Making `Card`, `DataTable`, `Dialog`, etc. adapt to narrow viewports via container queries or relative units.
-- **Responsive typography** — Auto-scaling font sizes and spacing based on viewport width.
-- **Touch-friendly interactions** — Larger tap targets, swipe gestures for `CinePlayer` / `MiniPlayer`, touch-optimized drag handles.
-- **Adaptive component variants** — `DataTable` → card list on mobile, `SideNav` → slide-over drawer, `Header` → hamburger menu.
-- **Breakpoint-aware props** — e.g., `<Button size={{ base: 'sm', md: 'lg' }}>` aligned with Tailwind CSS v4 breakpoints.
-- **Mobile-first CSS refactor** — Layering complexity at wider breakpoints instead of overriding desktop defaults.
-
-If you're interested in contributing any of these, check out the [Contributing](#contributing) section — I'd love the help! 🙌
 
 ---
 

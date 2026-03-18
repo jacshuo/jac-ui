@@ -46,6 +46,25 @@ export default function TooltipPage() {
           </Tooltip>
         </div>
       </Section>
+
+      <Section title="Max width (wrapping)">
+        <div className="flex flex-wrap gap-4">
+          <Tooltip
+            content="This is a long tooltip that wraps onto multiple lines when maxWidth is set — useful for longer explanatory text."
+            maxWidth="14rem"
+            position="top"
+          >
+            <Button intent="outline">Wrapping tooltip</Button>
+          </Tooltip>
+          <Tooltip
+            content="Another multiline tooltip with a numeric pixel maxWidth for precise control."
+            maxWidth={180}
+            position="right"
+          >
+            <Button intent="outline">Numeric px</Button>
+          </Tooltip>
+        </div>
+      </Section>
     </div>
   );
 }

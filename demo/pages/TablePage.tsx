@@ -236,6 +236,47 @@ export default function TablePage() {
           </TableBody>
         </Table>
       </Section>
+
+      <Section title="Density variants">
+        <div className="space-y-6">
+          {(["compact", "default", "relaxed"] as const).map((density) => (
+            <div key={density}>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-primary-400">
+                {density}
+              </p>
+              <SortableTable
+                columns={sortableColumns}
+                data={initialPeople.slice(0, 3)}
+                rowKey={(r) => r.id}
+                density={density}
+              />
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      <Section title="Hide columns below breakpoint">
+        <p className="mb-3 text-sm text-primary-500 dark:text-primary-400">
+          &ldquo;Age&rdquo; hides below <code>md</code> and &ldquo;Status&rdquo; hides below{" "}
+          <code>sm</code>. Narrow the window to see columns disappear.
+        </p>
+        <SortableTable
+          columns={[
+            { key: "name", header: "Name", cell: (r) => r.name },
+            { key: "role", header: "Role", cell: (r) => r.role },
+            { key: "age", header: "Age", cell: (r) => r.age, hideBelow: "md" },
+            {
+              key: "status",
+              header: "Status",
+              sortable: false,
+              hideBelow: "sm",
+              cell: (r) => <Badge intent={statusColor[r.status]}>{r.status}</Badge>,
+            },
+          ]}
+          data={initialPeople}
+          rowKey={(r) => r.id}
+        />
+      </Section>
     </div>
   );
 }

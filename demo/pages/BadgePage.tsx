@@ -26,6 +26,20 @@ export default function BadgePage() {
           </Badge>
         </div>
       </Section>
+
+      <Section title="Sizes">
+        <div className="flex flex-wrap items-center gap-4">
+          <Badge size="sm" intent="success">
+            <CheckCircle /> Small
+          </Badge>
+          <Badge size="md" intent="info">
+            <Info /> Medium (default)
+          </Badge>
+          <Badge size="lg" intent="warning">
+            <AlertTriangle /> Large
+          </Badge>
+        </div>
+      </Section>
     </div>
   );
 }

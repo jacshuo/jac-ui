@@ -75,7 +75,11 @@ export function Tabs({
 
 /* ── TabList (with sliding indicator) ─────────────────────── */
 
-export function TabList({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+export function TabList({
+  className,
+  scrollable,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement> & { scrollable?: boolean }) {
   const ctx = useContext(TabsContext);
   const listRef = useRef<HTMLDivElement>(null);
   const [indicator, setIndicator] = useState<{ left: number; width: number } | null>(null);
@@ -110,7 +114,12 @@ export function TabList({ className, ...props }: React.HTMLAttributes<HTMLDivEle
   return (
     <div
       ref={listRef}
-      className={cn(tabListVariants({ intent: ctx?.intent }), "relative", className)}
+      className={cn(
+        tabListVariants({ intent: ctx?.intent }),
+        "relative",
+        scrollable && "overflow-x-auto",
+        className,
+      )}
       role="tablist"
       {...props}
     >

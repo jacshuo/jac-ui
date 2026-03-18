@@ -27,7 +27,7 @@ export const buttonVariants = cva(
 
 // ─── Badge
 export const badgeVariants = cva(
-  "inline-flex items-center gap-1 rounded border px-2.5 py-0.5 text-xs font-semibold [&_svg]:h-3 [&_svg]:w-3 [&_svg]:shrink-0",
+  "inline-flex items-center gap-1 rounded border font-semibold [&_svg]:shrink-0",
   {
     variants: {
       intent: {
@@ -41,8 +41,53 @@ export const badgeVariants = cva(
         primary:
           "border-secondary-200 bg-secondary-100 text-secondary-700 dark:border-secondary-700 dark:bg-secondary-800 dark:text-secondary-300",
       },
+      size: {
+        sm: "px-1.5 py-0 text-[0.625rem] [&_svg]:h-2.5 [&_svg]:w-2.5",
+        md: "px-2.5 py-0.5 text-xs [&_svg]:h-3 [&_svg]:w-3",
+        lg: "px-3 py-1 text-sm [&_svg]:h-3.5 [&_svg]:w-3.5",
+      },
     },
-    defaultVariants: { intent: "primary" },
+    defaultVariants: { intent: "primary", size: "md" },
+  },
+);
+
+// ─── Indicator
+export const indicatorVariants = cva(
+  "absolute flex items-center justify-center rounded-full font-bold leading-none ring-2 ring-white select-none pointer-events-none z-10 dark:ring-primary-900",
+  {
+    variants: {
+      intent: {
+        danger: "bg-danger-500 text-white",
+        success: "bg-success-500 text-white",
+        warning: "bg-warning-500 text-white",
+        info: "bg-primary-500 text-white",
+        primary: "bg-secondary-500 text-white",
+      },
+      size: {
+        sm: "text-[0.5rem]",
+        md: "text-[0.625rem]",
+        lg: "text-xs",
+      },
+      dot: {
+        true: "",
+        false: "",
+      },
+      placement: {
+        "top-right": "top-0 right-0 translate-x-1/2 -translate-y-1/2",
+        "top-left": "top-0 left-0 -translate-x-1/2 -translate-y-1/2",
+        "bottom-right": "bottom-0 right-0 translate-x-1/2 translate-y-1/2",
+        "bottom-left": "bottom-0 left-0 -translate-x-1/2 translate-y-1/2",
+      },
+    },
+    compoundVariants: [
+      { dot: true, size: "sm", class: "h-1.5 w-1.5 min-w-0 ring-1" },
+      { dot: true, size: "md", class: "h-2 w-2 min-w-0" },
+      { dot: true, size: "lg", class: "h-2.5 w-2.5 min-w-0" },
+      { dot: false, size: "sm", class: "h-4 min-w-4 px-1" },
+      { dot: false, size: "md", class: "h-5 min-w-5 px-1.5" },
+      { dot: false, size: "lg", class: "h-6 min-w-6 px-2" },
+    ],
+    defaultVariants: { intent: "danger", size: "md", dot: false, placement: "top-right" },
   },
 );
 
@@ -130,8 +175,13 @@ export const tableVariants = cva("w-full text-left text-sm", {
       bordered:
         "[&_th]:border [&_td]:border [&_th]:border-primary-200 [&_td]:border-primary-200 dark:[&_th]:border-primary-700 dark:[&_td]:border-primary-700",
     },
+    density: {
+      compact: "[&_th]:px-2 [&_th]:py-1 [&_td]:px-2 [&_td]:py-1",
+      default: "",
+      relaxed: "[&_th]:px-6 [&_th]:py-5 [&_td]:px-6 [&_td]:py-5",
+    },
   },
-  defaultVariants: { intent: "default" },
+  defaultVariants: { intent: "default", density: "default" },
 });
 
 // ─── List
@@ -148,6 +198,32 @@ export const listVariants = cva("text-sm text-primary-700 dark:text-primary-300"
   defaultVariants: { intent: "default" },
 });
 
+// ─── Accordion trigger / content size variants
+export const accordionTriggerVariants = cva(
+  "flex w-full items-center justify-between font-medium transition-all [&_svg]:shrink-0",
+  {
+    variants: {
+      size: {
+        sm: "py-2 text-xs [&_svg]:h-3.5 [&_svg]:w-3.5",
+        md: "py-3 text-sm [&_svg]:h-4 [&_svg]:w-4",
+        lg: "py-4 text-base [&_svg]:h-5 [&_svg]:w-5",
+      },
+    },
+    defaultVariants: { size: "md" },
+  },
+);
+
+export const accordionContentVariants = cva("", {
+  variants: {
+    size: {
+      sm: "pb-2 text-xs",
+      md: "pb-3 text-sm",
+      lg: "pb-4 text-base",
+    },
+  },
+  defaultVariants: { size: "md" },
+});
+
 // ─── Accordion
 export const accordionVariants = cva("divide-y", {
   variants: {
@@ -160,6 +236,36 @@ export const accordionVariants = cva("divide-y", {
   },
   defaultVariants: { intent: "default" },
 });
+
+// ─── List item size variants
+export const listItemVariants = cva(
+  "group flex w-full items-center gap-1.5 text-left [&_svg]:shrink-0",
+  {
+    variants: {
+      size: {
+        sm: "py-0.5 text-xs [&_svg]:h-3 [&_svg]:w-3",
+        md: "py-1.5 text-sm [&_svg]:h-3.5 [&_svg]:w-3.5",
+        lg: "py-2 text-base [&_svg]:h-4 [&_svg]:w-4",
+      },
+    },
+    defaultVariants: { size: "md" },
+  },
+);
+
+// ─── Tree item size variants
+export const treeItemVariants = cva(
+  "flex cursor-pointer items-center gap-1 rounded transition-colors [&_svg]:shrink-0",
+  {
+    variants: {
+      size: {
+        sm: "py-0.5 text-xs [&_svg]:h-3.5 [&_svg]:w-3.5",
+        md: "py-1 text-sm [&_svg]:h-4 [&_svg]:w-4",
+        lg: "py-1.5 text-base [&_svg]:h-5 [&_svg]:w-5",
+      },
+    },
+    defaultVariants: { size: "md" },
+  },
+);
 
 // ─── Tabs
 export const tabListVariants = cva("flex", {
@@ -456,5 +562,58 @@ export const alertVariants = cva(
       },
     },
     defaultVariants: { intent: "info" },
+  },
+);
+
+// ─── Form
+export const formVariants = cva("w-full", {
+  variants: {
+    intent: {
+      default: "",
+      card: "rounded-(--form-radius) border border-primary-200 bg-white p-6 shadow-sm dark:border-primary-700 dark:bg-primary-900",
+      inset: "rounded-(--form-radius) bg-primary-50 p-6 dark:bg-primary-800/50",
+    },
+    size: {
+      sm: "",
+      md: "",
+      lg: "",
+    },
+  },
+  defaultVariants: { intent: "default", size: "md" },
+});
+
+// ─── FormItem
+export const formItemVariants = cva("flex w-full", {
+  variants: {
+    /**
+     * "stacked"  — label above control (default on mobile, always when chosen)
+     * "inline"   — label left, control right (fixed label column width)
+     */
+    layout: {
+      stacked: "flex-col gap-1.5",
+      inline: "flex-row items-start gap-(--form-item-gap-md)",
+    },
+    size: {
+      sm: "",
+      md: "",
+      lg: "",
+    },
+  },
+  defaultVariants: { layout: "stacked", size: "md" },
+});
+
+// ─── Form validation status
+export const formValidationVariants = cva(
+  "mt-1 flex items-center gap-1 text-xs [&_svg]:h-3.5 [&_svg]:w-3.5 [&_svg]:shrink-0",
+  {
+    variants: {
+      status: {
+        error: "text-danger-600 dark:text-danger-400",
+        warning: "text-warning-600 dark:text-warning-400",
+        success: "text-success-600 dark:text-success-400",
+        hint: "text-primary-400 dark:text-primary-500",
+      },
+    },
+    defaultVariants: { status: "hint" },
   },
 );

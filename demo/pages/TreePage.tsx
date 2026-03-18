@@ -275,6 +275,35 @@ export default function TreePage() {
           </TreeItem>
         </Tree>
       </Section>
+
+      <Section title="Sizes">
+        <div className="grid gap-6 sm:grid-cols-3">
+          {(["sm", "md", "lg"] as const).map((size) => (
+            <div key={size}>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-primary-400">
+                {size}
+              </p>
+              <Tree size={size}>
+                <TreeItem
+                  label="src"
+                  icon={<FolderOpen className="text-yellow-500" />}
+                  defaultExpanded
+                >
+                  <TreeItem
+                    label="components"
+                    icon={<Folder className="text-yellow-500" />}
+                    defaultExpanded
+                  >
+                    <TreeItem label="Button.tsx" icon={<FileCode className="text-blue-500" />} />
+                    <TreeItem label="Card.tsx" icon={<FileCode className="text-blue-500" />} />
+                  </TreeItem>
+                  <TreeItem label="index.ts" icon={<FileCode className="text-blue-500" />} />
+                </TreeItem>
+              </Tree>
+            </div>
+          ))}
+        </div>
+      </Section>
     </div>
   );
 }

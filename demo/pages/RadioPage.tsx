@@ -22,7 +22,7 @@ export default function RadioPage() {
 
       {/* ── Horizontal layout ────────────────────────── */}
       <Section title="Horizontal layout">
-        <RadioGroup defaultValue="h1" className="flex-row">
+        <RadioGroup defaultValue="h1" orientation="horizontal">
           <Radio value="h1" label="Left" />
           <Radio value="h2" label="Center" />
           <Radio value="h3" label="Right" />

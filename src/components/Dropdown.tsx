@@ -33,6 +33,10 @@ interface DropdownBaseProps {
   align?: "left" | "right";
   /** Additional class name for the root container. */
   className?: string;
+  /** Controls the trigger height and text size. @default 'md' */
+  size?: "sm" | "md" | "lg";
+  /** Enable domino flip-in/flip-out animation for menu items. @default true */
+  animated?: boolean;
 }
 
 export interface DropdownSingleProps extends DropdownBaseProps {
@@ -95,15 +99,61 @@ function flattenOptions(options: DropdownOption[]): DropdownOption[] {
   return result;
 }
 
+/* ── Animation helpers ─────────────────────────────────── */
+
+const ITEM_STEP_MS = 40; // stagger between items
+const ITEM_OUT_MS = 150; // must match --animate-dropdown-item-out duration
+const CONTAINER_OUT_MS = 120; // must match --animate-dropdown-container-out duration
+
+function itemStyle(
+  index: number,
+  total: number,
+  closing: boolean,
+  animated: boolean,
+): React.CSSProperties {
+  if (!animated) return {};
+  if (closing) {
+    const reverseIndex = total - 1 - index;
+    return {
+      animation: `var(--animate-dropdown-item-out)`,
+      animationDelay: `${reverseIndex * ITEM_STEP_MS}ms`,
+    };
+  }
+  return {
+    animation: `var(--animate-dropdown-item-in)`,
+    animationDelay: `${index * ITEM_STEP_MS}ms`,
+  };
+}
+
+function containerAnimStyle(
+  total: number,
+  closing: boolean,
+  animated: boolean,
+): React.CSSProperties {
+  if (!animated) return {};
+  if (closing) {
+    const itemsFinishMs = Math.max(total - 1, 0) * ITEM_STEP_MS + ITEM_OUT_MS;
+    return {
+      animation: `dropdown-container-out ${CONTAINER_OUT_MS}ms ease-in both`,
+      animationDelay: `${itemsFinishMs}ms`,
+    };
+  }
+  return { animation: `var(--animate-dropdown-container-in)` };
+}
+
 /* ── Sub-menu (cascading — single-select only) ─────────── */
 
 function CascadeMenu({
   options,
   onSelect,
+  animated = true,
+  closing = false,
   depth = 0,
 }: {
   options: DropdownOption[];
   onSelect: (value: string, option: DropdownOption) => void;
+  animated?: boolean;
+  closing?: boolean;
   depth?: number;
 }) {
   const [hoveredKey, setHoveredKey] = useState<string | null>(null);
@@ -128,15 +178,17 @@ function CascadeMenu({
   return (
     <div
       className={cn(
-        "absolute z-50 min-w-44 rounded-md border py-1 shadow-lg",
+        "absolute z-50 min-w-44 rounded-md border py-1 shadow-lg overflow-hidden",
         "border-primary-200 dark:border-primary-700 dark:bg-primary-800 bg-white",
-        "animate-fade-in",
         depth === 0 ? "mt-1 w-full" : "top-0 ml-0.5",
       )}
-      style={depth > 0 ? { left: "100%" } : undefined}
+      style={{
+        ...(depth > 0 ? { left: "100%" } : {}),
+        ...containerAnimStyle(options.length, closing, animated),
+      }}
       role="listbox"
     >
-      {options.map((opt) => {
+      {options.map((opt, i) => {
         const hasSub = !!opt.children?.length;
         const isHovered = hoveredKey === opt.value;
 
@@ -144,6 +196,7 @@ function CascadeMenu({
           <div
             key={opt.value}
             className="relative"
+            style={itemStyle(i, options.length, closing, animated)}
             onMouseEnter={() => handleMouseEnter(opt.value)}
             onMouseLeave={handleMouseLeave}
           >
@@ -171,7 +224,12 @@ function CascadeMenu({
             </div>
 
             {hasSub && isHovered && (
-              <CascadeMenu options={opt.children!} onSelect={onSelect} depth={depth + 1} />
+              <CascadeMenu
+                options={opt.children!}
+                onSelect={onSelect}
+                animated={animated}
+                depth={depth + 1}
+              />
             )}
           </div>
         );
@@ -188,6 +246,8 @@ function FlatMenu({
   multiple,
   selected,
   canAdd,
+  animated = true,
+  closing = false,
   onSelect,
   onToggle,
   onAdd,
@@ -197,6 +257,8 @@ function FlatMenu({
   multiple: boolean;
   selected: string[];
   canAdd: boolean;
+  animated?: boolean;
+  closing?: boolean;
   onSelect: (value: string, option: DropdownOption) => void;
   onToggle: (value: string) => void;
   onAdd: () => void;
@@ -211,17 +273,21 @@ function FlatMenu({
       )
     : flat;
 
+  // Extra rows: empty state or add prompt
+  const extraCount = (filtered.length === 0 && !canAdd) || canAdd ? 1 : 0;
+  const totalRows = filtered.length + extraCount;
+
   return (
     <div
       className={cn(
         "absolute z-50 mt-1 w-full max-h-60 min-w-44 overflow-y-auto rounded-md border py-1 shadow-lg",
         "border-primary-200 dark:border-primary-700 dark:bg-primary-800 bg-white",
-        "animate-fade-in",
       )}
       role="listbox"
       aria-multiselectable={multiple || undefined}
+      style={containerAnimStyle(totalRows, closing, animated)}
     >
-      {filtered.map((opt) => {
+      {filtered.map((opt, i) => {
         const isSelected = multiple && selected.includes(opt.value);
         return (
           <div
@@ -234,6 +300,7 @@ function FlatMenu({
               "text-primary-700 hover:bg-primary-100 dark:text-primary-300 dark:hover:bg-primary-700/50",
               opt.disabled && "pointer-events-none opacity-50",
             )}
+            style={itemStyle(i, totalRows, closing, animated)}
             onClick={() => {
               if (opt.disabled) return;
               if (multiple) {
@@ -264,7 +331,12 @@ function FlatMenu({
       })}
 
       {filtered.length === 0 && !canAdd && (
-        <div className="text-primary-400 px-3 py-2 text-center text-sm">No matches</div>
+        <div
+          className="text-primary-400 px-3 py-2 text-center text-sm"
+          style={itemStyle(0, 1, closing, animated)}
+        >
+          No matches
+        </div>
       )}
 
       {canAdd && (
@@ -273,6 +345,7 @@ function FlatMenu({
             "flex w-full cursor-pointer items-center gap-2 px-3 py-1.5 text-left text-sm transition-colors",
             "text-primary-600 hover:bg-primary-50 dark:text-primary-400 dark:hover:bg-primary-900/30",
           )}
+          style={itemStyle(filtered.length, totalRows, closing, animated)}
           onClick={onAdd}
         >
           <span className="flex h-4 w-4 shrink-0 items-center justify-center text-lg leading-none">
@@ -296,6 +369,8 @@ export function Dropdown(props: DropdownProps) {
     disabled = false,
     align = "left",
     className,
+    size = "md",
+    animated = true,
   } = props;
 
   const multiple = props.multiple === true;
@@ -313,9 +388,36 @@ export function Dropdown(props: DropdownProps) {
     : [];
 
   const [open, setOpen] = useState(false);
+  const [closing, setClosing] = useState(false);
   const [search, setSearch] = useState("");
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+
+  // Animated close: play out animation then actually hide
+  const closeMenu = useCallback(() => {
+    if (!animated || !open) {
+      setOpen(false);
+      setSearch("");
+      return;
+    }
+    setClosing(true);
+    // Total out duration: last item delay + item out duration
+    const totalItems = Math.max(options.length, 1);
+    const delay = (totalItems - 1) * ITEM_STEP_MS + ITEM_OUT_MS + CONTAINER_OUT_MS + 20;
+    closeTimerRef.current = setTimeout(() => {
+      setOpen(false);
+      setClosing(false);
+      setSearch("");
+    }, delay);
+  }, [animated, open, options.length]);
+
+  useEffect(
+    () => () => {
+      if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    },
+    [],
+  );
 
   // Single-select: find current option
   const singleValue = !multiple
@@ -331,26 +433,22 @@ export function Dropdown(props: DropdownProps) {
     if (!open) return;
     const handler = (e: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setOpen(false);
-        setSearch("");
+        closeMenu();
       }
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
-  }, [open]);
+  }, [open, closeMenu]);
 
   // Close on Escape
   useEffect(() => {
     if (!open) return;
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setOpen(false);
-        setSearch("");
-      }
+      if (e.key === "Escape") closeMenu();
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [open]);
+  }, [open, closeMenu]);
 
   /* ── Single-select handler ──────────────────────────── */
   const handleSelect = useCallback(
@@ -359,7 +457,10 @@ export function Dropdown(props: DropdownProps) {
         if ((props as DropdownSingleProps).value === undefined) setInternalValue(val);
         (props as DropdownSingleProps).onChange?.(val, opt);
       }
+      // No close animation on selection — close immediately for snappy feel
+      if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
       setOpen(false);
+      setClosing(false);
       setSearch("");
     },
 
@@ -411,15 +512,16 @@ export function Dropdown(props: DropdownProps) {
   /* ── Toggle open ────────────────────────────────────── */
   const toggleOpen = useCallback(() => {
     if (disabled) return;
-    setOpen((prev) => {
-      const next = !prev;
-      if (next && editable) {
-        requestAnimationFrame(() => inputRef.current?.focus());
-      }
-      return next;
-    });
-    setSearch("");
-  }, [disabled, editable]);
+    if (open) {
+      closeMenu();
+    } else {
+      if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+      setClosing(false);
+      setOpen(true);
+      setSearch("");
+      if (editable) requestAnimationFrame(() => inputRef.current?.focus());
+    }
+  }, [disabled, open, closeMenu, editable]);
 
   /* ── Display label ──────────────────────────────────── */
   let displayLabel: string;
@@ -448,7 +550,7 @@ export function Dropdown(props: DropdownProps) {
       {/* Trigger */}
       <div
         className={cn(
-          inputVariants({ state: "default", size: "md" }),
+          inputVariants({ state: "default", size }),
           "flex cursor-pointer items-center gap-1",
           disabled && "pointer-events-none opacity-50",
         )}
@@ -512,12 +614,19 @@ export function Dropdown(props: DropdownProps) {
               multiple={multiple}
               selected={selectedValues}
               canAdd={canAdd}
+              animated={animated}
+              closing={closing}
               onSelect={handleSelect}
               onToggle={handleToggle}
               onAdd={handleAdd}
             />
           ) : (
-            <CascadeMenu options={options} onSelect={handleSelect} />
+            <CascadeMenu
+              options={options}
+              onSelect={handleSelect}
+              animated={animated}
+              closing={closing}
+            />
           )}
         </div>
       )}

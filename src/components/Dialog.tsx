@@ -96,9 +96,18 @@ export function Dialog({
 /* ── DialogContent ────────────────────────────────────────── */
 
 type DialogContentProps = React.HTMLAttributes<HTMLDivElement> &
-  VariantProps<typeof dialogContentVariants>;
+  VariantProps<typeof dialogContentVariants> & {
+    /** Where to render the dialog in the viewport. @default 'center' */
+    position?: "center" | "bottom";
+  };
 
-export function DialogContent({ size, className, children, ...props }: DialogContentProps) {
+export function DialogContent({
+  size,
+  position = "center",
+  className,
+  children,
+  ...props
+}: DialogContentProps) {
   const ctx = useContext(DialogContext);
   if (!ctx) return null;
 
@@ -111,15 +120,26 @@ export function DialogContent({ size, className, children, ...props }: DialogCon
     }
   };
 
+  const isBottom = position === "bottom";
+
   if (ctx.modal) {
     return (
       <div
-        className="animate-fade-in fixed inset-0 flex items-center justify-center bg-black/50 p-4"
+        className={cn(
+          "animate-fade-in fixed inset-0 bg-black/50",
+          isBottom ? "flex items-end justify-center" : "flex items-center justify-center p-4",
+        )}
         style={{ zIndex }}
         onClick={handleBackdropClick}
       >
         <div
-          className={cn(dialogContentVariants({ size }), "animate-scale-in", className)}
+          className={cn(
+            dialogContentVariants({ size }),
+            isBottom
+              ? "animate-slide-in-bottom w-full rounded-b-none rounded-t-[var(--dialog-sheet-radius)] max-h-[85vh] overflow-y-auto"
+              : "animate-scale-in",
+            className,
+          )}
           role="dialog"
           aria-modal="true"
           onClick={(e) => e.stopPropagation()}

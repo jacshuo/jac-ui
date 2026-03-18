@@ -18,6 +18,8 @@ type TooltipProps = VariantProps<typeof tooltipVariants> & {
   delay?: number;
   children: React.ReactNode;
   className?: string;
+  /** Maximum width of the tooltip. Allows text to wrap. @default undefined (no wrap) */
+  maxWidth?: string | number;
 };
 
 export function Tooltip({
@@ -25,6 +27,7 @@ export function Tooltip({
   position = "top",
   intent,
   delay = 200,
+  maxWidth,
   children,
   className,
 }: TooltipProps) {
@@ -49,9 +52,11 @@ export function Tooltip({
           className={cn(
             tooltipVariants({ intent }),
             positionClasses[position],
-            "pointer-events-none whitespace-nowrap",
+            "pointer-events-none",
+            maxWidth ? "whitespace-normal" : "whitespace-nowrap",
             className,
           )}
+          style={maxWidth !== undefined ? { maxWidth } : undefined}
           role="tooltip"
         >
           {content}

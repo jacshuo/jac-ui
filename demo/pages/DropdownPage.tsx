@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Inbox, Send, Archive, Star, Trash2 } from "lucide-react";
-import { Dropdown, type DropdownOption } from "../../src";
+import { Dropdown, Form, FormItem, type DropdownOption } from "../../src";
 import { Section, PageTitle } from "./helpers";
 
 const fruits: DropdownOption[] = [
@@ -258,72 +258,98 @@ export default function DropdownPage() {
 
       {/* ── Cascaded selection ───────────────────────── */}
       <Section title="Cascaded selection (Country → State → County → City)">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="space-y-1">
-            <label className="text-xs font-medium text-primary-500 dark:text-primary-400">
-              Country
-            </label>
-            <Dropdown
-              options={keysToOptions(geoData)}
-              value={country}
-              onChange={(v) => {
-                setCountry(v);
-                setState(undefined);
-                setCounty(undefined);
-                setCity(undefined);
-              }}
-              placeholder="Select country…"
-            />
-          </div>
-          <div className="space-y-1">
-            <label className="text-xs font-medium text-primary-500 dark:text-primary-400">
-              State / Province
-            </label>
-            <Dropdown
-              options={stateOptions}
-              value={state}
-              onChange={(v) => {
-                setState(v);
-                setCounty(undefined);
-                setCity(undefined);
-              }}
-              placeholder="Select state…"
-              disabled={!country}
-            />
-          </div>
-          <div className="space-y-1">
-            <label className="text-xs font-medium text-primary-500 dark:text-primary-400">
-              County / Region
-            </label>
-            <Dropdown
-              options={countyOptions}
-              value={county}
-              onChange={(v) => {
-                setCounty(v);
-                setCity(undefined);
-              }}
-              placeholder="Select county…"
-              disabled={!state}
-            />
-          </div>
-          <div className="space-y-1">
-            <label className="text-xs font-medium text-primary-500 dark:text-primary-400">
-              City
-            </label>
-            <Dropdown
-              options={cityOptions}
-              value={city}
-              onChange={setCity}
-              placeholder="Select city…"
-              disabled={!county}
-            />
-          </div>
+        <div className="max-w-lg">
+          <Form layout="inline">
+            <FormItem label="Country" required>
+              <Dropdown
+                options={keysToOptions(geoData)}
+                value={country}
+                onChange={(v) => {
+                  setCountry(v);
+                  const states = keysToOptions(geoData[v] as GeoNode);
+                  const firstState = states[0]?.value;
+                  setState(firstState);
+                  const counties = firstState
+                    ? keysToOptions((geoData[v] as GeoNode)?.[firstState] as GeoNode)
+                    : [];
+                  const firstCounty = counties[0]?.value;
+                  setCounty(firstCounty);
+                  const cities = firstCounty
+                    ? keysToOptions(
+                        ((geoData[v] as GeoNode)?.[firstState!] as GeoNode)?.[
+                          firstCounty
+                        ] as GeoNode,
+                      )
+                    : [];
+                  setCity(cities[0]?.value);
+                }}
+                placeholder="Select country…"
+              />
+            </FormItem>
+            <FormItem label="State / Province">
+              <Dropdown
+                options={stateOptions}
+                value={state}
+                onChange={(v) => {
+                  setState(v);
+                  const counties = keysToOptions((geoData[country!] as GeoNode)?.[v] as GeoNode);
+                  const firstCounty = counties[0]?.value;
+                  setCounty(firstCounty);
+                  const cities = firstCounty
+                    ? keysToOptions(
+                        ((geoData[country!] as GeoNode)?.[v] as GeoNode)?.[firstCounty] as GeoNode,
+                      )
+                    : [];
+                  setCity(cities[0]?.value);
+                }}
+                placeholder="Select state…"
+                disabled={!country}
+              />
+            </FormItem>
+            <FormItem label="County / Region">
+              <Dropdown
+                options={countyOptions}
+                value={county}
+                onChange={(v) => {
+                  setCounty(v);
+                  const cities = keysToOptions(
+                    ((geoData[country!] as GeoNode)?.[state!] as GeoNode)?.[v] as GeoNode,
+                  );
+                  setCity(cities[0]?.value);
+                }}
+                placeholder="Select county…"
+                disabled={!state}
+              />
+            </FormItem>
+            <FormItem label="City">
+              <Dropdown
+                options={cityOptions}
+                value={city}
+                onChange={setCity}
+                placeholder="Select city…"
+                disabled={!county}
+              />
+            </FormItem>
+          </Form>
         </div>
         {city && (
           <p className="mt-3 text-sm text-primary-600 dark:text-primary-400">
             Selected: <strong>{city}</strong>, {county}, {state}, {country}
           </p>
         )}
+      </Section>
+
+      <Section title="Sizes">
+        <div className="grid gap-6 sm:grid-cols-3">
+          {(["sm", "md", "lg"] as const).map((size) => (
+            <div key={size}>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-primary-400">
+                {size}
+              </p>
+              <Dropdown options={fruits} placeholder={`${size} dropdown…`} size={size} />
+            </div>
+          ))}
+        </div>
       </Section>
     </div>
   );

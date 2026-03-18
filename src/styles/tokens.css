@@ -62,6 +62,10 @@
 
   --animate-fade-in: fade-in 150ms ease-out;
   --animate-scale-in: scale-in 200ms ease-out;
+  --animate-dropdown-item-in: dropdown-item-in 200ms ease-out both;
+  --animate-dropdown-item-out: dropdown-item-out 150ms ease-in both;
+  --animate-dropdown-container-in: dropdown-container-in 150ms ease-out both;
+  --animate-dropdown-container-out: dropdown-container-out 120ms ease-in both;
   --animate-slide-in-right: slide-in-right 300ms ease-out;
   --animate-slide-in-left: slide-in-left 300ms ease-out;
   --animate-slide-in-top: slide-in-top 300ms ease-out;
@@ -113,6 +117,28 @@
 @keyframes scale-in {
   from { opacity: 0; transform: scale(0.95); }
   to { opacity: 1; transform: scale(1); }
+}
+
+/* Dropdown item domino: flip from top edge (rotateX) + fade */
+@keyframes dropdown-item-in {
+  from { opacity: 0; transform: perspective(400px) rotateX(-50deg); transform-origin: top center; }
+  to   { opacity: 1; transform: perspective(400px) rotateX(0deg);   transform-origin: top center; }
+}
+
+@keyframes dropdown-item-out {
+  from { opacity: 1; transform: perspective(400px) rotateX(0deg);   transform-origin: top center; }
+  to   { opacity: 0; transform: perspective(400px) rotateX(-50deg); transform-origin: top center; }
+}
+
+/* Dropdown container fade+scale */
+@keyframes dropdown-container-in {
+  from { opacity: 0; transform: scaleY(0.96); transform-origin: top center; }
+  to   { opacity: 1; transform: scaleY(1);    transform-origin: top center; }
+}
+
+@keyframes dropdown-container-out {
+  from { opacity: 1; transform: scaleY(1);    transform-origin: top center; }
+  to   { opacity: 0; transform: scaleY(0.96); transform-origin: top center; }
 }
 
 @keyframes slide-in-right {
@@ -185,4 +211,136 @@
     background-position: -100% 0;
   }
   100% { background-image: none; }
+}
+
+/* ── Accordion size tokens ───────────────────────────── */
+:root {
+  --accordion-trigger-py-sm:  0.375rem;
+  --accordion-trigger-py-md:  0.75rem;
+  --accordion-trigger-py-lg:  1rem;
+  --accordion-content-pb-sm:  0.375rem;
+  --accordion-content-pb-md:  0.75rem;
+  --accordion-content-pb-lg:  1rem;
+  --accordion-trigger-text-sm: 0.75rem;
+  --accordion-trigger-text-md: 0.875rem;
+  --accordion-trigger-text-lg: 1rem;
+  --accordion-content-text-sm: 0.75rem;
+  --accordion-content-text-md: 0.875rem;
+  --accordion-content-text-lg: 1rem;
+}
+
+/* ── Badge size tokens ───────────────────────────────── */
+:root {
+  --badge-px-sm: 0.375rem;
+  --badge-px-md: 0.625rem;
+  --badge-px-lg: 0.75rem;
+  --badge-py-sm: 0px;
+  --badge-py-md: 0.125rem;
+  --badge-py-lg: 0.25rem;
+  --badge-text-sm: 0.625rem;
+  --badge-text-md: 0.75rem;
+  --badge-text-lg: 0.875rem;
+  --badge-icon-sm: 0.625rem;
+  --badge-icon-md: 0.75rem;
+  --badge-icon-lg: 0.875rem;
+}
+
+/* ── List size tokens ────────────────────────────────── */
+:root {
+  --list-item-py-sm: 0.25rem;
+  --list-item-py-md: 0.375rem;
+  --list-item-py-lg: 0.5rem;
+  --list-item-text-sm: 0.75rem;
+  --list-item-text-md: 0.875rem;
+  --list-item-text-lg: 1rem;
+  --list-item-icon-sm: 0.75rem;
+  --list-item-icon-md: 0.875rem;
+  --list-item-icon-lg: 1rem;
+}
+
+/* ── Tree size tokens ────────────────────────────────── */
+:root {
+  --tree-item-py-sm: 0.125rem;
+  --tree-item-py-md: 0.25rem;
+  --tree-item-py-lg: 0.375rem;
+  --tree-item-text-sm: 0.75rem;
+  --tree-item-text-md: 0.875rem;
+  --tree-item-text-lg: 1rem;
+  --tree-item-icon-sm: 0.875rem;
+  --tree-item-icon-md: 1rem;
+  --tree-item-icon-lg: 1.125rem;
+}
+
+/* ── Header tokens ───────────────────────────────────── */
+:root {
+  --header-mobile-bg: theme(colors.white);
+  --header-mobile-border: theme(colors.primary.200);
+}
+.dark {
+  --header-mobile-bg: theme(colors.primary.900);
+  --header-mobile-border: theme(colors.primary.700);
+}
+
+/* ── Table density tokens ────────────────────────────── */
+:root {
+  --table-cell-px-compact:  0.5rem;
+  --table-cell-py-compact:  0.25rem;
+  --table-cell-px-default:  1rem;
+  --table-cell-py-default:  0.75rem;
+  --table-cell-px-relaxed:  1.5rem;
+  --table-cell-py-relaxed:  1.25rem;
+}
+
+/* ── Tooltip tokens ──────────────────────────────────── */
+:root {
+  --tooltip-max-width: 16rem;
+}
+
+/* ── Toast tokens ────────────────────────────────────── */
+:root {
+  --toast-width: 20rem;
+}
+
+/* ── Dialog bottom-sheet tokens ──────────────────────── */
+:root {
+  --dialog-sheet-radius: 0.75rem;
+}
+
+/* ── Form / FormItem tokens ──────────────────────────── */
+:root {
+  /* label column width in "inline" layout */
+  --form-label-w-sm:   5rem;
+  --form-label-w-md:   7rem;
+  --form-label-w-lg:   9rem;
+
+  /* row gap between label and control */
+  --form-item-gap-sm:  0.5rem;
+  --form-item-gap-md:  0.75rem;
+  --form-item-gap-lg:  1rem;
+
+  /* vertical gap between FormItems */
+  --form-row-gap-sm:   0.75rem;
+  --form-row-gap-md:   1.25rem;
+  --form-row-gap-lg:   1.75rem;
+
+  /* validation message text sizes */
+  --form-hint-text:    0.75rem;   /* text-xs */
+
+  /* section spacing */
+  --form-header-mb:    1.5rem;
+  --form-footer-pt:    1.5rem;
+  --form-footer-gap:   0.5rem;
+
+  /* form border radius */
+  --form-radius:       0.5rem;
+
+  /* row actions — minimum tap target on touch devices */
+  --row-action-touch-min: 2.25rem;
+}
+
+/* ── Indicator tokens ────────────────────────────────── */
+:root {
+  --indicator-dot-size-sm: 0.375rem;  /* 6px  */
+  --indicator-dot-size-md: 0.5rem;    /* 8px  */
+  --indicator-dot-size-lg: 0.625rem;  /* 10px */
 }

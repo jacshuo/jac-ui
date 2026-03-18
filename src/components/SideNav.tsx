@@ -1,6 +1,6 @@
-import React, { useState, useCallback, useRef, useLayoutEffect } from "react";
+import React, { useState, useCallback, useRef, useLayoutEffect, useEffect, useMemo } from "react";
 import { createPortal } from "react-dom";
-import { ChevronRight, ChevronsLeft, Menu } from "lucide-react";
+import { ChevronRight, ChevronsLeft, Menu, X } from "lucide-react";
 import { cn } from "../lib/utils";
 
 /* ── Types ─────────────────────────────────────────────── */
@@ -66,6 +66,19 @@ export interface SideNavProps extends React.HTMLAttributes<HTMLElement> {
   defaultExpandedKeys?: Set<string> | "all";
   /** Fires when a group is toggled. */
   onExpandedKeysChange?: (keys: Set<string>) => void;
+  /**
+   * Enable built-in responsive behaviour: a floating action button toggles a slide-in
+   * overlay drawer on narrow viewports, so the nav never occupies layout space on mobile.
+   * @default true
+   */
+  responsive?: boolean;
+  /** Viewport width (px) below which mobile mode activates. @default 768 */
+  mobileBreakpoint?: number;
+  /**
+   * Distance (px) from the top of the viewport where the mobile drawer starts.
+   * Set this to the height of your app's top bar. @default 48
+   */
+  mobileTopOffset?: number;
 }
 
 /* ── Styles ────────────────────────────────────────────── */
@@ -413,6 +426,9 @@ export function SideNav({
   defaultExpandedKeys = "all",
   onExpandedKeysChange,
   className,
+  responsive = true,
+  mobileBreakpoint = 768,
+  mobileTopOffset = 48,
   ...props
 }: SideNavProps) {
   const [internalMode, setInternalMode] = useState(defaultCollapseMode);
@@ -443,13 +459,42 @@ export function SideNav({
     onCollapseModeChange?.(next);
   }, [mode, onCollapseModeChange]);
 
-  return (
-    <nav
-      className={cn("flex flex-col gap-0.5", mode === "mini" && "items-center", className)}
-      {...props}
-    >
-      {/* ── Toggle button ──────────────────── */}
-      {collapsible && (
+  // ── Responsive: mobile FAB + overlay drawer ───────────
+  const [isMobile, setIsMobile] = useState(
+    () => responsive && typeof window !== "undefined" && window.innerWidth < mobileBreakpoint,
+  );
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  useEffect(() => {
+    if (!responsive || typeof window === "undefined" || !window.matchMedia) return;
+    const mql = window.matchMedia(`(max-width: ${mobileBreakpoint - 1}px)`);
+    const handler = (e: MediaQueryListEvent) => {
+      setIsMobile(e.matches);
+      if (!e.matches) setMobileOpen(false);
+    };
+    mql.addEventListener("change", handler);
+    return () => mql.removeEventListener("change", handler);
+  }, [responsive, mobileBreakpoint]);
+
+  // Close drawer when a navigation link (<a>) inside it is clicked
+  const handleNavClick = useCallback((e: React.MouseEvent) => {
+    if ((e.target as HTMLElement).closest("a")) setMobileOpen(false);
+  }, []);
+
+  // On mobile, also close drawer when onItemClick fires (button-based navigation)
+  const effectiveOnItemClick = useMemo(() => {
+    if (!isMobile || !onItemClick) return onItemClick;
+    return (item: SideNavItem, path: string) => {
+      setMobileOpen(false);
+      onItemClick(item, path);
+    };
+  }, [isMobile, onItemClick]);
+
+  // ── Shared nav body (used in both mobile drawer and desktop) ──
+  const navBody = (
+    <>
+      {/* Collapse toggle — desktop only */}
+      {collapsible && !isMobile && (
         <div
           className={cn(
             "flex shrink-0 mb-1",
@@ -468,8 +513,8 @@ export function SideNav({
         </div>
       )}
 
-      {/* ── Expanded mode ──────────────────── */}
-      {mode === "expanded" && (
+      {/* Expanded mode — always shown on mobile */}
+      {(isMobile || mode === "expanded") && (
         <>
           {title && (
             <h2 className="text-primary-500 dark:text-primary-400 mb-3 text-sm font-semibold uppercase">
@@ -482,7 +527,7 @@ export function SideNav({
               item={item}
               basePath={basePath}
               depth={0}
-              onItemClick={onItemClick}
+              onItemClick={effectiveOnItemClick}
               LinkComponent={LinkComponent}
               showLines={showLines}
               expandedKeys={expandedKeys}
@@ -492,8 +537,9 @@ export function SideNav({
         </>
       )}
 
-      {/* ── Icons mode ─────────────────────── */}
-      {mode === "icons" &&
+      {/* Icons mode — desktop only */}
+      {!isMobile &&
+        mode === "icons" &&
         items.map((item) => {
           const key = item.key ?? item.path ?? item.label;
           if (item.children && item.children.length > 0) {
@@ -502,7 +548,7 @@ export function SideNav({
                 key={key}
                 item={item}
                 basePath={basePath}
-                onItemClick={onItemClick}
+                onItemClick={effectiveOnItemClick}
                 LinkComponent={LinkComponent}
               />
             );
@@ -512,13 +558,64 @@ export function SideNav({
               key={key}
               item={item}
               basePath={basePath}
-              onItemClick={onItemClick}
+              onItemClick={effectiveOnItemClick}
               LinkComponent={LinkComponent}
             />
           );
         })}
 
       {/* mini mode: only the toggle button above */}
+    </>
+  );
+
+  // ── Mobile: portal-based FAB + slide-in drawer ────────
+  if (responsive && isMobile) {
+    return (
+      <>
+        {mobileOpen &&
+          createPortal(
+            <div
+              className="fixed inset-0 z-40 bg-black/50"
+              style={{ top: mobileTopOffset }}
+              onClick={() => setMobileOpen(false)}
+            />,
+            document.body,
+          )}
+        {createPortal(
+          <aside
+            className={cn(
+              "fixed bottom-0 left-0 z-50 w-56 overflow-y-auto border-r border-primary-200 dark:border-primary-700 bg-white dark:bg-primary-900 shadow-xl transition-transform duration-200 p-3",
+              mobileOpen ? "translate-x-0" : "-translate-x-full",
+            )}
+            style={{ top: mobileTopOffset }}
+            onClick={handleNavClick}
+          >
+            <nav className="flex flex-col gap-0.5">{navBody}</nav>
+          </aside>,
+          document.body,
+        )}
+        {createPortal(
+          <button
+            type="button"
+            className="fixed bottom-5 left-4 z-50 flex h-10 w-10 items-center justify-center rounded-full bg-primary-800 text-white shadow-lg transition-colors hover:bg-primary-700 dark:bg-primary-100 dark:text-primary-900 dark:hover:bg-primary-200"
+            onClick={() => setMobileOpen((o) => !o)}
+            aria-label={mobileOpen ? "Close navigation" : "Open navigation"}
+          >
+            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>,
+          document.body,
+        )}
+      </>
+    );
+  }
+
+  // ── Desktop: inline render ────────────────────────────
+  return (
+    <nav
+      className={cn("flex flex-col gap-0.5", mode === "mini" && "items-center", className)}
+      {...props}
+    >
+      {navBody}
     </nav>
   );
 }

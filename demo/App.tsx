@@ -22,6 +22,7 @@ import {
 
 import ButtonPage from "./pages/ButtonPage";
 import BadgePage from "./pages/BadgePage";
+import IndicatorPage from "./pages/IndicatorPage";
 import LabelPage from "./pages/LabelPage";
 import InputPage from "./pages/InputPage";
 import DropdownPage from "./pages/DropdownPage";
@@ -52,6 +53,7 @@ import CheckboxPage from "./pages/CheckboxPage";
 import RadioPage from "./pages/RadioPage";
 import TextBoxPage from "./pages/TextBoxPage";
 import MasonryPage from "./pages/MasonryPage";
+import FormPage from "./pages/FormPage";
 
 /* ── Sidebar nav items ───────────────────────────────── */
 
@@ -62,6 +64,7 @@ const navItems: SideNavItem[] = [
     children: [
       { label: "Button", path: "button" },
       { label: "Badge", path: "badge" },
+      { label: "Indicator", path: "indicator" },
       { label: "Label", path: "label" },
       { label: "Input", path: "input" },
       { label: "Dropdown", path: "dropdown" },
@@ -69,6 +72,7 @@ const navItems: SideNavItem[] = [
       { label: "Checkbox", path: "checkbox" },
       { label: "Radio", path: "radio" },
       { label: "TextBox", path: "textbox" },
+      { label: "Form", path: "form" },
     ],
   },
   {
@@ -219,11 +223,11 @@ export default function App() {
       <div className="flex flex-1 overflow-hidden">
         {/* ── Sidebar ────────────────────── */}
         <aside
-          className={`shrink-0 border-r border-primary-200 bg-white dark:border-primary-700 dark:bg-primary-900 transition-all duration-200 ${
+          className={`hidden md:block shrink-0 border-r border-primary-200 bg-white dark:border-primary-700 dark:bg-primary-900 transition-all duration-200 ${
             sideNavMode === "expanded"
-              ? "w-48 overflow-y-auto p-3"
+              ? "w-48 overflow-y-auto overscroll-y-contain p-3"
               : sideNavMode === "icons"
-                ? "w-14 overflow-y-auto p-2"
+                ? "w-14 overflow-y-auto overscroll-y-contain p-2"
                 : "w-auto p-1"
           }`}
         >
@@ -239,11 +243,12 @@ export default function App() {
         </aside>
 
         {/* ── Content ────────────────────── */}
-        <main className="flex-1 overflow-y-auto p-8">
+        <main className="flex-1 overflow-y-auto overscroll-y-contain p-4 pb-20 sm:p-6 sm:pb-20 md:p-8">
           <Routes>
             <Route path="/" element={<Navigate to="/button" replace />} />
             <Route path="/button" element={<ButtonPage />} />
             <Route path="/badge" element={<BadgePage />} />
+            <Route path="/indicator" element={<IndicatorPage />} />
             <Route path="/label" element={<LabelPage />} />
             <Route path="/input" element={<InputPage />} />
             <Route path="/dropdown" element={<DropdownPage />} />
@@ -274,6 +279,7 @@ export default function App() {
             <Route path="/cine-player" element={<CinePlayerPage />} />
             <Route path="/file-explorer" element={<FileExplorerPage />} />
             <Route path="/masonry" element={<MasonryPage />} />
+            <Route path="/form" element={<FormPage />} />
           </Routes>
         </main>
       </div>

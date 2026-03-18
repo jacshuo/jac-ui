@@ -2,13 +2,18 @@ import React, { createContext, useCallback, useContext, useState } from "react";
 import { type VariantProps } from "class-variance-authority";
 import { ChevronDown } from "lucide-react";
 import { cn } from "../lib/utils";
-import { accordionVariants } from "../styles/theme";
+import {
+  accordionVariants,
+  accordionTriggerVariants,
+  accordionContentVariants,
+} from "../styles/theme";
 
 /* ── Context ──────────────────────────────────────────────── */
 
 type AccordionCtx = {
   expandedItems: string[];
   toggleItem: (value: string) => void;
+  size?: "sm" | "md" | "lg";
 };
 const AccordionContext = createContext<AccordionCtx | null>(null);
 
@@ -23,6 +28,8 @@ type AccordionProps = React.HTMLAttributes<HTMLDivElement> &
     defaultValue?: string[];
     value?: string[];
     onValueChange?: (value: string[]) => void;
+    /** Size of triggers and content text. @default 'md' */
+    size?: "sm" | "md" | "lg";
   };
 
 export function Accordion({
@@ -31,6 +38,7 @@ export function Accordion({
   value,
   onValueChange,
   intent,
+  size,
   className,
   children,
   ...props
@@ -57,7 +65,7 @@ export function Accordion({
   );
 
   return (
-    <AccordionContext.Provider value={{ expandedItems, toggleItem }}>
+    <AccordionContext.Provider value={{ expandedItems, toggleItem, size }}>
       <div className={cn(accordionVariants({ intent }), className)} {...props}>
         {children}
       </div>
@@ -95,19 +103,18 @@ export function AccordionTrigger({ className, children, ...props }: AccordionTri
   return (
     <button
       className={cn(
-        "text-primary-800 hover:text-primary-600 dark:text-primary-100 dark:hover:text-primary-300 flex w-full cursor-pointer items-center justify-between gap-2 py-3 text-sm font-medium transition-colors [&>svg]:shrink-0",
+        "text-primary-800 hover:text-primary-600 dark:text-primary-100 dark:hover:text-primary-300 cursor-pointer gap-2 font-medium transition-colors",
+        accordionTriggerVariants({ size: ctx?.size }),
         className,
       )}
       onClick={() => itemCtx && ctx?.toggleItem(itemCtx.value)}
       aria-expanded={itemCtx?.isExpanded ? "true" : "false"}
       {...props}
     >
-      <span className="flex items-center gap-1.5 [&_svg]:h-4 [&_svg]:w-4 [&_svg]:shrink-0">
-        {children}
-      </span>
+      <span className="flex items-center gap-1.5 [&_svg]:shrink-0">{children}</span>
       <ChevronDown
         className={cn(
-          "h-4 w-4 shrink-0 transition-transform duration-200",
+          "shrink-0 transition-transform duration-200",
           itemCtx?.isExpanded && "rotate-180",
         )}
       />
@@ -120,6 +127,7 @@ export function AccordionTrigger({ className, children, ...props }: AccordionTri
 type AccordionContentProps = React.HTMLAttributes<HTMLDivElement>;
 
 export function AccordionContent({ className, children, ...props }: AccordionContentProps) {
+  const ctx = useContext(AccordionContext);
   const itemCtx = useContext(AccordionItemContext);
 
   return (
@@ -131,7 +139,11 @@ export function AccordionContent({ className, children, ...props }: AccordionCon
     >
       <div className="overflow-hidden">
         <div
-          className={cn("text-primary-500 dark:text-primary-400 pb-3 text-sm", className)}
+          className={cn(
+            "text-primary-500 dark:text-primary-400",
+            accordionContentVariants({ size: ctx?.size }),
+            className,
+          )}
           {...props}
         >
           {children}

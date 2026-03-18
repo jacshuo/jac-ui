@@ -32,6 +32,8 @@ export interface RadioGroupProps {
   /** Shared size for all child radios. */
   size?: VariantProps<typeof radioVariants>["size"];
   disabled?: boolean;
+  /** Layout direction of the radio buttons. @default 'vertical' */
+  orientation?: "vertical" | "horizontal";
   className?: string;
   children: React.ReactNode;
 }
@@ -44,6 +46,7 @@ export function RadioGroup({
   intent,
   size,
   disabled,
+  orientation = "vertical",
   className,
   children,
 }: RadioGroupProps) {
@@ -63,7 +66,14 @@ export function RadioGroup({
 
   return (
     <RadioGroupContext.Provider value={{ name, value, onChange, intent, size, disabled }}>
-      <div role="radiogroup" className={cn("flex flex-col gap-2", className)}>
+      <div
+        role="radiogroup"
+        className={cn(
+          "flex gap-2",
+          orientation === "vertical" ? "flex-col" : "flex-row flex-wrap",
+          className,
+        )}
+      >
         {children}
       </div>
     </RadioGroupContext.Provider>

@@ -69,12 +69,15 @@ type HorizontalCardProps = Omit<React.HTMLAttributes<HTMLDivElement>, "children"
     /** Media configuration. */
     media: HorizontalCardMediaProps;
     children: React.ReactNode;
+    /** Stack media above content on small screens. @default false */
+    stackOnMobile?: boolean;
   };
 
 export function HorizontalCard({
   intent,
   media,
   mediaPosition = "left",
+  stackOnMobile = false,
   className,
   children,
   ...props
@@ -83,9 +86,10 @@ export function HorizontalCard({
     <div
       className={cn(
         "relative shrink-0 overflow-hidden",
-        mediaPosition === "left" ? "rounded-l-lg" : "rounded-r-lg",
+        stackOnMobile ? "h-48 w-full rounded-t-lg sm:h-auto sm:w-auto" : "",
+        !stackOnMobile && (mediaPosition === "left" ? "rounded-l-lg" : "rounded-r-lg"),
       )}
-      style={{ width: media.width ?? "10rem" }}
+      style={!stackOnMobile ? { width: media.width ?? "10rem" } : undefined}
     >
       {media.src ? (
         <img
@@ -107,7 +111,9 @@ export function HorizontalCard({
       className={cn(
         cardVariants({ intent }),
         "flex overflow-hidden p-0",
-        mediaPosition === "right" && "flex-row-reverse",
+        stackOnMobile ? "flex-col sm:flex-row" : "",
+        !stackOnMobile && mediaPosition === "right" && "flex-row-reverse",
+        !stackOnMobile && mediaPosition === "left" && "flex-row",
         className,
       )}
       {...props}

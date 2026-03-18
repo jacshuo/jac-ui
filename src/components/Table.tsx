@@ -20,10 +20,10 @@ import { tableVariants } from "../styles/theme";
 
 type TableProps = React.TableHTMLAttributes<HTMLTableElement> & VariantProps<typeof tableVariants>;
 
-export function Table({ intent, className, ...props }: TableProps) {
+export function Table({ intent, density, className, ...props }: TableProps) {
   return (
     <div className="w-full overflow-auto">
-      <table className={cn(tableVariants({ intent }), className)} {...props} />
+      <table className={cn(tableVariants({ intent, density }), className)} {...props} />
     </div>
   );
 }
@@ -107,6 +107,13 @@ export function TableEmpty({ icon, text = "No data", className }: TableEmptyProp
    Shared types
    ═══════════════════════════════════════════════════════════ */
 
+/** Static map — no dynamic string construction so Tailwind can detect classes. */
+const hidebelowClasses = {
+  sm: "hidden sm:table-cell",
+  md: "hidden md:table-cell",
+  lg: "hidden lg:table-cell",
+} as const;
+
 export type SortDirection = "asc" | "desc";
 
 export type SortState<K extends string = string> = {
@@ -133,6 +140,8 @@ export type ColumnDef<T, K extends string = string> = {
   editable?: boolean;
   /** Extract a raw string value for editing. Falls back to cell(). */
   editValue?: (row: T) => string;
+  /** Hide this column below a given breakpoint. */
+  hideBelow?: "sm" | "md" | "lg";
 };
 
 /* ═══════════════════════════════════════════════════════════
@@ -149,6 +158,7 @@ type SortableTableProps<T, K extends string = string> = {
   /** Render action buttons for each row. Receives the row data object. */
   rowActions?: (row: T) => React.ReactNode;
   intent?: VariantProps<typeof tableVariants>["intent"];
+  density?: VariantProps<typeof tableVariants>["density"];
   className?: string;
   /** Custom empty state props (icon, text). Shown when data is empty. */
   empty?: TableEmptyProps;
@@ -163,6 +173,7 @@ export function SortableTable<T, K extends string = string>({
   rowKey,
   rowActions,
   intent,
+  density,
   className,
   empty,
 }: SortableTableProps<T, K>) {
@@ -209,7 +220,7 @@ export function SortableTable<T, K extends string = string>({
   }, [data, sort, columns]);
 
   return (
-    <Table intent={intent} className={className}>
+    <Table intent={intent} density={density} className={className}>
       <TableHeader>
         <TableRow>
           {columns.map((col) => {
@@ -218,7 +229,11 @@ export function SortableTable<T, K extends string = string>({
             return (
               <TableHead
                 key={col.key}
-                className={cn(sortable && "cursor-pointer select-none", col.headerClassName)}
+                className={cn(
+                  sortable && "cursor-pointer select-none",
+                  col.headerClassName,
+                  col.hideBelow && hidebelowClasses[col.hideBelow],
+                )}
                 onClick={sortable ? () => handleSort(col.key) : undefined}
                 aria-sort={
                   isActive ? (sort.direction === "asc" ? "ascending" : "descending") : undefined
@@ -247,7 +262,13 @@ export function SortableTable<T, K extends string = string>({
           sortedData.map((row, i) => (
             <TableRow key={rowKey ? rowKey(row, i) : i}>
               {columns.map((col) => (
-                <TableCell key={col.key} className={col.cellClassName}>
+                <TableCell
+                  key={col.key}
+                  className={cn(
+                    col.cellClassName,
+                    col.hideBelow && hidebelowClasses[col.hideBelow],
+                  )}
+                >
                   {col.cell(row)}
                 </TableCell>
               ))}
@@ -311,6 +332,7 @@ export type DataTableProps<T, K extends string = string> = {
   rowActions?: (row: T) => React.ReactNode;
 
   intent?: VariantProps<typeof tableVariants>["intent"];
+  density?: VariantProps<typeof tableVariants>["density"];
   className?: string;
   /** Custom empty state props (icon, text). Shown when data is empty. */
   empty?: TableEmptyProps;
@@ -390,6 +412,7 @@ export function DataTable<T, K extends string = string>({
   onDelete,
   rowActions,
   intent,
+  density,
   className,
   empty,
 }: DataTableProps<T, K>) {
@@ -535,7 +558,7 @@ export function DataTable<T, K extends string = string>({
         </div>
       )}
 
-      <Table intent={intent} className={className}>
+      <Table intent={intent} density={density} className={className}>
         <TableHeader>
           <TableRow>
             {selectionMode === "multiple" && (

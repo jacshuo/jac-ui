@@ -1,3 +1,13 @@
+/* ── Viewport lock — prevent body from scrolling ──────── */
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+#root {
+  height: 100%;
+}
+
 /* ── Slim, quiet scrollbars ─────────────────────────── */
 
 /* Firefox */

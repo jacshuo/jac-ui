@@ -20,6 +20,7 @@ export default function DialogPage() {
   const [nonModal, setNonModal] = useState(false);
   const [parent, setParent] = useState(false);
   const [confirm, setConfirm] = useState(false);
+  const [sheet, setSheet] = useState(false);
 
   return (
     <div className="space-y-8">
@@ -215,6 +216,48 @@ export default function DialogPage() {
                 }}
               >
                 <Trash2 /> Yes, Delete
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </Section>
+
+      <Section title="Bottom sheet (position=bottom)">
+        <Button onClick={() => setSheet(true)}>
+          <Info /> Open Bottom Sheet
+        </Button>
+        <Dialog open={sheet} onOpenChange={setSheet}>
+          <DialogContent position="bottom">
+            <DialogClose />
+            <DialogHeader>
+              <DialogTitle>Actions</DialogTitle>
+              <DialogDescription>
+                This dialog slides up from the bottom of the screen, like a native mobile sheet.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-2 py-2">
+              <button
+                className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm hover:bg-primary-50 dark:hover:bg-primary-800/50"
+                onClick={() => setSheet(false)}
+              >
+                <FileText className="h-4 w-4 text-primary-500" /> View details
+              </button>
+              <button
+                className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm hover:bg-primary-50 dark:hover:bg-primary-800/50"
+                onClick={() => setSheet(false)}
+              >
+                <Check className="h-4 w-4 text-success-500" /> Mark as done
+              </button>
+              <button
+                className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-danger-600 hover:bg-danger-50 dark:hover:bg-danger-900/30"
+                onClick={() => setSheet(false)}
+              >
+                <Trash2 className="h-4 w-4" /> Delete
+              </button>
+            </div>
+            <DialogFooter>
+              <Button intent="ghost" onClick={() => setSheet(false)}>
+                <X /> Close
               </Button>
             </DialogFooter>
           </DialogContent>
