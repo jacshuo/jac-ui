@@ -51,6 +51,7 @@ import SwitchPage from "./pages/SwitchPage";
 import CheckboxPage from "./pages/CheckboxPage";
 import RadioPage from "./pages/RadioPage";
 import TextBoxPage from "./pages/TextBoxPage";
+import MasonryPage from "./pages/MasonryPage";
 
 /* ── Sidebar nav items ───────────────────────────────── */
 
@@ -132,6 +133,7 @@ const navItems: SideNavItem[] = [
       { label: "MiniPlayer", path: "mini-player" },
       { label: "CinePlayer", path: "cine-player" },
       { label: "FileExplorer", path: "file-explorer" },
+      { label: "Masonry", path: "masonry" },
     ],
   },
 ];
@@ -271,6 +273,7 @@ export default function App() {
             <Route path="/mini-player" element={<MiniPlayerPage />} />
             <Route path="/cine-player" element={<CinePlayerPage />} />
             <Route path="/file-explorer" element={<FileExplorerPage />} />
+            <Route path="/masonry" element={<MasonryPage />} />
           </Routes>
         </main>
       </div>

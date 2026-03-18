@@ -178,3 +178,5 @@ export {
   type FileExplorerAction,
   type FileExplorerProps,
 } from "./components/FileExplorer";
+
+export { Masonry, type MasonryProps, type MasonryItemData } from "./components/Masonry";

@@ -70,6 +70,7 @@
   --animate-progress-shine: progress-shine 2s ease-in-out infinite;
   --animate-spin-rotate: spin-rotate 1.4s linear infinite;
   --animate-spin-dash: spin-dash 1.4s ease-in-out infinite;
+  --animate-masonry-ripple: masonry-ripple 0.6s ease-out forwards;
 
   /* ── Syntax highlighting (semantic) ─────────────────── */
   --color-syntax-keyword: var(--color-primary-600);

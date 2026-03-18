@@ -1,0 +1,129 @@
+/* ── Masonry interactive design tokens ────────────────── */
+
+:root {
+  --masonry-item-radius:      0.5rem;
+  --masonry-item-scale:       1.035;
+  --masonry-item-transition:  0.32s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --masonry-hover-shadow:     0 14px 32px rgba(0, 0, 0, 0.18),
+                              0 4px 12px rgba(0, 0, 0, 0.10);
+  --masonry-glass-from:       rgba(255, 255, 255, 0.08);
+  --masonry-glass-peak:       rgba(255, 255, 255, 0.28);
+  --masonry-overlay-from:     rgba(0, 0, 0, 0.72);
+  --masonry-overlay-mid:      rgba(0, 0, 0, 0.25);
+  --masonry-overlay-text:     #ffffff;
+  --masonry-overlay-muted:    rgba(255, 255, 255, 0.72);
+  --masonry-ripple-color:     rgba(255, 255, 255, 0.45);
+}
+
+/* ── Masonry item wrapper ────────────────────────────── */
+
+.masonry-item {
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: var(--masonry-item-radius);
+  position: relative;
+  transition:
+    transform var(--masonry-item-transition),
+    box-shadow var(--masonry-item-transition);
+  will-change: transform, box-shadow;
+}
+
+.masonry-item:hover {
+  transform: scale(var(--masonry-item-scale));
+  box-shadow: var(--masonry-hover-shadow);
+  z-index: 2;
+}
+
+/* ── Glass reflection sweep ──────────────────────────── */
+
+.masonry-item::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    var(--masonry-glass-from) 40%,
+    var(--masonry-glass-peak) 50%,
+    var(--masonry-glass-from) 60%,
+    transparent 70%
+  );
+  transform: translateX(-120%) skewX(-15deg);
+  transition: none;
+}
+
+.masonry-item:hover::before {
+  transform: translateX(120%) skewX(-15deg);
+  transition: transform 0.65s ease-out;
+}
+
+/* ── Overlay (title / description / actions) ─────────── */
+
+.masonry-item-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0.75rem 0.85rem;
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    var(--masonry-overlay-from) 0%,
+    var(--masonry-overlay-mid) 55%,
+    transparent 100%
+  );
+  transition: opacity var(--masonry-item-transition);
+}
+
+.masonry-item:hover .masonry-item-overlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.masonry-item-overlay-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--masonry-overlay-text);
+  margin: 0;
+}
+
+.masonry-item-overlay-desc {
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--masonry-overlay-muted);
+  margin: 0.15rem 0 0;
+}
+
+.masonry-item-overlay-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.45rem;
+}
+
+/* ── Click ripple ────────────────────────────────────── */
+
+@keyframes masonry-ripple {
+  0% {
+    opacity: 0.55;
+    transform: translate(-50%, -50%) scale(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(2.5);
+  }
+}
+
+.masonry-ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--masonry-ripple-color);
+  pointer-events: none;
+  z-index: 20;
+  animation: masonry-ripple 0.6s ease-out forwards;
+}

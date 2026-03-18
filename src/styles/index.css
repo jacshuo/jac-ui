@@ -4,5 +4,6 @@
 @import "./components/MiniPlayer.css";
 @import "./components/CinePlayer.css";
 @import "./components/FileExplorer.css";
+@import "./components/Masonry.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
