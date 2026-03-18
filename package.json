@@ -46,8 +46,12 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint src --ext .ts,.tsx",
+    "lint": "eslint src demo",
+    "lint:fix": "eslint src demo --fix",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\" \"demo/**/*.{ts,tsx}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx}\" \"demo/**/*.{ts,tsx}\"",
     "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
+    "prepare": "husky",
     "prepublishOnly": "npm run dist"
   },
   "peerDependencies": {
@@ -61,6 +65,7 @@
     "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.4",
     "@tailwindcss/postcss": "^4.2.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
@@ -72,14 +77,24 @@
     "cross-env": "^10.1.0",
     "css-loader": "^7.1.4",
     "css-minimizer-webpack-plugin": "^8.0.0",
+    "eslint": "^9.39.4",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.26",
     "fork-ts-checker-webpack-plugin": "^9.1.0",
+    "globals": "^17.4.0",
     "html-webpack-plugin": "^5.6.6",
+    "husky": "^9.1.7",
     "jsdom": "^29.0.0",
+    "lint-staged": "^16.4.0",
     "mini-css-extract-plugin": "^2.10.1",
     "null-loader": "^4.0.1",
     "postcss": "^8.5.8",
     "postcss-cli": "^11.0.1",
     "postcss-loader": "^8.2.1",
+    "prettier": "^3.8.1",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-router-dom": "^7.13.1",
@@ -88,6 +103,7 @@
     "terser-webpack-plugin": "^5.4.0",
     "ts-loader": "^9.5.4",
     "typescript": "^5.9.3",
+    "typescript-eslint": "^8.57.1",
     "vitest": "^4.1.0",
     "webpack": "^5.105.4",
     "webpack-cli": "^7.0.1",
@@ -104,5 +120,11 @@
     "name": "Shuo Wang",
     "email": "jacshuo@gmail.com"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  }
 }

@@ -1,5 +1,5 @@
-import React from 'react';
-import { cn } from '../lib/utils';
+import React from "react";
+import { cn } from "../lib/utils";
 
 /* ── Types ─────────────────────────────────────────────── */
 
@@ -12,17 +12,17 @@ export interface ImageCardProps extends React.HTMLAttributes<HTMLDivElement> {
   aspectRatio?: string;
 }
 
-export interface ImageCardBodyProps extends React.HTMLAttributes<HTMLDivElement> {}
-export interface ImageCardTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {}
-export interface ImageCardDescriptionProps extends React.HTMLAttributes<HTMLParagraphElement> {}
-export interface ImageCardActionsProps extends React.HTMLAttributes<HTMLDivElement> {}
+export type ImageCardBodyProps = React.HTMLAttributes<HTMLDivElement>;
+export type ImageCardTitleProps = React.HTMLAttributes<HTMLHeadingElement>;
+export type ImageCardDescriptionProps = React.HTMLAttributes<HTMLParagraphElement>;
+export type ImageCardActionsProps = React.HTMLAttributes<HTMLDivElement>;
 
 /* ── ImageCard ─────────────────────────────────────────── */
 
 export function ImageCard({
   src,
-  alt = '',
-  aspectRatio = '16/9',
+  alt = "",
+  aspectRatio = "16/9",
   className,
   children,
   ...props
@@ -30,9 +30,9 @@ export function ImageCard({
   return (
     <div
       className={cn(
-        'group overflow-hidden rounded-xl border transition-shadow duration-300',
-        'border-primary-200 dark:border-primary-700 dark:bg-primary-900 bg-white',
-        'dark:hover:shadow-primary-900/60 hover:shadow-lg',
+        "group overflow-hidden rounded-xl border transition-shadow duration-300",
+        "border-primary-200 dark:border-primary-700 dark:bg-primary-900 bg-white",
+        "dark:hover:shadow-primary-900/60 hover:shadow-lg",
         className,
       )}
       {...props}
@@ -63,13 +63,13 @@ export function ImageCard({
 /* ── Sub-components ────────────────────────────────────── */
 
 export function ImageCardBody({ className, ...props }: ImageCardBodyProps) {
-  return <div className={cn('space-y-2 p-4', className)} {...props} />;
+  return <div className={cn("space-y-2 p-4", className)} {...props} />;
 }
 
 export function ImageCardTitle({ className, ...props }: ImageCardTitleProps) {
   return (
     <h3
-      className={cn('text-primary-900 dark:text-primary-100 text-base font-semibold', className)}
+      className={cn("text-primary-900 dark:text-primary-100 text-base font-semibold", className)}
       {...props}
     />
   );
@@ -77,7 +77,7 @@ export function ImageCardTitle({ className, ...props }: ImageCardTitleProps) {
 
 export function ImageCardDescription({ className, ...props }: ImageCardDescriptionProps) {
   return (
-    <p className={cn('text-primary-500 dark:text-primary-400 text-sm', className)} {...props} />
+    <p className={cn("text-primary-500 dark:text-primary-400 text-sm", className)} {...props} />
   );
 }
 
@@ -85,7 +85,7 @@ export function ImageCardActions({ className, ...props }: ImageCardActionsProps)
   return (
     <div
       className={cn(
-        'border-primary-100 dark:border-primary-800 flex items-center gap-2 border-t px-4 py-3',
+        "border-primary-100 dark:border-primary-800 flex items-center gap-2 border-t px-4 py-3",
         className,
       )}
       {...props}

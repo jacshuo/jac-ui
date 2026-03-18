@@ -1,10 +1,6 @@
-import {
-  Button,
-  Alert, AlertTitle, AlertDescription,
-  useAlert,
-} from '../../src';
-import { Section, PageTitle } from './helpers';
-import { CheckCircle, AlertTriangle, XCircle, Info, Bell, Pin } from 'lucide-react';
+import { Button, Alert, AlertTitle, AlertDescription, useAlert } from "../../src";
+import { Section, PageTitle } from "./helpers";
+import { CheckCircle, AlertTriangle, XCircle, Info, Bell, Pin } from "lucide-react";
 
 export default function AlertPage() {
   const { addAlert } = useAlert();
@@ -16,19 +12,27 @@ export default function AlertPage() {
       <Section title="Static (inline) alerts">
         <div className="space-y-3">
           <Alert intent="success">
-            <AlertTitle><CheckCircle /> Success</AlertTitle>
+            <AlertTitle>
+              <CheckCircle /> Success
+            </AlertTitle>
             <AlertDescription>Operation completed successfully.</AlertDescription>
           </Alert>
           <Alert intent="warning">
-            <AlertTitle><AlertTriangle /> Warning</AlertTitle>
+            <AlertTitle>
+              <AlertTriangle /> Warning
+            </AlertTitle>
             <AlertDescription>Please check your input.</AlertDescription>
           </Alert>
           <Alert intent="error">
-            <AlertTitle><XCircle /> Error</AlertTitle>
+            <AlertTitle>
+              <XCircle /> Error
+            </AlertTitle>
             <AlertDescription>Something went wrong.</AlertDescription>
           </Alert>
           <Alert intent="info">
-            <AlertTitle><Info /> Info</AlertTitle>
+            <AlertTitle>
+              <Info /> Info
+            </AlertTitle>
             <AlertDescription>Here is some information.</AlertDescription>
           </Alert>
         </div>
@@ -39,7 +43,12 @@ export default function AlertPage() {
           <Button
             intent="primary"
             onClick={() =>
-              addAlert({ intent: 'success', title: 'Saved', message: 'Changes saved.', position: 'top-right' })
+              addAlert({
+                intent: "success",
+                title: "Saved",
+                message: "Changes saved.",
+                position: "top-right",
+              })
             }
           >
             <Bell /> Toast top-right
@@ -47,7 +56,12 @@ export default function AlertPage() {
           <Button
             intent="danger"
             onClick={() =>
-              addAlert({ intent: 'error', title: 'Error', message: 'Something failed.', position: 'top-left' })
+              addAlert({
+                intent: "error",
+                title: "Error",
+                message: "Something failed.",
+                position: "top-left",
+              })
             }
           >
             <XCircle /> Toast top-left
@@ -55,7 +69,12 @@ export default function AlertPage() {
           <Button
             intent="warning"
             onClick={() =>
-              addAlert({ intent: 'warning', title: 'Warning', message: 'Check your input.', position: 'bottom-right' })
+              addAlert({
+                intent: "warning",
+                title: "Warning",
+                message: "Check your input.",
+                position: "bottom-right",
+              })
             }
           >
             <AlertTriangle /> Toast bottom-right
@@ -63,7 +82,12 @@ export default function AlertPage() {
           <Button
             intent="outline"
             onClick={() =>
-              addAlert({ intent: 'info', title: 'Info', message: 'For your information.', position: 'top-center' })
+              addAlert({
+                intent: "info",
+                title: "Info",
+                message: "For your information.",
+                position: "top-center",
+              })
             }
           >
             <Info /> Toast top-center
@@ -71,7 +95,12 @@ export default function AlertPage() {
           <Button
             intent="ghost"
             onClick={() =>
-              addAlert({ intent: 'success', title: 'Persistent', message: 'This stays until dismissed.', duration: 0 })
+              addAlert({
+                intent: "success",
+                title: "Persistent",
+                message: "This stays until dismissed.",
+                duration: 0,
+              })
             }
           >
             <Pin /> Persistent toast

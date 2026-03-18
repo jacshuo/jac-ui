@@ -1,9 +1,9 @@
-import React, { createContext, useContext, useEffect, useId, useRef } from 'react';
-import { createPortal } from 'react-dom';
-import { type VariantProps } from 'class-variance-authority';
-import { X } from 'lucide-react';
-import { cn } from '../lib/utils';
-import { dialogContentVariants } from '../styles/theme';
+import React, { createContext, useContext, useEffect, useId, useRef } from "react";
+import { createPortal } from "react-dom";
+import { type VariantProps } from "class-variance-authority";
+import { X } from "lucide-react";
+import { cn } from "../lib/utils";
+import { dialogContentVariants } from "../styles/theme";
 
 /* ── Dialog stack (supports nested / stacked dialogs) ───── */
 
@@ -66,19 +66,19 @@ export function Dialog({
   useEffect(() => {
     if (!open || !modal) return;
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isTopDialog(id)) {
+      if (e.key === "Escape" && isTopDialog(id)) {
         onOpenChange(false);
       }
     };
-    document.addEventListener('keydown', handler);
-    return () => document.removeEventListener('keydown', handler);
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
   }, [open, modal, onOpenChange, id]);
 
   // lock body scroll when modal is open
   useEffect(() => {
     if (!open || !modal) return;
     const original = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = original;
     };
@@ -119,7 +119,7 @@ export function DialogContent({ size, className, children, ...props }: DialogCon
         onClick={handleBackdropClick}
       >
         <div
-          className={cn(dialogContentVariants({ size }), 'animate-scale-in', className)}
+          className={cn(dialogContentVariants({ size }), "animate-scale-in", className)}
           role="dialog"
           aria-modal="true"
           onClick={(e) => e.stopPropagation()}
@@ -134,16 +134,18 @@ export function DialogContent({ size, className, children, ...props }: DialogCon
   return (
     <div
       className={cn(
-        'fixed inset-0 flex items-center justify-center p-4',
-        ctx.closeOnOutsideClick ? 'pointer-events-auto' : 'pointer-events-none',
+        "fixed inset-0 flex items-center justify-center p-4",
+        ctx.closeOnOutsideClick ? "pointer-events-auto" : "pointer-events-none",
       )}
       style={{ zIndex }}
-      onClick={ctx.closeOnOutsideClick && isTopDialog(ctx.id) ? () => ctx.onOpenChange(false) : undefined}
+      onClick={
+        ctx.closeOnOutsideClick && isTopDialog(ctx.id) ? () => ctx.onOpenChange(false) : undefined
+      }
     >
       <div
         className={cn(
           dialogContentVariants({ size }),
-          'animate-scale-in pointer-events-auto shadow-2xl',
+          "animate-scale-in pointer-events-auto shadow-2xl",
           className,
         )}
         role="dialog"
@@ -159,13 +161,16 @@ export function DialogContent({ size, className, children, ...props }: DialogCon
 /* ── DialogHeader / Footer / Title / Description / Close ── */
 
 export function DialogHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn('mb-4 space-y-1', className)} {...props} />;
+  return <div className={cn("mb-4 space-y-1", className)} {...props} />;
 }
 
 export function DialogTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
   return (
     <h2
-      className={cn('text-primary-900 dark:text-primary-100 flex items-center gap-1.5 text-lg font-semibold [&_svg]:h-5 [&_svg]:w-5 [&_svg]:shrink-0', className)}
+      className={cn(
+        "text-primary-900 dark:text-primary-100 flex items-center gap-1.5 text-lg font-semibold [&_svg]:h-5 [&_svg]:w-5 [&_svg]:shrink-0",
+        className,
+      )}
       {...props}
     />
   );
@@ -176,12 +181,12 @@ export function DialogDescription({
   ...props
 }: React.HTMLAttributes<HTMLParagraphElement>) {
   return (
-    <p className={cn('text-primary-500 dark:text-primary-400 text-sm', className)} {...props} />
+    <p className={cn("text-primary-500 dark:text-primary-400 text-sm", className)} {...props} />
   );
 }
 
 export function DialogFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn('mt-6 flex justify-end gap-2', className)} {...props} />;
+  return <div className={cn("mt-6 flex justify-end gap-2", className)} {...props} />;
 }
 
 export function DialogClose({
@@ -192,7 +197,7 @@ export function DialogClose({
   return (
     <button
       className={cn(
-        'text-primary-400 hover:text-primary-600 dark:hover:text-primary-200 absolute top-4 right-4 rounded-md p-1 transition-colors',
+        "text-primary-400 hover:text-primary-600 dark:hover:text-primary-200 absolute top-4 right-4 rounded-md p-1 transition-colors",
         className,
       )}
       onClick={() => ctx?.onOpenChange(false)}

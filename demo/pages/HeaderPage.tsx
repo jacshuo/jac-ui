@@ -1,22 +1,63 @@
-import { useState } from 'react';
-import { Header, type HeaderNavItem, type HeaderAction } from '../../src';
-import { Section, PageTitle } from './helpers';
+import { useState } from "react";
+import { Header, type HeaderNavItem, type HeaderAction } from "../../src";
+import { Section, PageTitle } from "./helpers";
 import {
-  Sun, Moon, Search, Globe, LogIn, LogOut, User, Bell, Github,
-  Rocket, Menu,
-} from 'lucide-react';
+  Sun,
+  Moon,
+  Search,
+  Globe,
+  LogIn,
+  LogOut,
+  User,
+  Bell,
+  Github,
+  Rocket,
+  Menu,
+} from "lucide-react";
 
 export default function HeaderPage() {
   const [dark, setDark] = useState(false);
-  const [activeNav, setActiveNav] = useState('home');
-  const [lang, setLang] = useState('EN');
+  const [activeNav, setActiveNav] = useState("home");
+  const [lang, setLang] = useState("EN");
 
   /* ── Shared nav items ───────────────────────────────── */
   const navItems: HeaderNavItem[] = [
-    { label: 'Home', href: '#', active: activeNav === 'home', onClick: (e) => { e.preventDefault(); setActiveNav('home'); } },
-    { label: 'Docs', href: '#', active: activeNav === 'docs', onClick: (e) => { e.preventDefault(); setActiveNav('docs'); } },
-    { label: 'Blog', href: '#', active: activeNav === 'blog', onClick: (e) => { e.preventDefault(); setActiveNav('blog'); } },
-    { label: 'Pricing', href: '#', active: activeNav === 'pricing', onClick: (e) => { e.preventDefault(); setActiveNav('pricing'); } },
+    {
+      label: "Home",
+      href: "#",
+      active: activeNav === "home",
+      onClick: (e) => {
+        e.preventDefault();
+        setActiveNav("home");
+      },
+    },
+    {
+      label: "Docs",
+      href: "#",
+      active: activeNav === "docs",
+      onClick: (e) => {
+        e.preventDefault();
+        setActiveNav("docs");
+      },
+    },
+    {
+      label: "Blog",
+      href: "#",
+      active: activeNav === "blog",
+      onClick: (e) => {
+        e.preventDefault();
+        setActiveNav("blog");
+      },
+    },
+    {
+      label: "Pricing",
+      href: "#",
+      active: activeNav === "pricing",
+      onClick: (e) => {
+        e.preventDefault();
+        setActiveNav("pricing");
+      },
+    },
   ];
 
   return (
@@ -30,16 +71,16 @@ export default function HeaderPage() {
             navItems={navItems}
             actions={[
               {
-                key: 'theme',
+                key: "theme",
                 icon: dark ? <Sun /> : <Moon />,
-                'aria-label': 'Toggle theme',
+                "aria-label": "Toggle theme",
                 onClick: () => setDark((d) => !d),
               },
               {
-                key: 'login',
+                key: "login",
                 icon: <LogIn />,
-                'aria-label': 'Login',
-                onClick: () => alert('Login clicked'),
+                "aria-label": "Login",
+                onClick: () => alert("Login clicked"),
               },
             ]}
           />
@@ -56,14 +97,19 @@ export default function HeaderPage() {
               </span>
             }
             navItems={[
-              { label: 'Dashboard', href: '#', active: true },
-              { label: 'Projects', href: '#' },
-              { label: 'Team', href: '#' },
+              { label: "Dashboard", href: "#", active: true },
+              { label: "Projects", href: "#" },
+              { label: "Team", href: "#" },
             ]}
             actions={[
-              { key: 'search', icon: <Search />, 'aria-label': 'Search', onClick: () => alert('Search') },
-              { key: 'bell', icon: <Bell />, 'aria-label': 'Notifications' },
-              { key: 'user', icon: <User />, 'aria-label': 'Profile' },
+              {
+                key: "search",
+                icon: <Search />,
+                "aria-label": "Search",
+                onClick: () => alert("Search"),
+              },
+              { key: "bell", icon: <Bell />, "aria-label": "Notifications" },
+              { key: "user", icon: <User />, "aria-label": "Profile" },
             ]}
           />
         </div>
@@ -73,33 +119,33 @@ export default function HeaderPage() {
         <div className="overflow-hidden rounded-lg border border-primary-200 dark:border-primary-700">
           <Header
             brand="@jacshuo/onyx"
-            onBrandClick={() => alert('Navigate home')}
+            onBrandClick={() => alert("Navigate home")}
             navItems={navItems}
             actions={[
               {
-                key: 'lang',
+                key: "lang",
                 icon: <Globe />,
-                'aria-label': `Language: ${lang}`,
-                onClick: () => setLang((l) => (l === 'EN' ? '中文' : 'EN')),
+                "aria-label": `Language: ${lang}`,
+                onClick: () => setLang((l) => (l === "EN" ? "中文" : "EN")),
               },
               {
-                key: 'github',
+                key: "github",
                 icon: <Github />,
-                'aria-label': 'GitHub',
-                href: 'https://github.com/jacshuo',
+                "aria-label": "GitHub",
+                href: "https://github.com/jacshuo",
                 external: true,
               },
               {
-                key: 'theme',
+                key: "theme",
                 icon: dark ? <Sun /> : <Moon />,
-                'aria-label': 'Toggle theme',
+                "aria-label": "Toggle theme",
                 onClick: () => setDark((d) => !d),
               },
               {
-                key: 'login',
+                key: "login",
                 icon: <LogIn />,
-                'aria-label': 'Login',
-                onClick: () => alert('Login clicked'),
+                "aria-label": "Login",
+                onClick: () => alert("Login clicked"),
               },
             ]}
           />
@@ -112,10 +158,10 @@ export default function HeaderPage() {
             brand="SimpleApp"
             actions={[
               {
-                key: 'menu',
+                key: "menu",
                 icon: <Menu />,
-                'aria-label': 'Menu',
-                onClick: () => alert('Open mobile menu'),
+                "aria-label": "Menu",
+                onClick: () => alert("Open mobile menu"),
               },
             ]}
           />
@@ -132,19 +178,19 @@ export default function HeaderPage() {
               </span>
             }
             navItems={[
-              { label: 'Overview', href: '#', active: true },
-              { label: 'Repositories', href: '#' },
-              { label: 'Pull Requests', href: '#' },
-              { label: 'Issues', href: '#' },
+              { label: "Overview", href: "#", active: true },
+              { label: "Repositories", href: "#" },
+              { label: "Pull Requests", href: "#" },
+              { label: "Issues", href: "#" },
             ]}
             actions={[
-              { key: 'bell', icon: <Bell />, 'aria-label': 'Notifications' },
-              { key: 'user', icon: <User />, 'aria-label': 'Profile' },
+              { key: "bell", icon: <Bell />, "aria-label": "Notifications" },
+              { key: "user", icon: <User />, "aria-label": "Profile" },
               {
-                key: 'logout',
+                key: "logout",
                 icon: <LogOut />,
-                'aria-label': 'Logout',
-                onClick: () => alert('Logged out'),
+                "aria-label": "Logout",
+                onClick: () => alert("Logged out"),
               },
             ]}
           />

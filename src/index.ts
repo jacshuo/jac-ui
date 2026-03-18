@@ -2,7 +2,7 @@
 // import '@jac/ui/styles/theme.css';
 
 // ─── Utilities
-export { cn } from './lib/utils';
+export { cn } from "./lib/utils";
 
 // ─── Theme (CVA variant definitions)
 export {
@@ -20,19 +20,25 @@ export {
   dialogContentVariants,
   tooltipVariants,
   alertVariants,
-} from './styles/theme';
+} from "./styles/theme";
 
 // ─── Primitives
-export { Button } from './components/Button';
-export { Dropdown, type DropdownOption, type DropdownProps, type DropdownSingleProps, type DropdownMultipleProps } from './components/Dropdown';
+export { Button } from "./components/Button";
+export {
+  Dropdown,
+  type DropdownOption,
+  type DropdownProps,
+  type DropdownSingleProps,
+  type DropdownMultipleProps,
+} from "./components/Dropdown";
 export {
   DropdownButton,
   type DropdownItem,
   type DropdownButtonProps,
-} from './components/DropdownButton';
-export { Badge } from './components/Badge';
-export { Label } from './components/Label';
-export { Input } from './components/Input';
+} from "./components/DropdownButton";
+export { Badge } from "./components/Badge";
+export { Label } from "./components/Label";
+export { Input } from "./components/Input";
 
 // ─── Layout
 export {
@@ -43,15 +49,15 @@ export {
   CardContent,
   CardFooter,
   HorizontalCard,
-} from './components/Card';
+} from "./components/Card";
 export {
   ImageCard,
   ImageCardBody,
   ImageCardTitle,
   ImageCardDescription,
   ImageCardActions,
-} from './components/ImageCard';
-export { Panel, PanelHeader, PanelContent } from './components/Panel';
+} from "./components/ImageCard";
+export { Panel, PanelHeader, PanelContent } from "./components/Panel";
 
 // ─── Data Display
 export {
@@ -68,10 +74,10 @@ export {
   type SortDirection,
   type SelectionMode,
   type DataTableProps,
-} from './components/Table';
-export { List, ListItem } from './components/List';
-export { Tree, TreeItem } from './components/Tree';
-export { Chat, type ChatMessage, type ChatProps } from './components/Chat';
+} from "./components/Table";
+export { List, ListItem } from "./components/List";
+export { Tree, TreeItem } from "./components/Tree";
+export { Chat, type ChatMessage, type ChatProps } from "./components/Chat";
 
 // ─── Navigation
 export {
@@ -80,13 +86,13 @@ export {
   type SideNavItem,
   type SideNavProps,
   type SideNavLinkComponentProps,
-} from './components/SideNav';
+} from "./components/SideNav";
 export {
   Header,
   type HeaderProps,
   type HeaderNavItem,
   type HeaderAction,
-} from './components/Header';
+} from "./components/Header";
 
 // ─── Disclosure
 export {
@@ -94,8 +100,8 @@ export {
   AccordionItem,
   AccordionTrigger,
   AccordionContent,
-} from './components/Accordion';
-export { Tabs, TabList, TabTrigger, TabPanels, TabContent } from './components/Tabs';
+} from "./components/Accordion";
+export { Tabs, TabList, TabTrigger, TabPanels, TabContent } from "./components/Tabs";
 
 // ─── Overlay
 export {
@@ -106,8 +112,8 @@ export {
   DialogDescription,
   DialogFooter,
   DialogClose,
-} from './components/Dialog';
-export { Tooltip } from './components/Tooltip';
+} from "./components/Dialog";
+export { Tooltip } from "./components/Tooltip";
 
 // ─── Feedback
 export {
@@ -118,7 +124,7 @@ export {
   configureAlertTopOffset,
   type AlertPosition,
   type AlertOptions,
-} from './components/Alert';
+} from "./components/Alert";
 
 // ─── Extras
 export {
@@ -127,7 +133,7 @@ export {
   type FilmReelAction,
   type FilmReelLayout,
   type FilmReelProps,
-} from './components/FilmReel';
+} from "./components/FilmReel";
 
 export {
   MiniPlayer,
@@ -135,14 +141,14 @@ export {
   type MiniPlayerPosition,
   type MiniPlayerEntrance,
   type MiniPlayerProps,
-} from './components/MiniPlayer';
+} from "./components/MiniPlayer";
 
 export {
   CinePlayer,
   type CinePlayerMedia,
   type CinePlayerSortKey,
   type CinePlayerProps,
-} from './components/CinePlayer';
+} from "./components/CinePlayer";
 
 export {
   FileExplorer,
@@ -152,4 +158,4 @@ export {
   type FileExplorerInputMode,
   type FileExplorerAction,
   type FileExplorerProps,
-} from './components/FileExplorer';
+} from "./components/FileExplorer";

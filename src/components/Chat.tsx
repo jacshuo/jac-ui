@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import { cn } from '../lib/utils';
+import React, { useEffect, useRef } from "react";
+import { cn } from "../lib/utils";
 
 /* ── Types ─────────────────────────────────────────────── */
 
@@ -26,7 +26,7 @@ export interface ChatProps extends React.HTMLAttributes<HTMLDivElement> {
    * - `'split'` — self messages on the right, others on the left (default)
    * - `'left'`  — all messages aligned to the left
    */
-  mode?: 'split' | 'left';
+  mode?: "split" | "left";
   /** Auto-scroll to bottom when messages change. @default true */
   autoScroll?: boolean;
 }
@@ -43,7 +43,7 @@ function Avatar({ avatar, sender }: { avatar?: string | React.ReactNode; sender:
     );
   }
 
-  if (typeof avatar === 'string') {
+  if (typeof avatar === "string") {
     // Check if it's a URL (starts with http/https/data/blob) vs plain text/emoji
     if (/^(?:https?|data|blob):/.test(avatar)) {
       return (
@@ -73,13 +73,13 @@ function Avatar({ avatar, sender }: { avatar?: string | React.ReactNode; sender:
 
 function ChatBubble({ msg, alignRight }: { msg: ChatMessage; alignRight: boolean }) {
   return (
-    <div className={cn('flex gap-2.5', alignRight ? 'flex-row-reverse' : 'flex-row')}>
+    <div className={cn("flex gap-2.5", alignRight ? "flex-row-reverse" : "flex-row")}>
       <Avatar avatar={msg.avatar} sender={msg.sender} />
 
       <div
         className={cn(
-          'flex max-w-[75%] flex-col gap-0.5',
-          alignRight ? 'items-end' : 'items-start',
+          "flex max-w-[75%] flex-col gap-0.5",
+          alignRight ? "items-end" : "items-start",
         )}
       >
         {/* Sender name */}
@@ -88,10 +88,10 @@ function ChatBubble({ msg, alignRight }: { msg: ChatMessage; alignRight: boolean
         {/* Bubble */}
         <div
           className={cn(
-            'rounded-xl px-3 py-2 text-sm leading-relaxed',
+            "rounded-xl px-3 py-2 text-sm leading-relaxed",
             alignRight
-              ? 'rounded-tr-sm bg-primary-500 text-white dark:bg-primary-600'
-              : 'bg-primary-100 text-primary-800 dark:bg-primary-800 dark:text-primary-200 rounded-tl-sm',
+              ? "rounded-tr-sm bg-primary-500 text-white dark:bg-primary-600"
+              : "bg-primary-100 text-primary-800 dark:bg-primary-800 dark:text-primary-200 rounded-tl-sm",
           )}
         >
           {msg.content}
@@ -110,7 +110,7 @@ function ChatBubble({ msg, alignRight }: { msg: ChatMessage; alignRight: boolean
 
 export function Chat({
   messages,
-  mode = 'split',
+  mode = "split",
   autoScroll = true,
   className,
   ...props
@@ -119,21 +119,21 @@ export function Chat({
 
   useEffect(() => {
     if (autoScroll) {
-      bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+      bottomRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages, autoScroll]);
 
   return (
     <div
       className={cn(
-        'flex flex-col gap-4 overflow-y-auto rounded-lg border p-4',
-        'border-primary-200 dark:border-primary-700 dark:bg-primary-900 bg-white',
+        "flex flex-col gap-4 overflow-y-auto rounded-lg border p-4",
+        "border-primary-200 dark:border-primary-700 dark:bg-primary-900 bg-white",
         className,
       )}
       {...props}
     >
       {messages.map((msg) => {
-        const alignRight = mode === 'split' && !!msg.self;
+        const alignRight = mode === "split" && !!msg.self;
         return <ChatBubble key={msg.id} msg={msg} alignRight={alignRight} />;
       })}
       <div ref={bottomRef} />

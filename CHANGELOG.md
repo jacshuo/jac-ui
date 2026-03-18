@@ -6,6 +6,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 ---
 
+## [0.1.7] — 2026-03-18
+
+### Added
+
+- **ESLint** — Flat config (`eslint.config.js`) with `typescript-eslint`, `eslint-plugin-react`, `react-hooks`, `react-refresh`, and Prettier integration.
+- **Prettier** — Enforced consistent formatting (double quotes, trailing commas, 100-char width, LF line endings).
+- **Husky + lint-staged** — Pre-commit hook automatically lints and formats staged `.ts`/`.tsx` files.
+- New npm scripts: `lint`, `lint:fix`, `format`, `format:check`.
+
+### Fixed
+
+- ~2,100 formatting inconsistencies auto-fixed (quote style, trailing commas, spacing).
+- Ternary-as-statement patterns replaced with `if/else` blocks (`CinePlayer`, `FileExplorer`, `FilmReel`, `MiniPlayer`, `Table`).
+- Empty interfaces in `ImageCard` converted to type aliases.
+- Unescaped HTML entities in `DialogPage` demo.
+- Constant truthiness expression in `utils.test.ts`.
+
+---
+
 ## [0.1.6] — 2026-03-18
 
 ### Changed

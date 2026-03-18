@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { cn } from '../lib/utils';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { cn } from "../lib/utils";
 import {
   Play,
   Pause,
@@ -16,7 +16,7 @@ import {
   Disc3,
   Shuffle,
   Repeat1,
-} from 'lucide-react';
+} from "lucide-react";
 
 /* ═══════════════════════════════════════════════════════════
    Types
@@ -37,17 +37,9 @@ export interface MiniPlayerTrack {
   duration?: number;
 }
 
-export type MiniPlayerPosition =
-  | 'bottom-right'
-  | 'bottom-left'
-  | 'top-right'
-  | 'top-left';
+export type MiniPlayerPosition = "bottom-right" | "bottom-left" | "top-right" | "top-left";
 
-export type MiniPlayerEntrance =
-  | 'bottom'
-  | 'top'
-  | 'left'
-  | 'right';
+export type MiniPlayerEntrance = "bottom" | "top" | "left" | "right";
 
 export interface MiniPlayerProps {
   /** Playlist of tracks. */
@@ -59,7 +51,7 @@ export interface MiniPlayerProps {
   /** Entrance animation direction. @default derived from position */
   entrance?: MiniPlayerEntrance;
   /** Theme override. Follows parent by default. */
-  theme?: 'dark' | 'light';
+  theme?: "dark" | "light";
   /** When true, player docks to the nearest edge and reveals on hover. @default false */
   docked?: boolean;
   /** When true, player is visible (managed externally or auto-shown on track change). */
@@ -87,7 +79,7 @@ export interface MiniPlayerProps {
    ═══════════════════════════════════════════════════════════ */
 
 const PLACEHOLDER_COVER =
-  'data:image/svg+xml,' +
+  "data:image/svg+xml," +
   encodeURIComponent(
     `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
       <rect width="200" height="200" fill="#1e1b2e"/>
@@ -98,37 +90,37 @@ const PLACEHOLDER_COVER =
   );
 
 function fmtTime(s: number): string {
-  if (!isFinite(s) || s < 0) return '0:00';
+  if (!isFinite(s) || s < 0) return "0:00";
   const m = Math.floor(s / 60);
   const sec = Math.floor(s % 60);
-  return `${m}:${sec.toString().padStart(2, '0')}`;
+  return `${m}:${sec.toString().padStart(2, "0")}`;
 }
 
 function defaultEntrance(pos: MiniPlayerPosition): MiniPlayerEntrance {
-  if (pos.startsWith('bottom')) return 'bottom';
-  if (pos.startsWith('top')) return 'top';
-  return 'right';
+  if (pos.startsWith("bottom")) return "bottom";
+  if (pos.startsWith("top")) return "top";
+  return "right";
 }
 
 const POSITION_CLASSES: Record<MiniPlayerPosition, string> = {
-  'bottom-right': 'bottom-4 right-4',
-  'bottom-left': 'bottom-4 left-4',
-  'top-right': 'top-4 right-4',
-  'top-left': 'top-4 left-4',
+  "bottom-right": "bottom-4 right-4",
+  "bottom-left": "bottom-4 left-4",
+  "top-right": "top-4 right-4",
+  "top-left": "top-4 left-4",
 };
 
 const DOCK_CLASSES: Record<MiniPlayerPosition, string> = {
-  'bottom-right': 'bottom-4 right-0',
-  'bottom-left': 'bottom-4 left-0',
-  'top-right': 'top-4 right-0',
-  'top-left': 'top-4 left-0',
+  "bottom-right": "bottom-4 right-0",
+  "bottom-left": "bottom-4 left-0",
+  "top-right": "top-4 right-0",
+  "top-left": "top-4 left-0",
 };
 
 const DOCK_STRIP: Record<MiniPlayerPosition, string> = {
-  'bottom-right': 'bottom-8 right-0 w-1.5 h-16 rounded-l-full',
-  'bottom-left': 'bottom-8 left-0 w-1.5 h-16 rounded-r-full',
-  'top-right': 'top-8 right-0 w-1.5 h-16 rounded-l-full',
-  'top-left': 'top-8 left-0 w-1.5 h-16 rounded-r-full',
+  "bottom-right": "bottom-8 right-0 w-1.5 h-16 rounded-l-full",
+  "bottom-left": "bottom-8 left-0 w-1.5 h-16 rounded-r-full",
+  "top-right": "top-8 right-0 w-1.5 h-16 rounded-l-full",
+  "top-left": "top-8 left-0 w-1.5 h-16 rounded-r-full",
 };
 
 /* ═══════════════════════════════════════════════════════════
@@ -138,7 +130,7 @@ const DOCK_STRIP: Record<MiniPlayerPosition, string> = {
 export function MiniPlayer({
   playlist,
   initialTrack = 0,
-  position = 'bottom-right',
+  position = "bottom-right",
   entrance: entranceProp,
   theme,
   docked: dockedProp = false,
@@ -149,7 +141,7 @@ export function MiniPlayer({
   autoPlay = true,
   shuffle: shuffleProp = false,
   loop: loopProp = false,
-  accent = '#8b5cf6',
+  accent = "#8b5cf6",
   className,
 }: MiniPlayerProps) {
   /* ── State ──────────────────────────────── */
@@ -179,13 +171,13 @@ export function MiniPlayer({
   const isDockedMode = dockedProp;
 
   /* ── Theme classes ──────────────────────── */
-  const themeClass = theme === 'dark' ? 'dark' : theme === 'light' ? 'light' : '';
+  const themeClass = theme === "dark" ? "dark" : theme === "light" ? "light" : "";
 
-  const bg = 'bg-(--mp-bg)';
-  const text = 'text-(--mp-text)';
-  const textSub = 'text-(--mp-text-muted)';
-  const accentCls = 'text-(--accent)';
-  const border = 'border-(--mp-border)';
+  const bg = "bg-(--mp-bg)";
+  const text = "text-(--mp-text)";
+  const textSub = "text-(--mp-text-muted)";
+  const accentCls = "text-(--accent)";
+  const border = "border-(--mp-border)";
 
   /* ── Audio control ──────────────────────── */
   useEffect(() => {
@@ -208,8 +200,8 @@ export function MiniPlayer({
       setPlaying(true);
       audio.play().catch(() => {});
     };
-    audio.addEventListener('canplaythrough', onCanPlay, { once: true });
-    return () => audio.removeEventListener('canplaythrough', onCanPlay);
+    audio.addEventListener("canplaythrough", onCanPlay, { once: true });
+    return () => audio.removeEventListener("canplaythrough", onCanPlay);
   }, [autoPlay]);
 
   useEffect(() => {
@@ -241,13 +233,13 @@ export function MiniPlayer({
         skipNext();
       }
     };
-    audio.addEventListener('timeupdate', onTime);
-    audio.addEventListener('loadedmetadata', onDur);
-    audio.addEventListener('ended', onEnd);
+    audio.addEventListener("timeupdate", onTime);
+    audio.addEventListener("loadedmetadata", onDur);
+    audio.addEventListener("ended", onEnd);
     return () => {
-      audio.removeEventListener('timeupdate', onTime);
-      audio.removeEventListener('loadedmetadata', onDur);
-      audio.removeEventListener('ended', onEnd);
+      audio.removeEventListener("timeupdate", onTime);
+      audio.removeEventListener("loadedmetadata", onDur);
+      audio.removeEventListener("ended", onEnd);
     };
   }, [currentIndex, playlist.length]);
 
@@ -270,7 +262,9 @@ export function MiniPlayer({
   const skipNext = useCallback(() => {
     if (shuffleOn) {
       let r: number;
-      do { r = Math.floor(Math.random() * playlist.length); } while (r === currentIndex && playlist.length > 1);
+      do {
+        r = Math.floor(Math.random() * playlist.length);
+      } while (r === currentIndex && playlist.length > 1);
       goToTrack(r);
     } else {
       goToTrack(currentIndex + 1);
@@ -280,7 +274,9 @@ export function MiniPlayer({
   const skipPrev = useCallback(() => {
     if (shuffleOn) {
       let r: number;
-      do { r = Math.floor(Math.random() * playlist.length); } while (r === currentIndex && playlist.length > 1);
+      do {
+        r = Math.floor(Math.random() * playlist.length);
+      } while (r === currentIndex && playlist.length > 1);
       goToTrack(r);
     } else {
       goToTrack(currentIndex - 1);
@@ -291,7 +287,11 @@ export function MiniPlayer({
     const isLiked = liked.has(currentIndex);
     setLiked((prev) => {
       const next = new Set(prev);
-      isLiked ? next.delete(currentIndex) : next.add(currentIndex);
+      if (isLiked) {
+        next.delete(currentIndex);
+      } else {
+        next.add(currentIndex);
+      }
       return next;
     });
     onLike?.(currentIndex, track, !isLiked);
@@ -320,14 +320,19 @@ export function MiniPlayer({
     }, dur);
   }, [isDockedMode, onVisibleChange]);
 
-  useEffect(() => () => { if (animTimerRef.current) clearTimeout(animTimerRef.current); }, []);
+  useEffect(
+    () => () => {
+      if (animTimerRef.current) clearTimeout(animTimerRef.current);
+    },
+    [],
+  );
 
   /* ── Animations ─────────────────────────── */
   const enterAnim = dockHover
-    ? 'fade-in 0.2s ease-out both'
+    ? "fade-in 0.2s ease-out both"
     : `mp-enter-${entrance} 0.45s cubic-bezier(0.16, 1, 0.3, 1) both`;
   const exitAnim = dockHover
-    ? 'fade-in 0.2s ease-in reverse both'
+    ? "fade-in 0.2s ease-in reverse both"
     : `mp-exit-${entrance} 0.4s cubic-bezier(0.7, 0, 0.84, 0) both`;
 
   /* ── Progress ratio ─────────────────────── */
@@ -339,8 +344,11 @@ export function MiniPlayer({
       <>
         <audio ref={audioRef} preload="metadata" />
         <div
-          className={cn('fixed z-100 cursor-pointer transition-all duration-300', DOCK_STRIP[position])}
-          style={{ '--accent': accent } as React.CSSProperties}
+          className={cn(
+            "fixed z-100 cursor-pointer transition-all duration-300",
+            DOCK_STRIP[position],
+          )}
+          style={{ "--accent": accent } as React.CSSProperties}
           onMouseEnter={() => {
             setDockHover(true);
             setInternalVisible(true);
@@ -350,21 +358,23 @@ export function MiniPlayer({
           {/* Glowing strip */}
           <div
             className={cn(
-              'h-full w-full rounded-full',
-              playing
-                ? 'bg-(--accent)'
-                : 'bg-(--mp-dock-strip)',
+              "h-full w-full rounded-full",
+              playing ? "bg-(--accent)" : "bg-(--mp-dock-strip)",
             )}
-            style={playing ? {
-              animation: 'mp-progress-glow 2s ease-in-out infinite',
-              boxShadow: `0 0 12px color-mix(in srgb, var(--accent) 50%, transparent)`,
-            } : undefined}
+            style={
+              playing
+                ? {
+                    animation: "mp-progress-glow 2s ease-in-out infinite",
+                    boxShadow: `0 0 12px color-mix(in srgb, var(--accent) 50%, transparent)`,
+                  }
+                : undefined
+            }
           />
           {/* Pulse ring when playing */}
           {playing && (
             <div
               className="absolute inset-0 rounded-full bg-(--accent)/30"
-              style={{ animation: 'mp-pulse-ring 2s ease-out infinite' }}
+              style={{ animation: "mp-pulse-ring 2s ease-out infinite" }}
             />
           )}
         </div>
@@ -383,11 +393,16 @@ export function MiniPlayer({
 
       <div
         className={cn(
-          'fixed z-100',
+          "fixed z-100",
           isDockedMode ? DOCK_CLASSES[position] : POSITION_CLASSES[position],
           themeClass,
         )}
-        style={{ '--accent': accent, ...(exiting ? { animation: exitAnim } : { animation: enterAnim }) } as React.CSSProperties}
+        style={
+          {
+            "--accent": accent,
+            ...(exiting ? { animation: exitAnim } : { animation: enterAnim }),
+          } as React.CSSProperties
+        }
         onMouseEnter={() => {
           if (isDockedMode) {
             // Cancel any pending hide when mouse re-enters
@@ -408,12 +423,12 @@ export function MiniPlayer({
       >
         <div
           className={cn(
-            'w-[320px] overflow-hidden rounded-2xl border shadow-2xl backdrop-blur-xl',
+            "w-[320px] overflow-hidden rounded-2xl border shadow-2xl backdrop-blur-xl",
             bg,
             border,
-            isDockedMode && 'rounded-none',
-            position.endsWith('right') && isDockedMode && 'rounded-l-2xl',
-            position.endsWith('left') && isDockedMode && 'rounded-r-2xl',
+            isDockedMode && "rounded-none",
+            position.endsWith("right") && isDockedMode && "rounded-l-2xl",
+            position.endsWith("left") && isDockedMode && "rounded-r-2xl",
             className,
           )}
         >
@@ -434,7 +449,7 @@ export function MiniPlayer({
               <div className="relative h-14 w-14 shrink-0">
                 <div
                   className="h-14 w-14 overflow-hidden rounded-full border-2 border-white/10 shadow-lg"
-                  style={playing ? { animation: 'mp-vinyl-spin 4s linear infinite' } : undefined}
+                  style={playing ? { animation: "mp-vinyl-spin 4s linear infinite" } : undefined}
                 >
                   <img
                     src={track.cover || PLACEHOLDER_COVER}
@@ -451,23 +466,25 @@ export function MiniPlayer({
                 {playing && (
                   <div
                     className="absolute inset-0 rounded-full bg-(--accent)/20"
-                    style={{ animation: 'mp-pulse-ring 2.5s ease-out infinite' }}
+                    style={{ animation: "mp-pulse-ring 2.5s ease-out infinite" }}
                   />
                 )}
               </div>
 
               {/* Track info */}
               <div className="min-w-0 flex-1">
-                <div className={cn('truncate text-sm font-semibold', text)}>
-                  {track.title}
-                </div>
+                <div className={cn("truncate text-sm font-semibold", text)}>{track.title}</div>
                 {track.artist && (
-                  <div className={cn('truncate text-xs', textSub)}>
-                    {track.artist}
-                  </div>
+                  <div className={cn("truncate text-xs", textSub)}>{track.artist}</div>
                 )}
                 {track.album && (
-                  <div className={cn('mt-0.5 truncate text-[10px] tracking-wide', textSub, 'opacity-60')}>
+                  <div
+                    className={cn(
+                      "mt-0.5 truncate text-[10px] tracking-wide",
+                      textSub,
+                      "opacity-60",
+                    )}
+                  >
                     {track.album}
                   </div>
                 )}
@@ -477,18 +494,25 @@ export function MiniPlayer({
               <div className="flex shrink-0 items-center gap-0.5">
                 <button
                   className={cn(
-                    'rounded-full p-1.5 transition-all duration-200',
+                    "rounded-full p-1.5 transition-all duration-200",
                     liked.has(currentIndex)
-                      ? 'text-rose-500 hover:text-rose-400'
-                      : cn(textSub, 'hover:text-rose-500'),
+                      ? "text-rose-500 hover:text-rose-400"
+                      : cn(textSub, "hover:text-rose-500"),
                   )}
                   onClick={toggleLike}
                   title="Like"
                 >
-                  <Heart className="h-4 w-4" fill={liked.has(currentIndex) ? 'currentColor' : 'none'} />
+                  <Heart
+                    className="h-4 w-4"
+                    fill={liked.has(currentIndex) ? "currentColor" : "none"}
+                  />
                 </button>
                 <button
-                  className={cn('rounded-full p-1.5 transition-colors', textSub, 'hover:' + text.split(' ')[0])}
+                  className={cn(
+                    "rounded-full p-1.5 transition-colors",
+                    textSub,
+                    "hover:" + text.split(" ")[0],
+                  )}
                   onClick={() => setShowPlaylist((v) => !v)}
                   title="Playlist"
                 >
@@ -496,7 +520,11 @@ export function MiniPlayer({
                 </button>
                 {!isDockedMode && (
                   <button
-                    className={cn('rounded-full p-1.5 transition-colors', textSub, 'hover:' + text.split(' ')[0])}
+                    className={cn(
+                      "rounded-full p-1.5 transition-colors",
+                      textSub,
+                      "hover:" + text.split(" ")[0],
+                    )}
                     onClick={hide}
                     title="Dismiss"
                   >
@@ -524,7 +552,7 @@ export function MiniPlayer({
                 style={{ left: `calc(${pct}% - 6px)` }}
               />
             </div>
-            <div className={cn('mt-1 flex justify-between text-[10px] font-mono', textSub)}>
+            <div className={cn("mt-1 flex justify-between text-[10px] font-mono", textSub)}>
               <span>{fmtTime(progress)}</span>
               <span>{fmtTime(duration)}</span>
             </div>
@@ -534,30 +562,34 @@ export function MiniPlayer({
           <div className="flex items-center justify-center gap-2 px-4 pb-3 pt-1">
             <button
               className={cn(
-                'rounded-full p-1.5 transition-colors',
+                "rounded-full p-1.5 transition-colors",
                 shuffleOn ? accentCls : textSub,
-                'hover:text-(--mp-text)',
+                "hover:text-(--mp-text)",
               )}
               onClick={() => setShuffleOn((s) => !s)}
-              title={shuffleOn ? 'Shuffle On' : 'Shuffle Off'}
+              title={shuffleOn ? "Shuffle On" : "Shuffle Off"}
             >
               <Shuffle className="h-3.5 w-3.5" />
             </button>
 
             <button
               className={cn(
-                'rounded-full p-1.5 transition-colors',
+                "rounded-full p-1.5 transition-colors",
                 loopOn ? accentCls : textSub,
-                'hover:text-(--mp-text)',
+                "hover:text-(--mp-text)",
               )}
               onClick={() => setLoopOn((l) => !l)}
-              title={loopOn ? 'Loop On' : 'Loop Off'}
+              title={loopOn ? "Loop On" : "Loop Off"}
             >
               <Repeat1 className="h-3.5 w-3.5" />
             </button>
 
             <button
-              className={cn('rounded-full p-2 transition-colors', textSub, 'hover:text-(--mp-text)')}
+              className={cn(
+                "rounded-full p-2 transition-colors",
+                textSub,
+                "hover:text-(--mp-text)",
+              )}
               onClick={skipPrev}
               title="Previous"
             >
@@ -566,12 +598,12 @@ export function MiniPlayer({
 
             <button
               className={cn(
-                'flex h-10 w-10 items-center justify-center rounded-full transition-all duration-200',
-                'bg-(--accent) text-white shadow-lg active:scale-95',
+                "flex h-10 w-10 items-center justify-center rounded-full transition-all duration-200",
+                "bg-(--accent) text-white shadow-lg active:scale-95",
               )}
               style={{ boxShadow: `0 6px 20px color-mix(in srgb, var(--accent) 35%, transparent)` }}
               onClick={() => setPlaying((p) => !p)}
-              title={playing ? 'Pause' : 'Play'}
+              title={playing ? "Pause" : "Play"}
             >
               {playing ? (
                 <Pause className="h-4.5 w-4.5" fill="currentColor" />
@@ -581,7 +613,11 @@ export function MiniPlayer({
             </button>
 
             <button
-              className={cn('rounded-full p-2 transition-colors', textSub, 'hover:text-(--mp-text)')}
+              className={cn(
+                "rounded-full p-2 transition-colors",
+                textSub,
+                "hover:text-(--mp-text)",
+              )}
               onClick={skipNext}
               title="Next"
             >
@@ -591,9 +627,13 @@ export function MiniPlayer({
             {/* Volume */}
             <div className="ml-2 flex items-center gap-1.5">
               <button
-                className={cn('rounded-full p-1 transition-colors', textSub, 'hover:text-(--mp-text)')}
+                className={cn(
+                  "rounded-full p-1 transition-colors",
+                  textSub,
+                  "hover:text-(--mp-text)",
+                )}
                 onClick={() => setMuted((m) => !m)}
-                title={muted ? 'Unmute' : 'Mute'}
+                title={muted ? "Unmute" : "Mute"}
               >
                 {muted || volume === 0 ? (
                   <VolumeX className="h-3.5 w-3.5" />
@@ -619,11 +659,11 @@ export function MiniPlayer({
           {/* ── Playlist (expandable) ────── */}
           <div
             className={cn(
-              'overflow-hidden transition-all duration-300 ease-in-out',
-              showPlaylist ? 'max-h-60' : 'max-h-0',
+              "overflow-hidden transition-all duration-300 ease-in-out",
+              showPlaylist ? "max-h-60" : "max-h-0",
             )}
           >
-            <div className={cn('border-t px-2 py-2', border)}>
+            <div className={cn("border-t px-2 py-2", border)}>
               <div className="max-h-52 space-y-0.5 overflow-y-auto">
                 {playlist.map((t, i) => {
                   const isCurrent = i === currentIndex;
@@ -631,10 +671,10 @@ export function MiniPlayer({
                     <button
                       key={i}
                       className={cn(
-                        'flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left transition-all duration-200',
+                        "flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left transition-all duration-200",
                         isCurrent
-                          ? 'bg-(--accent)/10 dark:bg-(--accent)/15'
-                          : 'hover:bg-(--mp-surface-hover)',
+                          ? "bg-(--accent)/10 dark:bg-(--accent)/15"
+                          : "hover:bg-(--mp-surface-hover)",
                       )}
                       onClick={() => {
                         goToTrack(i);
@@ -657,9 +697,9 @@ export function MiniPlayer({
                             ))}
                           </div>
                         ) : isCurrent ? (
-                          <Disc3 className={cn('h-4 w-4', accentCls)} />
+                          <Disc3 className={cn("h-4 w-4", accentCls)} />
                         ) : (
-                          <span className={cn('text-xs font-mono', textSub)}>{i + 1}</span>
+                          <span className={cn("text-xs font-mono", textSub)}>{i + 1}</span>
                         )}
                       </div>
                       {/* Mini cover */}
@@ -675,16 +715,14 @@ export function MiniPlayer({
                       <div className="min-w-0 flex-1">
                         <div
                           className={cn(
-                            'truncate text-xs font-medium',
+                            "truncate text-xs font-medium",
                             isCurrent ? accentCls : text,
                           )}
                         >
                           {t.title}
                         </div>
                         {t.artist && (
-                          <div className={cn('truncate text-[10px]', textSub)}>
-                            {t.artist}
-                          </div>
+                          <div className={cn("truncate text-[10px]", textSub)}>{t.artist}</div>
                         )}
                       </div>
                       {/* Like badge */}

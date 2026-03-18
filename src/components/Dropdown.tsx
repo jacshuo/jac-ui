@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ChevronDown, ChevronRight, Check } from 'lucide-react';
-import { cn } from '../lib/utils';
-import { inputVariants } from '../styles/theme';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ChevronDown, ChevronRight, Check } from "lucide-react";
+import { cn } from "../lib/utils";
+import { inputVariants } from "../styles/theme";
 
 /* ── Types ─────────────────────────────────────────────── */
 
@@ -30,7 +30,7 @@ interface DropdownBaseProps {
   /** Disable the entire dropdown. */
   disabled?: boolean;
   /** Menu alignment. @default 'left' */
-  align?: 'left' | 'right';
+  align?: "left" | "right";
   /** Additional class name for the root container. */
   className?: string;
 }
@@ -120,12 +120,12 @@ function CascadeMenu({
   return (
     <div
       className={cn(
-        'absolute z-50 min-w-44 rounded-md border py-1 shadow-lg',
-        'border-primary-200 dark:border-primary-700 dark:bg-primary-800 bg-white',
-        'animate-fade-in',
-        depth === 0 ? 'mt-1 w-full' : 'top-0 ml-0.5',
+        "absolute z-50 min-w-44 rounded-md border py-1 shadow-lg",
+        "border-primary-200 dark:border-primary-700 dark:bg-primary-800 bg-white",
+        "animate-fade-in",
+        depth === 0 ? "mt-1 w-full" : "top-0 ml-0.5",
       )}
-      style={depth > 0 ? { left: '100%' } : undefined}
+      style={depth > 0 ? { left: "100%" } : undefined}
       role="listbox"
     >
       {options.map((opt) => {
@@ -144,9 +144,9 @@ function CascadeMenu({
               aria-selected={false}
               aria-disabled={opt.disabled}
               className={cn(
-                'flex w-full cursor-pointer items-center gap-2 px-3 py-1.5 text-left text-sm transition-colors',
-                'text-primary-700 hover:bg-primary-100 dark:text-primary-300 dark:hover:bg-primary-700/50',
-                opt.disabled && 'pointer-events-none opacity-50',
+                "flex w-full cursor-pointer items-center gap-2 px-3 py-1.5 text-left text-sm transition-colors",
+                "text-primary-700 hover:bg-primary-100 dark:text-primary-300 dark:hover:bg-primary-700/50",
+                opt.disabled && "pointer-events-none opacity-50",
               )}
               onClick={() => {
                 if (opt.disabled || hasSub) return;
@@ -206,9 +206,9 @@ function FlatMenu({
   return (
     <div
       className={cn(
-        'absolute z-50 mt-1 w-full max-h-60 min-w-44 overflow-y-auto rounded-md border py-1 shadow-lg',
-        'border-primary-200 dark:border-primary-700 dark:bg-primary-800 bg-white',
-        'animate-fade-in',
+        "absolute z-50 mt-1 w-full max-h-60 min-w-44 overflow-y-auto rounded-md border py-1 shadow-lg",
+        "border-primary-200 dark:border-primary-700 dark:bg-primary-800 bg-white",
+        "animate-fade-in",
       )}
       role="listbox"
       aria-multiselectable={multiple || undefined}
@@ -222,9 +222,9 @@ function FlatMenu({
             aria-selected={multiple ? isSelected : false}
             aria-disabled={opt.disabled}
             className={cn(
-              'flex w-full cursor-pointer items-center gap-2 px-3 py-1.5 text-left text-sm transition-colors',
-              'text-primary-700 hover:bg-primary-100 dark:text-primary-300 dark:hover:bg-primary-700/50',
-              opt.disabled && 'pointer-events-none opacity-50',
+              "flex w-full cursor-pointer items-center gap-2 px-3 py-1.5 text-left text-sm transition-colors",
+              "text-primary-700 hover:bg-primary-100 dark:text-primary-300 dark:hover:bg-primary-700/50",
+              opt.disabled && "pointer-events-none opacity-50",
             )}
             onClick={() => {
               if (opt.disabled) return;
@@ -238,10 +238,10 @@ function FlatMenu({
             {multiple && (
               <span
                 className={cn(
-                  'flex h-4 w-4 shrink-0 items-center justify-center rounded border transition-colors',
+                  "flex h-4 w-4 shrink-0 items-center justify-center rounded border transition-colors",
                   isSelected
-                    ? 'border-primary-600 bg-primary-600 text-white dark:border-primary-500 dark:bg-primary-500'
-                    : 'border-secondary-300 bg-white dark:border-secondary-600 dark:bg-secondary-800',
+                    ? "border-primary-600 bg-primary-600 text-white dark:border-primary-500 dark:bg-primary-500"
+                    : "border-secondary-300 bg-white dark:border-secondary-600 dark:bg-secondary-800",
                 )}
               >
                 {isSelected && <Check className="h-3 w-3" />}
@@ -262,12 +262,14 @@ function FlatMenu({
       {canAdd && (
         <div
           className={cn(
-            'flex w-full cursor-pointer items-center gap-2 px-3 py-1.5 text-left text-sm transition-colors',
-            'text-primary-600 hover:bg-primary-50 dark:text-primary-400 dark:hover:bg-primary-900/30',
+            "flex w-full cursor-pointer items-center gap-2 px-3 py-1.5 text-left text-sm transition-colors",
+            "text-primary-600 hover:bg-primary-50 dark:text-primary-400 dark:hover:bg-primary-900/30",
           )}
           onClick={onAdd}
         >
-          <span className="flex h-4 w-4 shrink-0 items-center justify-center text-lg leading-none">+</span>
+          <span className="flex h-4 w-4 shrink-0 items-center justify-center text-lg leading-none">
+            +
+          </span>
           <span className="truncate">Add &ldquo;{filter.trim()}&rdquo;</span>
         </div>
       )}
@@ -280,11 +282,11 @@ function FlatMenu({
 export function Dropdown(props: DropdownProps) {
   const {
     options,
-    placeholder = 'Select…',
+    placeholder = "Select…",
     editable = false,
     onAddItem,
     disabled = false,
-    align = 'left',
+    align = "left",
     className,
   } = props;
 
@@ -292,7 +294,7 @@ export function Dropdown(props: DropdownProps) {
   const selectedValues: string[] = multiple ? (props.selected ?? []) : [];
 
   const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -309,24 +311,24 @@ export function Dropdown(props: DropdownProps) {
     const handler = (e: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
         setOpen(false);
-        setSearch('');
+        setSearch("");
       }
     };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
   }, [open]);
 
   // Close on Escape
   useEffect(() => {
     if (!open) return;
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         setOpen(false);
-        setSearch('');
+        setSearch("");
       }
     };
-    document.addEventListener('keydown', handler);
-    return () => document.removeEventListener('keydown', handler);
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
   }, [open]);
 
   /* ── Single-select handler ──────────────────────────── */
@@ -336,9 +338,9 @@ export function Dropdown(props: DropdownProps) {
         (props as DropdownSingleProps).onChange?.(val, opt);
       }
       setOpen(false);
-      setSearch('');
+      setSearch("");
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
     [multiple, props],
   );
 
@@ -351,7 +353,7 @@ export function Dropdown(props: DropdownProps) {
         : [...selectedValues, val];
       (props as DropdownMultipleProps).onSelectionChange?.(next);
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
     [multiple, selectedValues, props],
   );
 
@@ -362,8 +364,7 @@ export function Dropdown(props: DropdownProps) {
     const flat = flattenOptions(options);
     return !flat.some(
       (o) =>
-        o.value.toLowerCase() === lowerSearch ||
-        (o.label ?? o.value).toLowerCase() === lowerSearch,
+        o.value.toLowerCase() === lowerSearch || (o.label ?? o.value).toLowerCase() === lowerSearch,
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editable, lowerSearch, options]);
@@ -372,12 +373,12 @@ export function Dropdown(props: DropdownProps) {
     const value = search.trim();
     if (!value) return;
     onAddItem?.(value);
-    setSearch('');
+    setSearch("");
   }, [search, onAddItem]);
 
   const handleInputKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === 'Enter' && canAdd) {
+      if (e.key === "Enter" && canAdd) {
         e.preventDefault();
         handleAdd();
       }
@@ -395,7 +396,7 @@ export function Dropdown(props: DropdownProps) {
       }
       return next;
     });
-    setSearch('');
+    setSearch("");
   }, [disabled, editable]);
 
   /* ── Display label ──────────────────────────────────── */
@@ -403,31 +404,31 @@ export function Dropdown(props: DropdownProps) {
   if (multiple) {
     const count = selectedValues.length;
     if (count === 0) {
-      displayLabel = '';
+      displayLabel = "";
     } else if (count <= 2) {
       displayLabel = selectedValues
         .map((v) => findOption(options, v))
-        .map((o) => (o ? (o.label ?? o.value) : ''))
+        .map((o) => (o ? (o.label ?? o.value) : ""))
         .filter(Boolean)
-        .join(', ');
+        .join(", ");
     } else {
       displayLabel = `${count} selected`;
     }
   } else {
-    displayLabel = singleSelected ? (singleSelected.label ?? singleSelected.value) : '';
+    displayLabel = singleSelected ? (singleSelected.label ?? singleSelected.value) : "";
   }
 
   /* ── Need flat menu? (editable, multi, or filtering) ─ */
   const useFlatMenu = multiple || editable;
 
   return (
-    <div ref={containerRef} className={cn('relative inline-block min-w-44', className)}>
+    <div ref={containerRef} className={cn("relative inline-block min-w-44", className)}>
       {/* Trigger */}
       <div
         className={cn(
-          inputVariants({ state: 'default', size: 'md' }),
-          'flex cursor-pointer items-center gap-1',
-          disabled && 'pointer-events-none opacity-50',
+          inputVariants({ state: "default", size: "md" }),
+          "flex cursor-pointer items-center gap-1",
+          disabled && "pointer-events-none opacity-50",
         )}
         onClick={toggleOpen}
         role="combobox"
@@ -452,12 +453,19 @@ export function Dropdown(props: DropdownProps) {
             }}
           />
         ) : (
-          <span className={cn('flex-1 truncate', !displayLabel && 'text-secondary-400 dark:text-secondary-600')}>
+          <span
+            className={cn(
+              "flex-1 truncate",
+              !displayLabel && "text-secondary-400 dark:text-secondary-600",
+            )}
+          >
             {displayLabel || placeholder}
           </span>
         )}
         {singleSelected?.icon && !editable && !multiple && (
-          <span className="flex h-4 w-4 shrink-0 items-center justify-center">{singleSelected.icon}</span>
+          <span className="flex h-4 w-4 shrink-0 items-center justify-center">
+            {singleSelected.icon}
+          </span>
         )}
         {multiple && selectedValues.length > 0 && (
           <span className="rounded-full bg-primary-100 px-1.5 text-xs font-semibold text-primary-700 dark:bg-primary-900 dark:text-primary-300">
@@ -466,15 +474,15 @@ export function Dropdown(props: DropdownProps) {
         )}
         <ChevronDown
           className={cn(
-            'text-primary-400 h-4 w-4 shrink-0 transition-transform',
-            open && 'rotate-180',
+            "text-primary-400 h-4 w-4 shrink-0 transition-transform",
+            open && "rotate-180",
           )}
         />
       </div>
 
       {/* Menu */}
       {open && (
-        <div className={cn(align === 'right' ? 'right-0' : 'left-0', 'absolute w-full')}>
+        <div className={cn(align === "right" ? "right-0" : "left-0", "absolute w-full")}>
           {useFlatMenu ? (
             <FlatMenu
               options={options}

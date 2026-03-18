@@ -1,11 +1,11 @@
-import React, { useState, useCallback, useRef, useLayoutEffect } from 'react';
-import { createPortal } from 'react-dom';
-import { ChevronRight, ChevronsLeft, Menu } from 'lucide-react';
-import { cn } from '../lib/utils';
+import React, { useState, useCallback, useRef, useLayoutEffect } from "react";
+import { createPortal } from "react-dom";
+import { ChevronRight, ChevronsLeft, Menu } from "lucide-react";
+import { cn } from "../lib/utils";
 
 /* ── Types ─────────────────────────────────────────────── */
 
-export type SideNavCollapseMode = 'expanded' | 'icons' | 'mini';
+export type SideNavCollapseMode = "expanded" | "icons" | "mini";
 
 export interface SideNavItem {
   /** Unique key (falls back to `path` or `label`). */
@@ -63,7 +63,7 @@ export interface SideNavProps extends React.HTMLAttributes<HTMLElement> {
    */
   expandedKeys?: Set<string>;
   /** Default expanded keys (uncontrolled). When omitted all groups start open. */
-  defaultExpandedKeys?: Set<string> | 'all';
+  defaultExpandedKeys?: Set<string> | "all";
   /** Fires when a group is toggled. */
   onExpandedKeysChange?: (keys: Set<string>) => void;
 }
@@ -71,21 +71,21 @@ export interface SideNavProps extends React.HTMLAttributes<HTMLElement> {
 /* ── Styles ────────────────────────────────────────────── */
 
 const itemBase =
-  'flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-sm transition-colors cursor-pointer';
+  "flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-sm transition-colors cursor-pointer";
 
 const itemActive =
-  'bg-primary-200 dark:bg-primary-700/50 text-primary-900 dark:text-primary-100 font-medium';
+  "bg-primary-200 dark:bg-primary-700/50 text-primary-900 dark:text-primary-100 font-medium";
 
 const itemInactive =
-  'text-primary-600 dark:text-primary-400 hover:bg-primary-100 dark:hover:bg-primary-800/50 hover:text-primary-900 dark:hover:text-primary-200';
+  "text-primary-600 dark:text-primary-400 hover:bg-primary-100 dark:hover:bg-primary-800/50 hover:text-primary-900 dark:hover:text-primary-200";
 
 const iconBtnCls =
-  'flex items-center justify-center rounded-md p-2 transition-colors cursor-pointer text-primary-600 dark:text-primary-400 hover:bg-primary-100 dark:hover:bg-primary-800/50 hover:text-primary-900 dark:hover:text-primary-200';
+  "flex items-center justify-center rounded-md p-2 transition-colors cursor-pointer text-primary-600 dark:text-primary-400 hover:bg-primary-100 dark:hover:bg-primary-800/50 hover:text-primary-900 dark:hover:text-primary-200";
 
 /* ── Default link renderer (plain <a>) ─────────────────── */
 
 function DefaultLink({ to, className, style, children }: SideNavLinkComponentProps) {
-  const cls = typeof className === 'function' ? className({ isActive: false }) : className;
+  const cls = typeof className === "function" ? className({ isActive: false }) : className;
   return (
     <a href={to} className={cls} style={style}>
       {children}
@@ -95,7 +95,7 @@ function DefaultLink({ to, className, style, children }: SideNavLinkComponentPro
 
 /* ── Collapse‑mode cycling ─────────────────────────────── */
 
-const modeOrder: SideNavCollapseMode[] = ['expanded', 'icons', 'mini'];
+const modeOrder: SideNavCollapseMode[] = ["expanded", "icons", "mini"];
 
 function nextCollapseMode(current: SideNavCollapseMode): SideNavCollapseMode {
   const i = modeOrder.indexOf(current);
@@ -159,22 +159,20 @@ function ExpandedItemNode({
         <button
           type="button"
           onClick={toggle}
-          className={cn(itemBase, itemInactive, 'justify-between')}
+          className={cn(itemBase, itemInactive, "justify-between")}
           style={{ paddingLeft }}
         >
           <span className="flex items-center gap-2">
             {item.icon}
             {item.label}
           </span>
-          <ChevronRight className={cn('h-3.5 w-3.5 transition-transform', open && 'rotate-90')} />
+          <ChevronRight className={cn("h-3.5 w-3.5 transition-transform", open && "rotate-90")} />
         </button>
         {open && (
           <div
             className={cn(
-              'flex flex-col gap-0.5 pt-0.5',
-              showLines
-                ? 'ml-2.5 border-l border-primary-200 dark:border-primary-700'
-                : 'ml-2',
+              "flex flex-col gap-0.5 pt-0.5",
+              showLines ? "ml-2.5 border-l border-primary-200 dark:border-primary-700" : "ml-2",
             )}
           >
             {item.children!.map((child) => (
@@ -228,7 +226,7 @@ function ExpandedItemNode({
   }
 
   return (
-    <span className={cn(itemBase, itemInactive, 'cursor-default')} style={{ paddingLeft }}>
+    <span className={cn(itemBase, itemInactive, "cursor-default")} style={{ paddingLeft }}>
       {item.icon}
       {item.label}
     </span>
@@ -269,9 +267,7 @@ function IconGroupFlyout({
   }, [open]);
 
   const iconContent = item.icon || (
-    <span className="text-xs font-bold leading-none">
-      {item.label.charAt(0).toUpperCase()}
-    </span>
+    <span className="text-xs font-bold leading-none">{item.label.charAt(0).toUpperCase()}</span>
   );
 
   return (
@@ -279,7 +275,7 @@ function IconGroupFlyout({
       <button
         ref={btnRef}
         type="button"
-        className={cn(iconBtnCls, 'w-full')}
+        className={cn(iconBtnCls, "w-full")}
         title={item.label}
         onClick={() => setOpen((o) => !o)}
       >
@@ -331,10 +327,7 @@ function IconGroupFlyout({
                   );
                 }
                 return (
-                  <span
-                    key={childKey}
-                    className={cn(itemBase, 'cursor-default text-primary-400')}
-                  >
+                  <span key={childKey} className={cn(itemBase, "cursor-default text-primary-400")}>
                     {child.icon}
                     {child.label}
                   </span>
@@ -362,9 +355,7 @@ function IconLeafItem({
   LinkComponent: React.ComponentType<SideNavLinkComponentProps>;
 }) {
   const iconContent = item.icon || (
-    <span className="text-xs font-bold leading-none">
-      {item.label.charAt(0).toUpperCase()}
-    </span>
+    <span className="text-xs font-bold leading-none">{item.label.charAt(0).toUpperCase()}</span>
   );
 
   if (item.path != null) {
@@ -374,7 +365,7 @@ function IconLeafItem({
         <button
           type="button"
           onClick={() => onItemClick(item, to)}
-          className={cn(iconBtnCls, 'w-full')}
+          className={cn(iconBtnCls, "w-full")}
           title={item.label}
         >
           {iconContent}
@@ -387,9 +378,9 @@ function IconLeafItem({
         className={({ isActive }: { isActive: boolean }) =>
           cn(
             iconBtnCls,
-            'w-full',
+            "w-full",
             isActive &&
-              'bg-primary-200 dark:bg-primary-700/50 text-primary-900 dark:text-primary-100',
+              "bg-primary-200 dark:bg-primary-700/50 text-primary-900 dark:text-primary-100",
           )
         }
       >
@@ -399,7 +390,7 @@ function IconLeafItem({
   }
 
   return (
-    <span className={cn(iconBtnCls, 'w-full cursor-default')} title={item.label}>
+    <span className={cn(iconBtnCls, "w-full cursor-default")} title={item.label}>
       {iconContent}
     </span>
   );
@@ -410,16 +401,16 @@ function IconLeafItem({
 export function SideNav({
   items,
   title,
-  basePath = '/',
+  basePath = "/",
   onItemClick,
   LinkComponent = DefaultLink,
   collapsible,
   collapseMode: controlledMode,
-  defaultCollapseMode = 'expanded',
+  defaultCollapseMode = "expanded",
   onCollapseModeChange,
   showLines = true,
   expandedKeys: controlledExpandedKeys,
-  defaultExpandedKeys = 'all',
+  defaultExpandedKeys = "all",
   onExpandedKeysChange,
   className,
   ...props
@@ -430,7 +421,7 @@ export function SideNav({
   // Expanded-keys state
   const allKeys = React.useMemo(() => collectGroupKeys(items), [items]);
   const [internalExpandedKeys, setInternalExpandedKeys] = useState<Set<string>>(() =>
-    defaultExpandedKeys === 'all' ? new Set(allKeys) : new Set(defaultExpandedKeys),
+    defaultExpandedKeys === "all" ? new Set(allKeys) : new Set(defaultExpandedKeys),
   );
   const expandedKeys = controlledExpandedKeys ?? null;
   const resolvedKeys = expandedKeys ?? internalExpandedKeys;
@@ -454,39 +445,31 @@ export function SideNav({
 
   return (
     <nav
-      className={cn(
-        'flex flex-col gap-0.5',
-        mode === 'mini' && 'items-center',
-        className,
-      )}
+      className={cn("flex flex-col gap-0.5", mode === "mini" && "items-center", className)}
       {...props}
     >
       {/* ── Toggle button ──────────────────── */}
       {collapsible && (
         <div
           className={cn(
-            'flex shrink-0 mb-1',
-            mode === 'expanded' ? 'justify-end' : 'justify-center',
+            "flex shrink-0 mb-1",
+            mode === "expanded" ? "justify-end" : "justify-center",
           )}
         >
           <button
             type="button"
             onClick={cycleMode}
             className={iconBtnCls}
-            aria-label={mode === 'mini' ? 'Expand sidebar' : 'Collapse sidebar'}
-            title={mode === 'mini' ? 'Expand sidebar' : 'Collapse sidebar'}
+            aria-label={mode === "mini" ? "Expand sidebar" : "Collapse sidebar"}
+            title={mode === "mini" ? "Expand sidebar" : "Collapse sidebar"}
           >
-            {mode === 'mini' ? (
-              <Menu className="h-5 w-5" />
-            ) : (
-              <ChevronsLeft className="h-4 w-4" />
-            )}
+            {mode === "mini" ? <Menu className="h-5 w-5" /> : <ChevronsLeft className="h-4 w-4" />}
           </button>
         </div>
       )}
 
       {/* ── Expanded mode ──────────────────── */}
-      {mode === 'expanded' && (
+      {mode === "expanded" && (
         <>
           {title && (
             <h2 className="text-primary-500 dark:text-primary-400 mb-3 text-sm font-semibold uppercase">
@@ -510,7 +493,7 @@ export function SideNav({
       )}
 
       {/* ── Icons mode ─────────────────────── */}
-      {mode === 'icons' &&
+      {mode === "icons" &&
         items.map((item) => {
           const key = item.key ?? item.path ?? item.label;
           if (item.children && item.children.length > 0) {

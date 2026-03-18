@@ -1,104 +1,119 @@
-import { useState, useEffect, useCallback } from 'react';
-import { Routes, Route, NavLink, Navigate } from 'react-router-dom';
-import { Sun, Moon, Github, Box, LayoutGrid, BarChart3, Compass, Layers, Square, Bell, Clapperboard } from 'lucide-react';
-import { SideNav, type SideNavItem, type SideNavLinkComponentProps, type SideNavCollapseMode } from '../src';
+import { useState, useEffect, useCallback } from "react";
+import { Routes, Route, NavLink, Navigate } from "react-router-dom";
+import {
+  Sun,
+  Moon,
+  Github,
+  Box,
+  LayoutGrid,
+  BarChart3,
+  Compass,
+  Layers,
+  Square,
+  Bell,
+  Clapperboard,
+} from "lucide-react";
+import {
+  SideNav,
+  type SideNavItem,
+  type SideNavLinkComponentProps,
+  type SideNavCollapseMode,
+} from "../src";
 
-import ButtonPage from './pages/ButtonPage';
-import BadgePage from './pages/BadgePage';
-import LabelPage from './pages/LabelPage';
-import InputPage from './pages/InputPage';
-import DropdownPage from './pages/DropdownPage';
-import CardPage from './pages/CardPage';
-import ImageCardPage from './pages/ImageCardPage';
-import PanelPage from './pages/PanelPage';
-import TablePage from './pages/TablePage';
-import ListPage from './pages/ListPage';
-import TreePage from './pages/TreePage';
-import ChatPage from './pages/ChatPage';
-import SideNavPage from './pages/SideNavPage';
-import AccordionPage from './pages/AccordionPage';
-import TabsPage from './pages/TabsPage';
-import DialogPage from './pages/DialogPage';
-import TooltipPage from './pages/TooltipPage';
-import AlertPage from './pages/AlertPage';
-import HeaderPage from './pages/HeaderPage';
-import FilmReelPage from './pages/FilmReelPage';
-import MiniPlayerPage from './pages/MiniPlayerPage';
-import CinePlayerPage from './pages/CinePlayerPage';
-import FileExplorerPage from './pages/FileExplorerPage';
+import ButtonPage from "./pages/ButtonPage";
+import BadgePage from "./pages/BadgePage";
+import LabelPage from "./pages/LabelPage";
+import InputPage from "./pages/InputPage";
+import DropdownPage from "./pages/DropdownPage";
+import CardPage from "./pages/CardPage";
+import ImageCardPage from "./pages/ImageCardPage";
+import PanelPage from "./pages/PanelPage";
+import TablePage from "./pages/TablePage";
+import ListPage from "./pages/ListPage";
+import TreePage from "./pages/TreePage";
+import ChatPage from "./pages/ChatPage";
+import SideNavPage from "./pages/SideNavPage";
+import AccordionPage from "./pages/AccordionPage";
+import TabsPage from "./pages/TabsPage";
+import DialogPage from "./pages/DialogPage";
+import TooltipPage from "./pages/TooltipPage";
+import AlertPage from "./pages/AlertPage";
+import HeaderPage from "./pages/HeaderPage";
+import FilmReelPage from "./pages/FilmReelPage";
+import MiniPlayerPage from "./pages/MiniPlayerPage";
+import CinePlayerPage from "./pages/CinePlayerPage";
+import FileExplorerPage from "./pages/FileExplorerPage";
 
 /* ── Sidebar nav items ───────────────────────────────── */
 
 const navItems: SideNavItem[] = [
   {
-    label: 'Primitives',
+    label: "Primitives",
     icon: <Box className="h-4 w-4" />,
     children: [
-      { label: 'Button', path: 'button' },
-      { label: 'Badge', path: 'badge' },
-      { label: 'Label', path: 'label' },
-      { label: 'Input', path: 'input' },
-      { label: 'Dropdown', path: 'dropdown' },
+      { label: "Button", path: "button" },
+      { label: "Badge", path: "badge" },
+      { label: "Label", path: "label" },
+      { label: "Input", path: "input" },
+      { label: "Dropdown", path: "dropdown" },
     ],
   },
   {
-    label: 'Layout',
+    label: "Layout",
     icon: <LayoutGrid className="h-4 w-4" />,
     children: [
-      { label: 'Card', path: 'card' },
-      { label: 'Image Card', path: 'image-card' },
-      { label: 'Panel', path: 'panel' },
+      { label: "Card", path: "card" },
+      { label: "Image Card", path: "image-card" },
+      { label: "Panel", path: "panel" },
     ],
   },
   {
-    label: 'Data Display',
+    label: "Data Display",
     icon: <BarChart3 className="h-4 w-4" />,
     children: [
-      { label: 'Table', path: 'table' },
-      { label: 'List', path: 'list' },
-      { label: 'Tree', path: 'tree' },
-      { label: 'Chat', path: 'chat' },
+      { label: "Table", path: "table" },
+      { label: "List", path: "list" },
+      { label: "Tree", path: "tree" },
+      { label: "Chat", path: "chat" },
     ],
   },
   {
-    label: 'Navigation',
+    label: "Navigation",
     icon: <Compass className="h-4 w-4" />,
     children: [
-      { label: 'Header', path: 'header' },
-      { label: 'SideNav', path: 'sidenav' },
+      { label: "Header", path: "header" },
+      { label: "SideNav", path: "sidenav" },
     ],
   },
   {
-    label: 'Disclosure',
+    label: "Disclosure",
     icon: <Layers className="h-4 w-4" />,
     children: [
-      { label: 'Accordion', path: 'accordion' },
-      { label: 'Tabs', path: 'tabs' },
+      { label: "Accordion", path: "accordion" },
+      { label: "Tabs", path: "tabs" },
     ],
   },
   {
-    label: 'Overlay',
+    label: "Overlay",
     icon: <Square className="h-4 w-4" />,
     children: [
-      { label: 'Dialog', path: 'dialog' },
-      { label: 'Tooltip', path: 'tooltip' },
+      { label: "Dialog", path: "dialog" },
+      { label: "Tooltip", path: "tooltip" },
     ],
   },
   {
-    label: 'Feedback',
+    label: "Feedback",
     icon: <Bell className="h-4 w-4" />,
-    children: [
-      { label: 'Alert / Toast', path: 'alert' },
-    ],
+    children: [{ label: "Alert / Toast", path: "alert" }],
   },
   {
-    label: 'Extras',
+    label: "Extras",
     icon: <Clapperboard className="h-4 w-4" />,
     children: [
-      { label: 'FilmReel', path: 'film-reel' },
-      { label: 'MiniPlayer', path: 'mini-player' },
-      { label: 'CinePlayer', path: 'cine-player' },
-      { label: 'FileExplorer', path: 'file-explorer' },
+      { label: "FilmReel", path: "film-reel" },
+      { label: "MiniPlayer", path: "mini-player" },
+      { label: "CinePlayer", path: "cine-player" },
+      { label: "FileExplorer", path: "file-explorer" },
     ],
   },
 ];
@@ -110,7 +125,7 @@ function RouterLink({ to, className, style, children }: SideNavLinkComponentProp
     <NavLink
       to={to}
       className={({ isActive }) =>
-        typeof className === 'function' ? className({ isActive }) : className
+        typeof className === "function" ? className({ isActive }) : className
       }
       style={style}
     >
@@ -123,13 +138,13 @@ function RouterLink({ to, className, style, children }: SideNavLinkComponentProp
 
 function useTheme() {
   const [dark, setDark] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return localStorage.getItem('jac-ui-theme') === 'dark';
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem("jac-ui-theme") === "dark";
   });
 
   useEffect(() => {
-    document.documentElement.classList.toggle('dark', dark);
-    localStorage.setItem('jac-ui-theme', dark ? 'dark' : 'light');
+    document.documentElement.classList.toggle("dark", dark);
+    localStorage.setItem("jac-ui-theme", dark ? "dark" : "light");
   }, [dark]);
 
   const toggle = useCallback(() => setDark((d) => !d), []);
@@ -140,7 +155,7 @@ function useTheme() {
 
 export default function App() {
   const { dark, toggle } = useTheme();
-  const [sideNavMode, setSideNavMode] = useState<SideNavCollapseMode>('expanded');
+  const [sideNavMode, setSideNavMode] = useState<SideNavCollapseMode>("expanded");
 
   return (
     <div className="flex h-screen flex-col">
@@ -155,8 +170,8 @@ export default function App() {
               to="/"
               className={({ isActive }) =>
                 isActive
-                  ? 'text-primary-900 font-medium dark:text-primary-100'
-                  : 'text-primary-500 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-200'
+                  ? "text-primary-900 font-medium dark:text-primary-100"
+                  : "text-primary-500 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-200"
               }
             >
               Home
@@ -185,11 +200,11 @@ export default function App() {
         {/* ── Sidebar ────────────────────── */}
         <aside
           className={`shrink-0 border-r border-primary-200 bg-white dark:border-primary-700 dark:bg-primary-900 transition-all duration-200 ${
-            sideNavMode === 'expanded'
-              ? 'w-48 overflow-y-auto p-3'
-              : sideNavMode === 'icons'
-                ? 'w-14 overflow-y-auto p-2'
-                : 'w-auto p-1'
+            sideNavMode === "expanded"
+              ? "w-48 overflow-y-auto p-3"
+              : sideNavMode === "icons"
+                ? "w-14 overflow-y-auto p-2"
+                : "w-auto p-1"
           }`}
         >
           <SideNav

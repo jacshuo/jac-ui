@@ -6,17 +6,17 @@ import React, {
   useLayoutEffect,
   useRef,
   useState,
-} from 'react';
-import { type VariantProps } from 'class-variance-authority';
-import { cn } from '../lib/utils';
-import { tabListVariants, tabTriggerVariants } from '../styles/theme';
+} from "react";
+import { type VariantProps } from "class-variance-authority";
+import { cn } from "../lib/utils";
+import { tabListVariants, tabTriggerVariants } from "../styles/theme";
 
 /* ── Context ──────────────────────────────────────────────── */
 
 type TabsCtx = {
   activeValue: string;
   setActiveValue: (value: string) => void;
-  intent: VariantProps<typeof tabListVariants>['intent'];
+  intent: VariantProps<typeof tabListVariants>["intent"];
   registerTrigger: (value: string, el: HTMLButtonElement | null) => void;
 };
 const TabsContext = createContext<TabsCtx | null>(null);
@@ -30,13 +30,13 @@ type TabsProps = {
   defaultValue?: string;
   value?: string;
   onValueChange?: (value: string) => void;
-  intent?: VariantProps<typeof tabListVariants>['intent'];
+  intent?: VariantProps<typeof tabListVariants>["intent"];
   children: React.ReactNode;
   className?: string;
 };
 
 export function Tabs({
-  defaultValue = '',
+  defaultValue = "",
   value,
   onValueChange,
   intent,
@@ -82,7 +82,9 @@ export function TabList({ className, ...props }: React.HTMLAttributes<HTMLDivEle
 
   const updateIndicator = useCallback(() => {
     if (!ctx || !listRef.current) return;
-    const triggers = listRef.current.querySelectorAll<HTMLButtonElement>('[role="tab"][data-active="true"]');
+    const triggers = listRef.current.querySelectorAll<HTMLButtonElement>(
+      '[role="tab"][data-active="true"]',
+    );
     const activeEl = triggers[0];
     if (!activeEl) {
       setIndicator(null);
@@ -102,13 +104,13 @@ export function TabList({ className, ...props }: React.HTMLAttributes<HTMLDivEle
     return () => ro.disconnect();
   }, [updateIndicator]);
 
-  const intent = ctx?.intent ?? 'line';
-  const showIndicator = indicator && (intent === 'line' || intent === 'underline');
+  const intent = ctx?.intent ?? "line";
+  const showIndicator = indicator && (intent === "line" || intent === "underline");
 
   return (
     <div
       ref={listRef}
-      className={cn(tabListVariants({ intent: ctx?.intent }), 'relative', className)}
+      className={cn(tabListVariants({ intent: ctx?.intent }), "relative", className)}
       role="tablist"
       {...props}
     >
@@ -161,8 +163,8 @@ export function TabPanels({ className, children, ...props }: TabPanelsProps) {
   const ctx = useContext(TabsContext);
   if (!ctx) return null;
 
-  const panels = React.Children.toArray(children).filter(
-    (c): c is React.ReactElement => React.isValidElement(c),
+  const panels = React.Children.toArray(children).filter((c): c is React.ReactElement =>
+    React.isValidElement(c),
   );
 
   const activeIndex = Math.max(
@@ -171,7 +173,7 @@ export function TabPanels({ className, children, ...props }: TabPanelsProps) {
   );
 
   return (
-    <div className={cn('overflow-hidden', className)} {...props}>
+    <div className={cn("overflow-hidden", className)} {...props}>
       <TabPanelsContext.Provider value={true}>
         <div
           className="flex transition-transform duration-300 ease-in-out"
@@ -205,7 +207,7 @@ export function TabContent({ value, className, children, ...props }: TabContentP
   // Inside TabPanels: always render (container handles sliding)
   if (insidePanels) {
     return (
-      <div className={cn('pt-4', className)} role="tabpanel" {...props}>
+      <div className={cn("pt-4", className)} role="tabpanel" {...props}>
         {children}
       </div>
     );
@@ -215,7 +217,7 @@ export function TabContent({ value, className, children, ...props }: TabContentP
   if (ctx?.activeValue !== value) return null;
 
   return (
-    <div className={cn('pt-4', className)} role="tabpanel" {...props}>
+    <div className={cn("pt-4", className)} role="tabpanel" {...props}>
       {children}
     </div>
   );

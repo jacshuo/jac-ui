@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
-import { cn } from '../lib/utils';
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { cn } from "../lib/utils";
 import {
   Heart,
   ThumbsDown,
@@ -17,7 +17,7 @@ import {
   Aperture,
   ZoomIn,
   ZoomOut,
-} from 'lucide-react';
+} from "lucide-react";
 
 /* ═══════════════════════════════════════════════════════════
    Types
@@ -49,7 +49,7 @@ export interface FilmReelAction {
   toggle?: boolean;
 }
 
-export type FilmReelLayout = 'strip' | 'sheet' | 'stack';
+export type FilmReelLayout = "strip" | "sheet" | "stack";
 
 export interface FilmReelProps {
   photos: FilmReelPhoto[];
@@ -68,20 +68,32 @@ export interface FilmReelProps {
    Constants
    ═══════════════════════════════════════════════════════════ */
 
-const FILM_BASE = '#1c1914';
-const FILM_DARK = '#130f0b';
-const SPROCKET_COLOR = '#2e261e';
-const FRAME_BORDER = '#504638';
-const FRAME_NUM_COLOR = '#6b5d4d';
+const FILM_BASE = "#1c1914";
+const FILM_DARK = "#130f0b";
+const SPROCKET_COLOR = "#2e261e";
+const FRAME_BORDER = "#504638";
+const FRAME_NUM_COLOR = "#6b5d4d";
 
 const GRAIN_SVG = `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`;
 
 const DEFAULT_ACTIONS: FilmReelAction[] = [
-  { key: 'like', icon: <Heart className="h-5 w-5" />, activeIcon: <Heart className="h-5 w-5" fill="currentColor" />, label: 'Like', toggle: true },
-  { key: 'dislike', icon: <ThumbsDown className="h-5 w-5" />, label: 'Dislike' },
-  { key: 'bookmark', icon: <Bookmark className="h-5 w-5" />, activeIcon: <Bookmark className="h-5 w-5" fill="currentColor" />, label: 'Bookmark', toggle: true },
-  { key: 'share', icon: <Share2 className="h-5 w-5" />, label: 'Share' },
-  { key: 'download', icon: <Download className="h-5 w-5" />, label: 'Download' },
+  {
+    key: "like",
+    icon: <Heart className="h-5 w-5" />,
+    activeIcon: <Heart className="h-5 w-5" fill="currentColor" />,
+    label: "Like",
+    toggle: true,
+  },
+  { key: "dislike", icon: <ThumbsDown className="h-5 w-5" />, label: "Dislike" },
+  {
+    key: "bookmark",
+    icon: <Bookmark className="h-5 w-5" />,
+    activeIcon: <Bookmark className="h-5 w-5" fill="currentColor" />,
+    label: "Bookmark",
+    toggle: true,
+  },
+  { key: "share", icon: <Share2 className="h-5 w-5" />, label: "Share" },
+  { key: "download", icon: <Download className="h-5 w-5" />, label: "Download" },
 ];
 
 /* ═══════════════════════════════════════════════════════════
@@ -90,7 +102,7 @@ const DEFAULT_ACTIONS: FilmReelAction[] = [
 
 export function FilmReel({
   photos,
-  layout = 'strip',
+  layout = "strip",
   actions = DEFAULT_ACTIONS,
   onAction,
   className,
@@ -111,7 +123,11 @@ export function FilmReel({
         const id = `${index}-${key}`;
         setActiveActions((prev) => {
           const next = new Set(prev);
-          next.has(id) ? next.delete(id) : next.add(id);
+          if (next.has(id)) {
+            next.delete(id);
+          } else {
+            next.add(id);
+          }
           return next;
         });
       }
@@ -120,8 +136,7 @@ export function FilmReel({
     [actions, onAction, photos],
   );
 
-  const Layout =
-    layout === 'strip' ? StripLayout : layout === 'sheet' ? SheetLayout : StackLayout;
+  const Layout = layout === "strip" ? StripLayout : layout === "sheet" ? SheetLayout : StackLayout;
 
   return (
     <>
@@ -189,19 +204,22 @@ function StripLayout({ photos, onPhotoClick, showGrain, className }: LayoutProps
   const scrollRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className={cn('select-none rounded-lg overflow-hidden', className)} style={{ background: FILM_DARK }}>
+    <div
+      className={cn("select-none rounded-lg overflow-hidden", className)}
+      style={{ background: FILM_DARK }}
+    >
       <SprocketStrip count={Math.max(30, photos.length * 6)} />
 
       <div
         ref={scrollRef}
         className="flex gap-1 overflow-x-auto scroll-smooth px-1 py-1"
-        style={{ background: FILM_BASE, scrollSnapType: 'x mandatory' }}
+        style={{ background: FILM_BASE, scrollSnapType: "x mandatory" }}
       >
         {photos.map((photo, i) => (
           <div
             key={i}
             className="group relative shrink-0 cursor-pointer"
-            style={{ scrollSnapAlign: 'center' }}
+            style={{ scrollSnapAlign: "center" }}
             onClick={() => onPhotoClick(i)}
           >
             {/* Film frame */}
@@ -211,27 +229,31 @@ function StripLayout({ photos, onPhotoClick, showGrain, className }: LayoutProps
             >
               <img
                 src={photo.src}
-                alt={photo.alt ?? photo.title ?? ''}
+                alt={photo.alt ?? photo.title ?? ""}
                 className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                 draggable={false}
               />
               {/* Warm overlay */}
               <div
                 className="pointer-events-none absolute inset-0 mix-blend-multiply opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                style={{ background: 'rgba(255, 175, 60, 0.06)' }}
+                style={{ background: "rgba(255, 175, 60, 0.06)" }}
               />
               {/* Grain overlay */}
               {showGrain && (
                 <div
                   className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-[0.06]"
-                  style={{ backgroundImage: GRAIN_SVG, animation: 'film-grain-shift 0.6s steps(5) infinite' }}
+                  style={{
+                    backgroundImage: GRAIN_SVG,
+                    animation: "film-grain-shift 0.6s steps(5) infinite",
+                  }}
                 />
               )}
               {/* Vignette */}
               <div
                 className="pointer-events-none absolute inset-0 opacity-30 transition-opacity duration-300 group-hover:opacity-50"
                 style={{
-                  background: 'radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.5) 100%)',
+                  background:
+                    "radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.5) 100%)",
                 }}
               />
             </div>
@@ -240,7 +262,8 @@ function StripLayout({ photos, onPhotoClick, showGrain, className }: LayoutProps
               className="mt-0.5 text-center font-mono text-[9px] tracking-widest"
               style={{ color: FRAME_NUM_COLOR }}
             >
-              {String(i + 1).padStart(2, '0')}{i % 2 === 0 ? '' : 'A'}
+              {String(i + 1).padStart(2, "0")}
+              {i % 2 === 0 ? "" : "A"}
             </div>
           </div>
         ))}
@@ -255,16 +278,29 @@ function StripLayout({ photos, onPhotoClick, showGrain, className }: LayoutProps
    Sheet Layout — contact sheet grid
    ═══════════════════════════════════════════════════════════ */
 
-function SheetLayout({ photos, onPhotoClick, showGrain, className, sheetTitle, sheetLabel }: LayoutProps) {
+function SheetLayout({
+  photos,
+  onPhotoClick,
+  showGrain,
+  className,
+  sheetTitle,
+  sheetLabel,
+}: LayoutProps) {
   return (
-    <div className={cn('rounded-lg p-5', className)} style={{ background: FILM_DARK }}>
+    <div className={cn("rounded-lg p-5", className)} style={{ background: FILM_DARK }}>
       {/* Film brand header */}
       <div className="mb-4 flex items-center justify-between">
-        <span className="font-mono text-[10px] uppercase tracking-[0.25em]" style={{ color: FRAME_NUM_COLOR }}>
+        <span
+          className="font-mono text-[10px] uppercase tracking-[0.25em]"
+          style={{ color: FRAME_NUM_COLOR }}
+        >
           {sheetTitle ?? `JAC\u00B7Film 35mm \u00B7 ${photos.length} exposures`}
         </span>
-        <span className="font-mono text-[10px] uppercase tracking-[0.25em]" style={{ color: FRAME_NUM_COLOR }}>
-          {sheetLabel ?? 'Contact Sheet'}
+        <span
+          className="font-mono text-[10px] uppercase tracking-[0.25em]"
+          style={{ color: FRAME_NUM_COLOR }}
+        >
+          {sheetLabel ?? "Contact Sheet"}
         </span>
       </div>
 
@@ -276,16 +312,19 @@ function SheetLayout({ photos, onPhotoClick, showGrain, className, sheetTitle, s
             style={{ animation: `reveal-up 0.4s ease-out ${i * 50}ms both` }}
             onClick={() => onPhotoClick(i)}
           >
-            <div className="mb-0.5 font-mono text-[9px] tracking-wider" style={{ color: FRAME_NUM_COLOR }}>
-              {String(i + 1).padStart(2, '0')}
+            <div
+              className="mb-0.5 font-mono text-[9px] tracking-wider"
+              style={{ color: FRAME_NUM_COLOR }}
+            >
+              {String(i + 1).padStart(2, "0")}
             </div>
             <div
               className="relative overflow-hidden rounded-[1px] border transition-all duration-300 group-hover:border-amber-600/50 group-hover:shadow-[0_0_20px_rgba(217,171,89,0.15)]"
-              style={{ borderColor: FRAME_BORDER, aspectRatio: '3/2' }}
+              style={{ borderColor: FRAME_BORDER, aspectRatio: "3/2" }}
             >
               <img
                 src={photo.src}
-                alt={photo.alt ?? ''}
+                alt={photo.alt ?? ""}
                 className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                 draggable={false}
               />
@@ -334,7 +373,7 @@ function StackLayout({ photos, onPhotoClick, showGrain, className }: LayoutProps
   };
 
   return (
-    <div className={cn('flex flex-col items-center gap-4', className)}>
+    <div className={cn("flex flex-col items-center gap-4", className)}>
       <div
         className="relative flex h-85 w-full items-center justify-center"
         onMouseEnter={() => setExpanded(true)}
@@ -348,7 +387,7 @@ function StackLayout({ photos, onPhotoClick, showGrain, className }: LayoutProps
             key={i}
             className="absolute cursor-pointer rounded-lg shadow-xl transition-all duration-500"
             style={{
-              transitionTimingFunction: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+              transitionTimingFunction: "cubic-bezier(0.34, 1.56, 0.64, 1)",
               transitionDelay: expanded ? `${i * 35}ms` : `${(maxVisible - i) * 25}ms`,
               transform: expanded
                 ? expandedTransform(i, visiblePhotos.length)
@@ -364,16 +403,16 @@ function StackLayout({ photos, onPhotoClick, showGrain, className }: LayoutProps
             <div
               className="relative h-full w-full overflow-hidden rounded-lg border transition-shadow duration-300"
               style={{
-                borderColor: expanded && hovered === i ? 'rgba(217,171,89,0.5)' : FRAME_BORDER,
+                borderColor: expanded && hovered === i ? "rgba(217,171,89,0.5)" : FRAME_BORDER,
                 boxShadow:
                   expanded && hovered === i
-                    ? '0 25px 50px rgba(0,0,0,0.5), 0 0 30px rgba(217,171,89,0.1)'
-                    : '0 10px 30px rgba(0,0,0,0.4)',
+                    ? "0 25px 50px rgba(0,0,0,0.5), 0 0 30px rgba(217,171,89,0.1)"
+                    : "0 10px 30px rgba(0,0,0,0.4)",
               }}
             >
               <img
                 src={photo.src}
-                alt={photo.alt ?? ''}
+                alt={photo.alt ?? ""}
                 className="h-full w-full object-cover"
                 draggable={false}
               />
@@ -387,14 +426,15 @@ function StackLayout({ photos, onPhotoClick, showGrain, className }: LayoutProps
               <div
                 className="pointer-events-none absolute inset-0"
                 style={{
-                  background: 'radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.35) 100%)',
+                  background:
+                    "radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.35) 100%)",
                 }}
               />
               {/* Title on hover */}
               {expanded && hovered === i && (
                 <div
                   className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/80 to-transparent p-3 pt-8"
-                  style={{ animation: 'reveal-up 0.25s ease-out' }}
+                  style={{ animation: "reveal-up 0.25s ease-out" }}
                 >
                   <span className="text-sm font-medium text-white/90">{photo.title}</span>
                 </div>
@@ -463,7 +503,7 @@ function Lightbox({
   // Lock body scroll
   useEffect(() => {
     const orig = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = orig;
     };
@@ -473,23 +513,23 @@ function Lightbox({
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       switch (e.key) {
-        case 'Escape':
+        case "Escape":
           onClose();
           break;
-        case 'ArrowLeft':
+        case "ArrowLeft":
           navigate(-1);
           break;
-        case 'ArrowRight':
+        case "ArrowRight":
           navigate(1);
           break;
-        case 'i':
-        case 'I':
+        case "i":
+        case "I":
           setShowInfo((v) => !v);
           break;
       }
     };
-    document.addEventListener('keydown', handler);
-    return () => document.removeEventListener('keydown', handler);
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
   });
 
   // Wheel zoom (non-passive)
@@ -505,8 +545,8 @@ function Lightbox({
         return next;
       });
     };
-    el.addEventListener('wheel', handler, { passive: false });
-    return () => el.removeEventListener('wheel', handler);
+    el.addEventListener("wheel", handler, { passive: false });
+    return () => el.removeEventListener("wheel", handler);
   }, []);
 
   const navigate = useCallback(
@@ -562,7 +602,7 @@ function Lightbox({
   return (
     <div
       className="fixed inset-0 z-200 flex flex-col"
-      style={{ animation: 'lightbox-backdrop-in 0.35s ease-out' }}
+      style={{ animation: "lightbox-backdrop-in 0.35s ease-out" }}
     >
       {/* Backdrop */}
       <div className="absolute inset-0 bg-black/95" onClick={onClose} />
@@ -571,7 +611,10 @@ function Lightbox({
       {showGrain && (
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.025]"
-          style={{ backgroundImage: GRAIN_SVG, animation: 'film-grain-shift 0.6s steps(5) infinite' }}
+          style={{
+            backgroundImage: GRAIN_SVG,
+            animation: "film-grain-shift 0.6s steps(5) infinite",
+          }}
         />
       )}
 
@@ -617,7 +660,7 @@ function Lightbox({
       <div
         ref={imageAreaRef}
         className="relative flex flex-1 items-center justify-center overflow-hidden"
-        style={{ cursor: zoom > 1 ? 'grab' : 'default' }}
+        style={{ cursor: zoom > 1 ? "grab" : "default" }}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
@@ -626,12 +669,12 @@ function Lightbox({
         <img
           key={currentIndex}
           src={photo.src}
-          alt={photo.alt ?? photo.title ?? ''}
+          alt={photo.alt ?? photo.title ?? ""}
           className="max-h-full max-w-full select-none object-contain"
           style={{
-            animation: 'lightbox-photo-in 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
+            animation: "lightbox-photo-in 0.35s cubic-bezier(0.16, 1, 0.3, 1)",
             transform: `scale(${zoom}) translate(${pan.x}px, ${pan.y}px)`,
-            transition: isDragging.current ? 'none' : 'transform 0.15s ease-out',
+            transition: isDragging.current ? "none" : "transform 0.15s ease-out",
           }}
           draggable={false}
         />
@@ -664,20 +707,16 @@ function Lightbox({
       {/* ── Metadata panel (slide up) ──────── */}
       <div
         className={cn(
-          'absolute inset-x-0 bottom-0 z-20 transition-all duration-400',
-          showInfo
-            ? 'translate-y-0 opacity-100'
-            : 'pointer-events-none translate-y-full opacity-0',
+          "absolute inset-x-0 bottom-0 z-20 transition-all duration-400",
+          showInfo ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-full opacity-0",
         )}
       >
         <div className="bg-linear-to-t from-black/90 via-black/75 to-transparent px-6 pb-24 pt-16">
-          {photo.title && (
-            <h3 className="mb-3 text-xl font-semibold text-white">{photo.title}</h3>
-          )}
+          {photo.title && <h3 className="mb-3 text-xl font-semibold text-white">{photo.title}</h3>}
           {photo.description && (
             <p
               className="mb-4 max-w-xl border-l-2 border-amber-500/40 pl-4 text-sm leading-relaxed text-white/60 italic"
-              style={{ animation: 'reveal-up 0.4s ease-out 0.1s both' }}
+              style={{ animation: "reveal-up 0.4s ease-out 0.1s both" }}
             >
               {photo.description}
             </p>
@@ -696,7 +735,7 @@ function Lightbox({
                   <Aperture className="h-3.5 w-3.5 text-amber-400/80" />
                   {[meta.aperture, meta.shutter, meta.iso && `ISO ${meta.iso}`]
                     .filter(Boolean)
-                    .join(' · ')}
+                    .join(" · ")}
                 </span>
               )}
               {meta.date && (
@@ -723,10 +762,10 @@ function Lightbox({
               <button
                 key={action.key}
                 className={cn(
-                  'rounded-full p-2.5 transition-all duration-200',
+                  "rounded-full p-2.5 transition-all duration-200",
                   active
-                    ? 'text-amber-400 hover:text-amber-300'
-                    : 'text-white/60 hover:bg-white/10 hover:text-white',
+                    ? "text-amber-400 hover:text-amber-300"
+                    : "text-white/60 hover:bg-white/10 hover:text-white",
                 )}
                 onClick={() => onAction(action.key, currentIndex)}
                 title={action.label}
@@ -740,10 +779,10 @@ function Lightbox({
           {/* Info toggle */}
           <button
             className={cn(
-              'rounded-full p-2.5 transition-all duration-200',
+              "rounded-full p-2.5 transition-all duration-200",
               showInfo
-                ? 'text-amber-400 hover:text-amber-300'
-                : 'text-white/60 hover:bg-white/10 hover:text-white',
+                ? "text-amber-400 hover:text-amber-300"
+                : "text-white/60 hover:bg-white/10 hover:text-white",
             )}
             onClick={() => setShowInfo((v) => !v)}
             title="Photo info (I)"

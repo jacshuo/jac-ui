@@ -1,8 +1,8 @@
-import React, { createContext, useCallback, useContext, useState } from 'react';
-import { type VariantProps } from 'class-variance-authority';
-import { ChevronDown } from 'lucide-react';
-import { cn } from '../lib/utils';
-import { accordionVariants } from '../styles/theme';
+import React, { createContext, useCallback, useContext, useState } from "react";
+import { type VariantProps } from "class-variance-authority";
+import { ChevronDown } from "lucide-react";
+import { cn } from "../lib/utils";
+import { accordionVariants } from "../styles/theme";
 
 /* ── Context ──────────────────────────────────────────────── */
 
@@ -19,14 +19,14 @@ const AccordionItemContext = createContext<AccordionItemCtx | null>(null);
 
 type AccordionProps = React.HTMLAttributes<HTMLDivElement> &
   VariantProps<typeof accordionVariants> & {
-    type?: 'single' | 'multiple';
+    type?: "single" | "multiple";
     defaultValue?: string[];
     value?: string[];
     onValueChange?: (value: string[]) => void;
   };
 
 export function Accordion({
-  type = 'single',
+  type = "single",
   defaultValue = [],
   value,
   onValueChange,
@@ -44,7 +44,7 @@ export function Accordion({
         if (prev.includes(itemValue)) {
           return prev.filter((v) => v !== itemValue);
         }
-        return type === 'single' ? [itemValue] : [...prev, itemValue];
+        return type === "single" ? [itemValue] : [...prev, itemValue];
       };
 
       if (onValueChange) {
@@ -77,7 +77,7 @@ export function AccordionItem({ value, className, children, ...props }: Accordio
 
   return (
     <AccordionItemContext.Provider value={{ value, isExpanded }}>
-      <div className={cn('', className)} {...props}>
+      <div className={cn("", className)} {...props}>
         {children}
       </div>
     </AccordionItemContext.Provider>
@@ -95,18 +95,20 @@ export function AccordionTrigger({ className, children, ...props }: AccordionTri
   return (
     <button
       className={cn(
-        'text-primary-800 hover:text-primary-600 dark:text-primary-100 dark:hover:text-primary-300 flex w-full cursor-pointer items-center justify-between gap-2 py-3 text-sm font-medium transition-colors [&>svg]:shrink-0',
+        "text-primary-800 hover:text-primary-600 dark:text-primary-100 dark:hover:text-primary-300 flex w-full cursor-pointer items-center justify-between gap-2 py-3 text-sm font-medium transition-colors [&>svg]:shrink-0",
         className,
       )}
       onClick={() => itemCtx && ctx?.toggleItem(itemCtx.value)}
-      aria-expanded={itemCtx?.isExpanded ? 'true' : 'false'}
+      aria-expanded={itemCtx?.isExpanded ? "true" : "false"}
       {...props}
     >
-      <span className="flex items-center gap-1.5 [&_svg]:h-4 [&_svg]:w-4 [&_svg]:shrink-0">{children}</span>
+      <span className="flex items-center gap-1.5 [&_svg]:h-4 [&_svg]:w-4 [&_svg]:shrink-0">
+        {children}
+      </span>
       <ChevronDown
         className={cn(
-          'h-4 w-4 shrink-0 transition-transform duration-200',
-          itemCtx?.isExpanded && 'rotate-180',
+          "h-4 w-4 shrink-0 transition-transform duration-200",
+          itemCtx?.isExpanded && "rotate-180",
         )}
       />
     </button>
@@ -123,13 +125,13 @@ export function AccordionContent({ className, children, ...props }: AccordionCon
   return (
     <div
       className={cn(
-        'grid transition-[grid-template-rows] duration-200 ease-out',
-        itemCtx?.isExpanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]',
+        "grid transition-[grid-template-rows] duration-200 ease-out",
+        itemCtx?.isExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
       )}
     >
       <div className="overflow-hidden">
         <div
-          className={cn('text-primary-500 dark:text-primary-400 pb-3 text-sm', className)}
+          className={cn("text-primary-500 dark:text-primary-400 pb-3 text-sm", className)}
           {...props}
         >
           {children}

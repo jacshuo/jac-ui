@@ -1,6 +1,6 @@
-import React, { createContext, useCallback, useContext, useState } from 'react';
-import { ChevronRight } from 'lucide-react';
-import { cn } from '../lib/utils';
+import React, { createContext, useCallback, useContext, useState } from "react";
+import { ChevronRight } from "lucide-react";
+import { cn } from "../lib/utils";
 
 /* ── Context ───────────────────────────────────────────── */
 
@@ -28,7 +28,7 @@ type TreeProps = React.HTMLAttributes<HTMLUListElement> & {
    */
   expandedKeys?: Set<string>;
   /** Default expanded keys (uncontrolled). Pass `'all'` to expand everything. */
-  defaultExpandedKeys?: Set<string> | 'all';
+  defaultExpandedKeys?: Set<string> | "all";
   /** Fires when a node is toggled. */
   onExpandedKeysChange?: (keys: Set<string>) => void;
 };
@@ -37,13 +37,13 @@ export function Tree({
   showLines = true,
   showRoot = true,
   expandedKeys: controlledKeys,
-  defaultExpandedKeys = 'all',
+  defaultExpandedKeys = "all",
   onExpandedKeysChange,
   className,
   children,
   ...props
 }: TreeProps) {
-  const [internalKeys, setInternalKeys] = useState<Set<string> | 'all'>(() => defaultExpandedKeys);
+  const [internalKeys, setInternalKeys] = useState<Set<string> | "all">(() => defaultExpandedKeys);
   const expandedKeys = controlledKeys ?? null;
 
   const onToggleKey = useCallback(
@@ -56,10 +56,10 @@ export function Tree({
       } else {
         setInternalKeys((prev) => {
           // 'all' means everything open — toggling one means closing it
-          if (prev === 'all') {
+          if (prev === "all") {
             // Can't enumerate, so we can't build a full set. Store as special case.
             // We'll treat 'all' minus this key. Use a sentinel approach.
-            return new Set(['__ALL_MINUS__', key]);
+            return new Set(["__ALL_MINUS__", key]);
           }
           const next = new Set(prev);
           if (next.has(key)) next.delete(key);
@@ -72,16 +72,16 @@ export function Tree({
   );
 
   // Resolve internal keys for context
-  const resolvedKeys = controlledKeys ?? (internalKeys === 'all' ? null : internalKeys);
+  const resolvedKeys = controlledKeys ?? (internalKeys === "all" ? null : internalKeys);
 
   return (
     <TreeContext.Provider value={{ showLines, expandedKeys: resolvedKeys, onToggleKey }}>
       {showRoot ? (
-        <ul className={cn('text-sm', className)} role="tree" {...props}>
+        <ul className={cn("text-sm", className)} role="tree" {...props}>
           {children}
         </ul>
       ) : (
-        <ul className={cn('text-sm', className)} role="tree" {...props}>
+        <ul className={cn("text-sm", className)} role="tree" {...props}>
           <RootChildrenOnly>{children}</RootChildrenOnly>
         </ul>
       )}
@@ -149,7 +149,7 @@ export function TreeItem({
   const hasChildren = React.Children.count(children) > 0;
 
   // Resolve the key used for context-level control
-  const resolvedKey = nodeKey ?? (typeof label === 'string' ? label : '');
+  const resolvedKey = nodeKey ?? (typeof label === "string" ? label : "");
 
   // Priority: per-item controlled > context expandedKeys > internal state
   let expanded: boolean;
@@ -157,7 +157,7 @@ export function TreeItem({
     expanded = controlledExpanded;
   } else if (expandedKeys != null && resolvedKey) {
     // Check the __ALL_MINUS__ sentinel
-    if (expandedKeys.has('__ALL_MINUS__')) {
+    if (expandedKeys.has("__ALL_MINUS__")) {
       expanded = !expandedKeys.has(resolvedKey);
     } else {
       expanded = expandedKeys.has(resolvedKey);
@@ -179,22 +179,22 @@ export function TreeItem({
 
   return (
     <li
-      className={cn('select-none', className)}
+      className={cn("select-none", className)}
       role="treeitem"
       aria-expanded={hasChildren ? expanded : undefined}
     >
       <div
         className={cn(
-          'hover:bg-primary-50 dark:hover:bg-primary-800/50 flex items-center gap-1 rounded-md px-1 py-1',
-          hasChildren ? 'cursor-pointer' : 'cursor-default',
+          "hover:bg-primary-50 dark:hover:bg-primary-800/50 flex items-center gap-1 rounded-md px-1 py-1",
+          hasChildren ? "cursor-pointer" : "cursor-default",
         )}
         onClick={hasChildren ? toggle : undefined}
       >
         {hasChildren ? (
           <ChevronRight
             className={cn(
-              'text-primary-400 h-4 w-4 shrink-0 transition-transform duration-200',
-              expanded && 'rotate-90',
+              "text-primary-400 h-4 w-4 shrink-0 transition-transform duration-200",
+              expanded && "rotate-90",
             )}
           />
         ) : (
@@ -206,15 +206,15 @@ export function TreeItem({
       {hasChildren && (
         <div
           className={cn(
-            'grid transition-[grid-template-rows] duration-200 ease-out',
-            expanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]',
+            "grid transition-[grid-template-rows] duration-200 ease-out",
+            expanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
           )}
         >
           <div className="overflow-hidden">
             <ul
               className={cn(
-                'ml-4 pl-2',
-                showLines && 'border-primary-200 dark:border-primary-700 border-l',
+                "ml-4 pl-2",
+                showLines && "border-primary-200 dark:border-primary-700 border-l",
               )}
               role="group"
             >

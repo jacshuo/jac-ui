@@ -1,8 +1,8 @@
-import React, { useMemo, useState, useCallback, useRef, useEffect } from 'react';
-import { type VariantProps } from 'class-variance-authority';
-import { ArrowUp, ArrowDown, ArrowUpDown, Plus, Trash2, Pencil, Check, X } from 'lucide-react';
-import { cn } from '../lib/utils';
-import { tableVariants } from '../styles/theme';
+import React, { useMemo, useState, useCallback, useRef, useEffect } from "react";
+import { type VariantProps } from "class-variance-authority";
+import { ArrowUp, ArrowDown, ArrowUpDown, Plus, Trash2, Pencil, Check, X } from "lucide-react";
+import { cn } from "../lib/utils";
+import { tableVariants } from "../styles/theme";
 
 /* ═══════════════════════════════════════════════════════════
    Primitive table elements (unchanged API)
@@ -25,7 +25,7 @@ export function TableHeader({
   return (
     <thead
       className={cn(
-        'bg-primary-50 text-primary-600 dark:bg-primary-800/50 dark:text-primary-400',
+        "bg-primary-50 text-primary-600 dark:bg-primary-800/50 dark:text-primary-400",
         className,
       )}
       {...props}
@@ -34,14 +34,14 @@ export function TableHeader({
 }
 
 export function TableBody({ className, ...props }: React.HTMLAttributes<HTMLTableSectionElement>) {
-  return <tbody className={cn('[&_tr:last-child]:border-0', className)} {...props} />;
+  return <tbody className={cn("[&_tr:last-child]:border-0", className)} {...props} />;
 }
 
 export function TableRow({ className, ...props }: React.HTMLAttributes<HTMLTableRowElement>) {
   return (
     <tr
       className={cn(
-        'border-primary-200 hover:bg-primary-50/50 dark:border-primary-700 dark:hover:bg-primary-800/30 border-b transition-colors',
+        "border-primary-200 hover:bg-primary-50/50 dark:border-primary-700 dark:hover:bg-primary-800/30 border-b transition-colors",
         className,
       )}
       {...props}
@@ -53,7 +53,7 @@ export function TableHead({ className, ...props }: React.ThHTMLAttributes<HTMLTa
   return (
     <th
       className={cn(
-        'px-4 py-3 text-left text-xs font-semibold tracking-wider uppercase',
+        "px-4 py-3 text-left text-xs font-semibold tracking-wider uppercase",
         className,
       )}
       {...props}
@@ -63,7 +63,7 @@ export function TableHead({ className, ...props }: React.ThHTMLAttributes<HTMLTa
 
 export function TableCell({ className, ...props }: React.TdHTMLAttributes<HTMLTableCellElement>) {
   return (
-    <td className={cn('text-primary-700 dark:text-primary-300 px-4 py-3', className)} {...props} />
+    <td className={cn("text-primary-700 dark:text-primary-300 px-4 py-3", className)} {...props} />
   );
 }
 
@@ -71,7 +71,7 @@ export function TableCell({ className, ...props }: React.TdHTMLAttributes<HTMLTa
    Shared types
    ═══════════════════════════════════════════════════════════ */
 
-export type SortDirection = 'asc' | 'desc';
+export type SortDirection = "asc" | "desc";
 
 export type SortState<K extends string = string> = {
   column: K;
@@ -110,7 +110,7 @@ type SortableTableProps<T, K extends string = string> = {
   onSortChange?: (sort: SortState<K>) => void;
   defaultSort?: SortState<K>;
   rowKey?: (row: T, index: number) => React.Key;
-  intent?: VariantProps<typeof tableVariants>['intent'];
+  intent?: VariantProps<typeof tableVariants>["intent"];
   className?: string;
 };
 
@@ -131,10 +131,10 @@ export function SortableTable<T, K extends string = string>({
     (column: K) => {
       const next: SortState<K> =
         sort?.column === column
-          ? sort.direction === 'asc'
-            ? { column, direction: 'desc' }
+          ? sort.direction === "asc"
+            ? { column, direction: "desc" }
             : null
-          : { column, direction: 'asc' };
+          : { column, direction: "asc" };
 
       if (onSortChange) {
         onSortChange(next);
@@ -158,12 +158,12 @@ export function SortableTable<T, K extends string = string>({
         if (aVal == null && bVal == null) return 0;
         if (aVal == null) return -1;
         if (bVal == null) return 1;
-        if (typeof aVal === 'number' && typeof bVal === 'number') return aVal - bVal;
+        if (typeof aVal === "number" && typeof bVal === "number") return aVal - bVal;
         return String(aVal).localeCompare(String(bVal));
       });
 
     const sorted = [...data].sort(compare);
-    return sort.direction === 'desc' ? sorted.reverse() : sorted;
+    return sort.direction === "desc" ? sorted.reverse() : sorted;
   }, [data, sort, columns]);
 
   return (
@@ -176,10 +176,10 @@ export function SortableTable<T, K extends string = string>({
             return (
               <TableHead
                 key={col.key}
-                className={cn(sortable && 'cursor-pointer select-none', col.headerClassName)}
+                className={cn(sortable && "cursor-pointer select-none", col.headerClassName)}
                 onClick={sortable ? () => handleSort(col.key) : undefined}
                 aria-sort={
-                  isActive ? (sort.direction === 'asc' ? 'ascending' : 'descending') : undefined
+                  isActive ? (sort.direction === "asc" ? "ascending" : "descending") : undefined
                 }
               >
                 <span className="inline-flex items-center gap-1">
@@ -213,7 +213,7 @@ export function SortableTable<T, K extends string = string>({
    toolbar (add/delete/edit rows)
    ═══════════════════════════════════════════════════════════ */
 
-export type SelectionMode = 'none' | 'single' | 'multiple';
+export type SelectionMode = "none" | "single" | "multiple";
 
 export type DataTableProps<T, K extends string = string> = {
   /** Column definitions. */
@@ -250,7 +250,7 @@ export type DataTableProps<T, K extends string = string> = {
   /** Called when Delete is clicked. Receives currently selected keys. */
   onDelete?: (keys: React.Key[]) => void;
 
-  intent?: VariantProps<typeof tableVariants>['intent'];
+  intent?: VariantProps<typeof tableVariants>["intent"];
   className?: string;
 };
 
@@ -283,8 +283,8 @@ function EditableCell({
         value={draft}
         onChange={(e) => setDraft(e.target.value)}
         onKeyDown={(e) => {
-          if (e.key === 'Enter') commit();
-          if (e.key === 'Escape') onCancel();
+          if (e.key === "Enter") commit();
+          if (e.key === "Escape") onCancel();
         }}
         aria-label="Edit cell"
         className="min-w-0 flex-1 rounded border border-primary-400 bg-white px-1.5 py-0.5 text-sm outline-none focus:ring-1 focus:ring-primary-400 dark:border-primary-600 dark:bg-secondary-800"
@@ -318,7 +318,7 @@ export function DataTable<T, K extends string = string>({
   sort: controlledSort,
   onSortChange,
   defaultSort = null,
-  selectionMode = 'none',
+  selectionMode = "none",
   selected: controlledSelected,
   onSelectionChange,
   editable = false,
@@ -337,11 +337,15 @@ export function DataTable<T, K extends string = string>({
     (column: K) => {
       const next: SortState<K> =
         sort?.column === column
-          ? sort.direction === 'asc'
-            ? { column, direction: 'desc' }
+          ? sort.direction === "asc"
+            ? { column, direction: "desc" }
             : null
-          : { column, direction: 'asc' };
-      onSortChange ? onSortChange(next) : setInternalSort(next);
+          : { column, direction: "asc" };
+      if (onSortChange) {
+        onSortChange(next);
+      } else {
+        setInternalSort(next);
+      }
     },
     [sort, onSortChange],
   );
@@ -358,11 +362,11 @@ export function DataTable<T, K extends string = string>({
         if (aVal == null && bVal == null) return 0;
         if (aVal == null) return -1;
         if (bVal == null) return 1;
-        if (typeof aVal === 'number' && typeof bVal === 'number') return aVal - bVal;
+        if (typeof aVal === "number" && typeof bVal === "number") return aVal - bVal;
         return String(aVal).localeCompare(String(bVal));
       });
     const sorted = [...data].sort(compare);
-    return sort.direction === 'desc' ? sorted.reverse() : sorted;
+    return sort.direction === "desc" ? sorted.reverse() : sorted;
   }, [data, sort, columns]);
 
   /* ── Selection state ────────────────────────────────── */
@@ -371,14 +375,17 @@ export function DataTable<T, K extends string = string>({
   const setSelected = onSelectionChange ?? setInternalSelected;
 
   const allKeys = useMemo(() => sortedData.map((row, i) => rowKey(row, i)), [sortedData, rowKey]);
-  const allSelected = selectionMode === 'multiple' && allKeys.length > 0 && allKeys.every((k) => selected.includes(k));
-  const someSelected = selectionMode === 'multiple' && selected.length > 0 && !allSelected;
+  const allSelected =
+    selectionMode === "multiple" &&
+    allKeys.length > 0 &&
+    allKeys.every((k) => selected.includes(k));
+  const someSelected = selectionMode === "multiple" && selected.length > 0 && !allSelected;
 
   const toggleRow = useCallback(
     (key: React.Key) => {
-      if (selectionMode === 'single') {
+      if (selectionMode === "single") {
         setSelected(selected.includes(key) ? [] : [key]);
-      } else if (selectionMode === 'multiple') {
+      } else if (selectionMode === "multiple") {
         setSelected(
           selected.includes(key) ? selected.filter((k) => k !== key) : [...selected, key],
         );
@@ -438,7 +445,8 @@ export function DataTable<T, K extends string = string>({
               disabled={selected.length === 0}
               className="inline-flex items-center gap-1.5 rounded-md border border-secondary-300 bg-white px-3 py-1.5 text-sm font-medium text-danger-600 transition-colors hover:bg-danger-50 disabled:opacity-40 disabled:pointer-events-none dark:border-secondary-600 dark:bg-secondary-800 dark:text-danger-400 dark:hover:bg-danger-900/20"
             >
-              <Trash2 className="h-3.5 w-3.5" /> Delete{selected.length > 0 && ` (${selected.length})`}
+              <Trash2 className="h-3.5 w-3.5" /> Delete
+              {selected.length > 0 && ` (${selected.length})`}
             </button>
           )}
           {editable && selected.length === 1 && (
@@ -457,7 +465,7 @@ export function DataTable<T, K extends string = string>({
           )}
           {selected.length > 0 && (
             <span className="ml-auto text-sm text-secondary-500 dark:text-secondary-400">
-              {selected.length} row{selected.length > 1 ? 's' : ''} selected
+              {selected.length} row{selected.length > 1 ? "s" : ""} selected
             </span>
           )}
         </div>
@@ -466,7 +474,7 @@ export function DataTable<T, K extends string = string>({
       <Table intent={intent} className={className}>
         <TableHeader>
           <TableRow>
-            {selectionMode === 'multiple' && (
+            {selectionMode === "multiple" && (
               <TableHead className="w-10">
                 <input
                   type="checkbox"
@@ -480,17 +488,17 @@ export function DataTable<T, K extends string = string>({
                 />
               </TableHead>
             )}
-            {selectionMode === 'single' && <TableHead className="w-10" />}
+            {selectionMode === "single" && <TableHead className="w-10" />}
             {columns.map((col) => {
               const sortable = col.sortable !== false;
               const isActive = sort?.column === col.key;
               return (
                 <TableHead
                   key={col.key}
-                  className={cn(sortable && 'cursor-pointer select-none', col.headerClassName)}
+                  className={cn(sortable && "cursor-pointer select-none", col.headerClassName)}
                   onClick={sortable ? () => handleSort(col.key) : undefined}
                   aria-sort={
-                    isActive ? (sort.direction === 'asc' ? 'ascending' : 'descending') : undefined
+                    isActive ? (sort.direction === "asc" ? "ascending" : "descending") : undefined
                   }
                 >
                   <span className="inline-flex items-center gap-1">
@@ -512,12 +520,12 @@ export function DataTable<T, K extends string = string>({
             return (
               <TableRow
                 key={rKey}
-                className={cn(isSelected && 'bg-primary-50/60 dark:bg-primary-900/20')}
+                className={cn(isSelected && "bg-primary-50/60 dark:bg-primary-900/20")}
                 onClick={() => {
-                  if (selectionMode !== 'none') toggleRow(rKey);
+                  if (selectionMode !== "none") toggleRow(rKey);
                 }}
               >
-                {selectionMode === 'multiple' && (
+                {selectionMode === "multiple" && (
                   <TableCell className="w-10">
                     <input
                       type="checkbox"
@@ -529,7 +537,7 @@ export function DataTable<T, K extends string = string>({
                     />
                   </TableCell>
                 )}
-                {selectionMode === 'single' && (
+                {selectionMode === "single" && (
                   <TableCell className="w-10">
                     <input
                       type="radio"
@@ -542,14 +550,13 @@ export function DataTable<T, K extends string = string>({
                   </TableCell>
                 )}
                 {columns.map((col) => {
-                  const isEditing =
-                    editingCell?.rowKey === rKey && editingCell?.colKey === col.key;
+                  const isEditing = editingCell?.rowKey === rKey && editingCell?.colKey === col.key;
 
                   const rawValue =
                     col.editValue?.(row) ??
                     (() => {
                       const v = col.cell(row);
-                      return typeof v === 'string' || typeof v === 'number' ? String(v) : '';
+                      return typeof v === "string" || typeof v === "number" ? String(v) : "";
                     })();
 
                   return (
@@ -557,7 +564,7 @@ export function DataTable<T, K extends string = string>({
                       key={col.key}
                       className={cn(
                         col.cellClassName,
-                        editable && col.editable !== false && 'cursor-text',
+                        editable && col.editable !== false && "cursor-text",
                       )}
                       onDoubleClick={(e) => {
                         e.stopPropagation();
@@ -588,13 +595,13 @@ export function DataTable<T, K extends string = string>({
 /* ── SortIcon ──────────────────────────────────────────── */
 
 function SortIcon({ active, direction }: { active: boolean; direction: SortDirection | null }) {
-  const cls = 'h-3.5 w-3.5 shrink-0';
+  const cls = "h-3.5 w-3.5 shrink-0";
   if (!active || !direction) {
-    return <ArrowUpDown className={cn(cls, 'opacity-30')} />;
+    return <ArrowUpDown className={cn(cls, "opacity-30")} />;
   }
-  return direction === 'asc' ? (
-    <ArrowUp className={cn(cls, 'opacity-70')} />
+  return direction === "asc" ? (
+    <ArrowUp className={cn(cls, "opacity-70")} />
   ) : (
-    <ArrowDown className={cn(cls, 'opacity-70')} />
+    <ArrowDown className={cn(cls, "opacity-70")} />
   );
 }

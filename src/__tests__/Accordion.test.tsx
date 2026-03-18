@@ -1,14 +1,14 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { describe, it, expect, vi } from "vitest";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import {
   Accordion,
   AccordionItem,
   AccordionTrigger,
   AccordionContent,
-} from '../components/Accordion';
+} from "../components/Accordion";
 
-function renderAccordion(type: 'single' | 'multiple' = 'single') {
+function renderAccordion(type: "single" | "multiple" = "single") {
   return render(
     <Accordion type={type} defaultValue={[]}>
       <AccordionItem value="item-1">
@@ -23,66 +23,66 @@ function renderAccordion(type: 'single' | 'multiple' = 'single') {
   );
 }
 
-describe('Accordion', () => {
-  it('renders triggers', () => {
+describe("Accordion", () => {
+  it("renders triggers", () => {
     renderAccordion();
-    expect(screen.getByText('Section 1')).toBeInTheDocument();
-    expect(screen.getByText('Section 2')).toBeInTheDocument();
+    expect(screen.getByText("Section 1")).toBeInTheDocument();
+    expect(screen.getByText("Section 2")).toBeInTheDocument();
   });
 
-  it('starts collapsed (aria-expanded=false)', () => {
+  it("starts collapsed (aria-expanded=false)", () => {
     renderAccordion();
-    const triggers = screen.getAllByRole('button');
-    triggers.forEach((t) => expect(t).toHaveAttribute('aria-expanded', 'false'));
+    const triggers = screen.getAllByRole("button");
+    triggers.forEach((t) => expect(t).toHaveAttribute("aria-expanded", "false"));
   });
 
-  it('expands item on click (single mode)', async () => {
+  it("expands item on click (single mode)", async () => {
     const user = userEvent.setup();
-    renderAccordion('single');
-    await user.click(screen.getByText('Section 1'));
-    expect(screen.getAllByRole('button')[0]).toHaveAttribute('aria-expanded', 'true');
+    renderAccordion("single");
+    await user.click(screen.getByText("Section 1"));
+    expect(screen.getAllByRole("button")[0]).toHaveAttribute("aria-expanded", "true");
   });
 
-  it('collapses previous in single mode', async () => {
+  it("collapses previous in single mode", async () => {
     const user = userEvent.setup();
-    renderAccordion('single');
-    await user.click(screen.getByText('Section 1'));
-    await user.click(screen.getByText('Section 2'));
-    expect(screen.getAllByRole('button')[0]).toHaveAttribute('aria-expanded', 'false');
-    expect(screen.getAllByRole('button')[1]).toHaveAttribute('aria-expanded', 'true');
+    renderAccordion("single");
+    await user.click(screen.getByText("Section 1"));
+    await user.click(screen.getByText("Section 2"));
+    expect(screen.getAllByRole("button")[0]).toHaveAttribute("aria-expanded", "false");
+    expect(screen.getAllByRole("button")[1]).toHaveAttribute("aria-expanded", "true");
   });
 
-  it('allows multiple open in multiple mode', async () => {
+  it("allows multiple open in multiple mode", async () => {
     const user = userEvent.setup();
-    renderAccordion('multiple');
-    await user.click(screen.getByText('Section 1'));
-    await user.click(screen.getByText('Section 2'));
-    expect(screen.getAllByRole('button')[0]).toHaveAttribute('aria-expanded', 'true');
-    expect(screen.getAllByRole('button')[1]).toHaveAttribute('aria-expanded', 'true');
+    renderAccordion("multiple");
+    await user.click(screen.getByText("Section 1"));
+    await user.click(screen.getByText("Section 2"));
+    expect(screen.getAllByRole("button")[0]).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getAllByRole("button")[1]).toHaveAttribute("aria-expanded", "true");
   });
 
-  it('toggles off on second click', async () => {
+  it("toggles off on second click", async () => {
     const user = userEvent.setup();
-    renderAccordion('single');
-    await user.click(screen.getByText('Section 1'));
-    expect(screen.getAllByRole('button')[0]).toHaveAttribute('aria-expanded', 'true');
-    await user.click(screen.getByText('Section 1'));
-    expect(screen.getAllByRole('button')[0]).toHaveAttribute('aria-expanded', 'false');
+    renderAccordion("single");
+    await user.click(screen.getByText("Section 1"));
+    expect(screen.getAllByRole("button")[0]).toHaveAttribute("aria-expanded", "true");
+    await user.click(screen.getByText("Section 1"));
+    expect(screen.getAllByRole("button")[0]).toHaveAttribute("aria-expanded", "false");
   });
 
-  it('renders with defaultValue expanded', () => {
+  it("renders with defaultValue expanded", () => {
     render(
-      <Accordion defaultValue={['a']}>
+      <Accordion defaultValue={["a"]}>
         <AccordionItem value="a">
           <AccordionTrigger>Open</AccordionTrigger>
           <AccordionContent>Expanded</AccordionContent>
         </AccordionItem>
       </Accordion>,
     );
-    expect(screen.getByRole('button')).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.getByRole("button")).toHaveAttribute("aria-expanded", "true");
   });
 
-  it('calls onValueChange in controlled mode', async () => {
+  it("calls onValueChange in controlled mode", async () => {
     const user = userEvent.setup();
     const onValueChange = vi.fn();
     render(
@@ -93,7 +93,7 @@ describe('Accordion', () => {
         </AccordionItem>
       </Accordion>,
     );
-    await user.click(screen.getByText('Click'));
-    expect(onValueChange).toHaveBeenCalledWith(['x']);
+    await user.click(screen.getByText("Click"));
+    expect(onValueChange).toHaveBeenCalledWith(["x"]);
   });
 });

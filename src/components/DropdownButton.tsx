@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { type VariantProps } from 'class-variance-authority';
-import { ChevronDown, Check } from 'lucide-react';
-import { cn } from '../lib/utils';
-import { buttonVariants } from '../styles/theme';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { type VariantProps } from "class-variance-authority";
+import { ChevronDown, Check } from "lucide-react";
+import { cn } from "../lib/utils";
+import { buttonVariants } from "../styles/theme";
 
 /* ── Types ─────────────────────────────────────────────── */
 
@@ -19,14 +19,14 @@ export interface DropdownItem {
 
 export interface DropdownButtonProps
   extends
-    Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children'>,
+    Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "children">,
     VariantProps<typeof buttonVariants> {
   /** Button label. */
   label: React.ReactNode;
   /** Dropdown menu items. */
   items: DropdownItem[];
   /** Menu alignment. @default 'left' */
-  align?: 'left' | 'right';
+  align?: "left" | "right";
 
   /* ── Editable ────────────────────────────────────────── */
   /** Show a search/add input at the top of the menu. */
@@ -46,7 +46,7 @@ export interface DropdownButtonProps
 /* ── Helpers ───────────────────────────────────────────── */
 
 function itemKey(item: DropdownItem, index: number): string {
-  return item.key ?? (typeof item.label === 'string' ? item.label : String(index));
+  return item.key ?? (typeof item.label === "string" ? item.label : String(index));
 }
 
 /* ── Component ─────────────────────────────────────────── */
@@ -56,7 +56,7 @@ export function DropdownButton({
   items,
   intent,
   size,
-  align = 'left',
+  align = "left",
   className,
   disabled,
   editable = false,
@@ -67,7 +67,7 @@ export function DropdownButton({
   ...props
 }: DropdownButtonProps) {
   const [open, setOpen] = useState(false);
-  const [filter, setFilter] = useState('');
+  const [filter, setFilter] = useState("");
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -78,7 +78,7 @@ export function DropdownButton({
         if (next && editable) {
           requestAnimationFrame(() => inputRef.current?.focus());
         }
-        if (!next) setFilter('');
+        if (!next) setFilter("");
         return next;
       });
     }
@@ -90,24 +90,24 @@ export function DropdownButton({
     const handler = (e: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
         setOpen(false);
-        setFilter('');
+        setFilter("");
       }
     };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
   }, [open]);
 
   // Close on Escape
   useEffect(() => {
     if (!open) return;
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         setOpen(false);
-        setFilter('');
+        setFilter("");
       }
     };
-    document.addEventListener('keydown', handler);
-    return () => document.removeEventListener('keydown', handler);
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
   }, [open]);
 
   /* ── Filtered items ────────────────────────────────── */
@@ -115,7 +115,7 @@ export function DropdownButton({
   const filteredItems = useMemo(() => {
     if (!filter) return items;
     return items.filter((item) => {
-      const text = typeof item.label === 'string' ? item.label : (item.key ?? '');
+      const text = typeof item.label === "string" ? item.label : (item.key ?? "");
       return text.toLowerCase().includes(lowerFilter);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -125,7 +125,7 @@ export function DropdownButton({
   const canAdd = useMemo(() => {
     if (!editable || !filter.trim()) return false;
     return !items.some((item) => {
-      const text = typeof item.label === 'string' ? item.label : (item.key ?? '');
+      const text = typeof item.label === "string" ? item.label : (item.key ?? "");
       return text.toLowerCase() === lowerFilter;
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -135,12 +135,12 @@ export function DropdownButton({
     const value = filter.trim();
     if (!value) return;
     onAddItem?.(value);
-    setFilter('');
+    setFilter("");
   }, [filter, onAddItem]);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === 'Enter' && canAdd) {
+      if (e.key === "Enter" && canAdd) {
         e.preventDefault();
         handleAdd();
       }
@@ -151,18 +151,24 @@ export function DropdownButton({
   /* ── Toggle selection (multi) ──────────────────────── */
   const toggleItem = useCallback(
     (key: string) => {
-      const next = selected.includes(key)
-        ? selected.filter((k) => k !== key)
-        : [...selected, key];
+      const next = selected.includes(key) ? selected.filter((k) => k !== key) : [...selected, key];
       onSelectionChange?.(next);
     },
     [selected, onSelectionChange],
   );
 
   /* ── Button display label ──────────────────────────── */
-  const displayLabel = multiple && selected.length > 0
-    ? <>{label} <span className="ml-1 rounded-full bg-white/20 px-1.5 text-xs font-semibold">{selected.length}</span></>
-    : label;
+  const displayLabel =
+    multiple && selected.length > 0 ? (
+      <>
+        {label}{" "}
+        <span className="ml-1 rounded-full bg-white/20 px-1.5 text-xs font-semibold">
+          {selected.length}
+        </span>
+      </>
+    ) : (
+      label
+    );
 
   return (
     <div ref={containerRef} className="relative inline-block">
@@ -172,26 +178,26 @@ export function DropdownButton({
         disabled={disabled}
         className={cn(
           buttonVariants({ intent, size }),
-          'inline-flex items-center gap-1',
+          "inline-flex items-center gap-1",
           className,
         )}
-        aria-haspopup={multiple ? 'listbox' : 'true'}
-        aria-expanded={open ? 'true' : 'false'}
+        aria-haspopup={multiple ? "listbox" : "true"}
+        aria-expanded={open ? "true" : "false"}
         {...props}
       >
         {displayLabel}
-        <ChevronDown className={cn('h-3.5 w-3.5 transition-transform', open && 'rotate-180')} />
+        <ChevronDown className={cn("h-3.5 w-3.5 transition-transform", open && "rotate-180")} />
       </button>
 
       {open && (
         <div
           className={cn(
-            'absolute z-50 mt-1 min-w-44 rounded-md border py-1 shadow-lg',
-            'border-primary-200 dark:border-primary-700 dark:bg-primary-800 bg-white',
-            'animate-fade-in',
-            align === 'right' ? 'right-0' : 'left-0',
+            "absolute z-50 mt-1 min-w-44 rounded-md border py-1 shadow-lg",
+            "border-primary-200 dark:border-primary-700 dark:bg-primary-800 bg-white",
+            "animate-fade-in",
+            align === "right" ? "right-0" : "left-0",
           )}
-          role={multiple ? 'listbox' : 'menu'}
+          role={multiple ? "listbox" : "menu"}
           aria-multiselectable={multiple || undefined}
         >
           {/* Editable filter/add input */}
@@ -222,13 +228,13 @@ export function DropdownButton({
                   )}
                   <button
                     type="button"
-                    role={multiple ? 'option' : 'menuitem'}
+                    role={multiple ? "option" : "menuitem"}
                     aria-selected={multiple ? isSelected : undefined}
                     disabled={item.disabled}
                     className={cn(
-                      'flex w-full cursor-pointer items-center gap-2 px-3 py-1.5 text-left text-sm transition-colors',
-                      'text-primary-700 hover:bg-primary-100 dark:text-primary-300 dark:hover:bg-primary-700/50',
-                      item.disabled && 'pointer-events-none opacity-50',
+                      "flex w-full cursor-pointer items-center gap-2 px-3 py-1.5 text-left text-sm transition-colors",
+                      "text-primary-700 hover:bg-primary-100 dark:text-primary-300 dark:hover:bg-primary-700/50",
+                      item.disabled && "pointer-events-none opacity-50",
                     )}
                     onClick={() => {
                       if (multiple) {
@@ -236,17 +242,17 @@ export function DropdownButton({
                       } else {
                         item.onClick?.();
                         setOpen(false);
-                        setFilter('');
+                        setFilter("");
                       }
                     }}
                   >
                     {multiple && (
                       <span
                         className={cn(
-                          'flex h-4 w-4 shrink-0 items-center justify-center rounded border transition-colors',
+                          "flex h-4 w-4 shrink-0 items-center justify-center rounded border transition-colors",
                           isSelected
-                          ? 'border-primary-600 bg-primary-600 text-white dark:border-primary-500 dark:bg-primary-500'
-                          : 'border-secondary-300 bg-white dark:border-secondary-600 dark:bg-secondary-800',
+                            ? "border-primary-600 bg-primary-600 text-white dark:border-primary-500 dark:bg-primary-500"
+                            : "border-secondary-300 bg-white dark:border-secondary-600 dark:bg-secondary-800",
                         )}
                       >
                         {isSelected && <Check className="h-3 w-3" />}
@@ -268,12 +274,14 @@ export function DropdownButton({
               <button
                 type="button"
                 className={cn(
-                  'flex w-full cursor-pointer items-center gap-2 px-3 py-1.5 text-left text-sm transition-colors',
-                  'text-primary-600 hover:bg-primary-50 dark:text-primary-400 dark:hover:bg-primary-900/30',
+                  "flex w-full cursor-pointer items-center gap-2 px-3 py-1.5 text-left text-sm transition-colors",
+                  "text-primary-600 hover:bg-primary-50 dark:text-primary-400 dark:hover:bg-primary-900/30",
                 )}
                 onClick={handleAdd}
               >
-                <span className="flex h-4 w-4 shrink-0 items-center justify-center text-lg leading-none">+</span>
+                <span className="flex h-4 w-4 shrink-0 items-center justify-center text-lg leading-none">
+                  +
+                </span>
                 <span className="truncate">Add &ldquo;{filter.trim()}&rdquo;</span>
               </button>
             )}

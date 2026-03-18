@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { cn } from '../lib/utils';
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { cn } from "../lib/utils";
 import {
   Play,
   Pause,
@@ -16,7 +16,7 @@ import {
   ArrowUpDown,
   X,
   ChevronRight,
-} from 'lucide-react';
+} from "lucide-react";
 
 /* ═══════════════════════════════════════════════════════════
    Types
@@ -37,7 +37,7 @@ export interface CinePlayerMedia {
   duration?: number;
 }
 
-export type CinePlayerSortKey = 'title' | 'type' | 'duration';
+export type CinePlayerSortKey = "title" | "type" | "duration";
 
 export interface CinePlayerProps {
   /** Media playlist. */
@@ -65,18 +65,18 @@ export interface CinePlayerProps {
    ═══════════════════════════════════════════════════════════ */
 
 function fmtTime(s: number): string {
-  if (!isFinite(s) || s < 0) return '0:00';
+  if (!isFinite(s) || s < 0) return "0:00";
   const h = Math.floor(s / 3600);
   const m = Math.floor((s % 3600) / 60);
   const sec = Math.floor(s % 60);
-  if (h > 0) return `${h}:${m.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
-  return `${m}:${sec.toString().padStart(2, '0')}`;
+  if (h > 0) return `${h}:${m.toString().padStart(2, "0")}:${sec.toString().padStart(2, "0")}`;
+  return `${m}:${sec.toString().padStart(2, "0")}`;
 }
 
 /* Sort comparators */
 const SORT_FNS: Record<CinePlayerSortKey, (a: CinePlayerMedia, b: CinePlayerMedia) => number> = {
   title: (a, b) => a.title.localeCompare(b.title),
-  type: (a, b) => (a.type ?? '').localeCompare(b.type ?? ''),
+  type: (a, b) => (a.type ?? "").localeCompare(b.type ?? ""),
   duration: (a, b) => (a.duration ?? 0) - (b.duration ?? 0),
 };
 
@@ -92,7 +92,7 @@ export function CinePlayer({
   loop: loopProp = false,
   onTrackChange,
   onPlayChange,
-  accent = '#8b5cf6',
+  accent = "#8b5cf6",
   className,
 }: CinePlayerProps) {
   /* ── State ────────────────────────────────── */
@@ -106,7 +106,7 @@ export function CinePlayer({
   const [shuffleOn, setShuffleOn] = useState(shuffleProp);
   const [loopOn, setLoopOn] = useState(loopProp);
   const [showPlaylist, setShowPlaylist] = useState(false);
-  const [sortKey, setSortKey] = useState<CinePlayerSortKey>('title');
+  const [sortKey, setSortKey] = useState<CinePlayerSortKey>("title");
   const [sortAsc, setSortAsc] = useState(true);
   const [cinemaMode, setCinemaMode] = useState(false);
   const [cinemaExiting, setCinemaExiting] = useState(false);
@@ -144,8 +144,8 @@ export function CinePlayer({
       setTransitioning(false);
       if (playing) v.play().catch(() => {});
     };
-    v.addEventListener('loadeddata', onLoaded, { once: true });
-    return () => v.removeEventListener('loadeddata', onLoaded);
+    v.addEventListener("loadeddata", onLoaded, { once: true });
+    return () => v.removeEventListener("loadeddata", onLoaded);
   }, [currentIndex, track.src]);
 
   /* ── Auto-play ──────────────────────────── */
@@ -158,15 +158,19 @@ export function CinePlayer({
       setPlaying(true);
       v.play().catch(() => {});
     };
-    v.addEventListener('canplaythrough', onCan, { once: true });
-    return () => v.removeEventListener('canplaythrough', onCan);
+    v.addEventListener("canplaythrough", onCan, { once: true });
+    return () => v.removeEventListener("canplaythrough", onCan);
   }, [autoPlay]);
 
   /* ── Play / Pause sync ─────────────────── */
   useEffect(() => {
     const v = videoRef.current;
     if (!v) return;
-    playing ? v.play().catch(() => {}) : v.pause();
+    if (playing) {
+      v.play().catch(() => {});
+    } else {
+      v.pause();
+    }
     onPlayChange?.(playing);
   }, [playing]);
 
@@ -194,15 +198,15 @@ export function CinePlayer({
         skipNext();
       }
     };
-    v.addEventListener('timeupdate', onTime);
-    v.addEventListener('loadedmetadata', onDur);
-    v.addEventListener('progress', onProgress);
-    v.addEventListener('ended', onEnd);
+    v.addEventListener("timeupdate", onTime);
+    v.addEventListener("loadedmetadata", onDur);
+    v.addEventListener("progress", onProgress);
+    v.addEventListener("ended", onEnd);
     return () => {
-      v.removeEventListener('timeupdate', onTime);
-      v.removeEventListener('loadedmetadata', onDur);
-      v.removeEventListener('progress', onProgress);
-      v.removeEventListener('ended', onEnd);
+      v.removeEventListener("timeupdate", onTime);
+      v.removeEventListener("loadedmetadata", onDur);
+      v.removeEventListener("progress", onProgress);
+      v.removeEventListener("ended", onEnd);
     };
   }, [currentIndex, playlist.length, loopOn]);
 
@@ -224,7 +228,12 @@ export function CinePlayer({
     }
   }, [playing, showControls]);
 
-  useEffect(() => () => { if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current); }, []);
+  useEffect(
+    () => () => {
+      if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
+    },
+    [],
+  );
 
   /* ── Navigation ─────────────────────────── */
   const goToTrack = useCallback(
@@ -241,7 +250,9 @@ export function CinePlayer({
   const skipNext = useCallback(() => {
     if (shuffleOn) {
       let r: number;
-      do { r = Math.floor(Math.random() * playlist.length); } while (r === currentIndex && playlist.length > 1);
+      do {
+        r = Math.floor(Math.random() * playlist.length);
+      } while (r === currentIndex && playlist.length > 1);
       goToTrack(r);
     } else {
       goToTrack(currentIndex + 1);
@@ -251,7 +262,9 @@ export function CinePlayer({
   const skipPrev = useCallback(() => {
     if (shuffleOn) {
       let r: number;
-      do { r = Math.floor(Math.random() * playlist.length); } while (r === currentIndex && playlist.length > 1);
+      do {
+        r = Math.floor(Math.random() * playlist.length);
+      } while (r === currentIndex && playlist.length > 1);
       goToTrack(r);
     } else {
       goToTrack(currentIndex - 1);
@@ -291,15 +304,18 @@ export function CinePlayer({
 
   useEffect(() => {
     const onFs = () => setIsFullscreen(!!document.fullscreenElement);
-    document.addEventListener('fullscreenchange', onFs);
-    return () => document.removeEventListener('fullscreenchange', onFs);
+    document.addEventListener("fullscreenchange", onFs);
+    return () => document.removeEventListener("fullscreenchange", onFs);
   }, []);
 
   /* ── Cinema mode ────────────────────────── */
   const toggleCinema = useCallback(() => {
     if (cinemaMode) {
       setCinemaExiting(true);
-      setTimeout(() => { setCinemaMode(false); setCinemaExiting(false); }, 500);
+      setTimeout(() => {
+        setCinemaMode(false);
+        setCinemaExiting(false);
+      }, 500);
     } else {
       setCinemaMode(true);
     }
@@ -312,7 +328,7 @@ export function CinePlayer({
 
   /* ── Sort cycling ───────────────────────── */
   const cycleSort = useCallback(() => {
-    const keys: CinePlayerSortKey[] = ['title', 'type', 'duration'];
+    const keys: CinePlayerSortKey[] = ["title", "type", "duration"];
     const idx = keys.indexOf(sortKey);
     if (sortAsc) {
       setSortAsc(false);
@@ -327,62 +343,71 @@ export function CinePlayer({
     const onKey = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
       switch (e.key) {
-        case ' ':
-        case 'k':
+        case " ":
+        case "k":
           e.preventDefault();
           setPlaying((p) => !p);
           break;
-        case 'f':
+        case "f":
           e.preventDefault();
           toggleFullscreen();
           break;
-        case 't':
+        case "t":
           e.preventDefault();
           toggleCinema();
           break;
-        case 'ArrowLeft':
+        case "ArrowLeft":
           e.preventDefault();
           if (videoRef.current) videoRef.current.currentTime = Math.max(0, progress - 5);
           break;
-        case 'ArrowRight':
+        case "ArrowRight":
           e.preventDefault();
           if (videoRef.current) videoRef.current.currentTime = Math.min(duration, progress + 5);
           break;
-        case 'ArrowUp':
+        case "ArrowUp":
           e.preventDefault();
           setVolume((v) => Math.min(1, v + 0.05));
           break;
-        case 'ArrowDown':
+        case "ArrowDown":
           e.preventDefault();
           setVolume((v) => Math.max(0, v - 0.05));
           break;
-        case 'Escape':
+        case "Escape":
           if (cinemaMode) toggleCinema();
           break;
-        case 'n':
+        case "n":
           e.preventDefault();
           skipNext();
           break;
-        case 'p':
+        case "p":
           e.preventDefault();
           skipPrev();
           break;
-        case 'l':
+        case "l":
           e.preventDefault();
           togglePlaylist();
           break;
       }
     };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [toggleFullscreen, toggleCinema, togglePlaylist, skipNext, skipPrev, progress, duration, cinemaMode]);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [
+    toggleFullscreen,
+    toggleCinema,
+    togglePlaylist,
+    skipNext,
+    skipPrev,
+    progress,
+    duration,
+    cinemaMode,
+  ]);
 
   /* ── Progress ratio ─────────────────────── */
   const pct = duration > 0 ? (progress / duration) * 100 : 0;
   const bufPct = duration > 0 ? (buffered / duration) * 100 : 0;
 
   /* ── Accent helpers ─────────────────────── */
-  const accentOn = 'text-(--accent)';
+  const accentOn = "text-(--accent)";
 
   /* ═══════════════════════════════════════════
      Render
@@ -392,205 +417,287 @@ export function CinePlayer({
     <div
       ref={containerRef}
       className={cn(
-        'group flex overflow-hidden',
-        isFullscreen ? 'h-full w-full' : 'aspect-video w-full',
-        !isFullscreen && 'rounded-xl',
-        !isFullscreen && playing && 'shadow-2xl',
-        !isFullscreen && !playing && 'animate-[cp-glow-pulse_4s_ease-in-out_infinite] will-change-[box-shadow]',
+        "group flex overflow-hidden",
+        isFullscreen ? "h-full w-full" : "aspect-video w-full",
+        !isFullscreen && "rounded-xl",
+        !isFullscreen && playing && "shadow-2xl",
+        !isFullscreen &&
+          !playing &&
+          "animate-[cp-glow-pulse_4s_ease-in-out_infinite] will-change-[box-shadow]",
         className,
       )}
-      style={{ '--accent': accent, background: 'var(--cp-bg)' } as React.CSSProperties}
+      style={{ "--accent": accent, background: "var(--cp-bg)" } as React.CSSProperties}
       tabIndex={0}
     >
       {/* ── Video area ─────────────────── */}
       <div
         className={cn(
-          'relative flex-1 min-w-0 h-full overflow-hidden',
-          transitioning && 'animate-[cp-track-transition_0.6s_ease-out]',
+          "relative flex-1 min-w-0 h-full overflow-hidden",
+          transitioning && "animate-[cp-track-transition_0.6s_ease-out]",
         )}
         onMouseMove={showControls}
-        onMouseLeave={() => { if (playing) setControlsVisible(false); }}
+        onMouseLeave={() => {
+          if (playing) setControlsVisible(false);
+        }}
       >
-      <video
-        ref={videoRef}
-        className="h-full w-full object-contain"
-        poster={track.poster}
-        playsInline
-        preload="metadata"
-        onClick={() => setPlaying((p) => !p)}
-      />
+        <video
+          ref={videoRef}
+          className="h-full w-full object-contain"
+          poster={track.poster}
+          playsInline
+          preload="metadata"
+          onClick={() => setPlaying((p) => !p)}
+        />
 
-      {/* ── Big play button (paused overlay) */}
-      {!playing && !transitioning && (
-        <div
-          className="absolute inset-0 flex cursor-pointer items-center justify-center"
-          style={{ background: 'var(--cp-overlay)' }}
-          onClick={() => setPlaying(true)}
-        >
-          <div className="flex h-20 w-20 items-center justify-center rounded-full backdrop-blur-md transition-transform hover:scale-110 active:scale-95" style={{ background: 'var(--cp-surface-hover)' }}>
-            <Play className="h-10 w-10 translate-x-0.5" fill="currentColor" style={{ color: 'var(--cp-text-strong)' }} />
-          </div>
-        </div>
-      )}
-
-      {/* ── Track title toast ──────────── */}
-      {transitioning && (
-        <div className="absolute left-6 top-6 z-20 animate-[fade-in_0.4s_ease-out]">
-            <div className="rounded-lg px-4 py-2 backdrop-blur-md" style={{ background: 'var(--cp-panel-bg)' }}>
-              <div className="text-sm font-semibold" style={{ color: 'var(--cp-text-strong)' }}>{track.title}</div>
-              {track.subtitle && <div className="text-xs" style={{ color: 'var(--cp-text-muted)' }}>{track.subtitle}</div>}
-          </div>
-        </div>
-      )}
-
-      {/* ── Title bar (top gradient) ───── */}
-      <div
-        className={cn(
-          'absolute inset-x-0 top-0 z-10 bg-linear-to-b from-black/70 to-transparent px-5 pb-8 pt-4 transition-opacity duration-500',
-          controlsVisible ? 'opacity-100' : 'pointer-events-none opacity-0',
-        )}
-      >
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-sm font-semibold drop-shadow-md" style={{ color: 'var(--cp-text-strong)' }}>
-              {track.title}
-            </h3>
-            {track.subtitle && (
-              <p className="text-xs" style={{ color: 'var(--cp-text-muted)' }}>{track.subtitle}</p>
-            )}
-          </div>
-          {track.type && (
-            <span className="rounded-full bg-(--accent)/70 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider backdrop-blur-sm" style={{ color: 'var(--cp-text-strong)' }}>
-              {track.type}
-            </span>
-          )}
-        </div>
-      </div>
-
-      {/* ── Controls bar (bottom) ──────── */}
-      <div
-        className={cn(
-          'absolute inset-x-0 bottom-0 z-10 bg-linear-to-t from-black/80 via-black/40 to-transparent px-4 pb-3 pt-10 transition-all duration-500',
-          controlsVisible
-            ? 'translate-y-0 opacity-100'
-            : 'pointer-events-none translate-y-2 opacity-0',
-        )}
-      >
-        {/* Seek bar */}
-        <div
-          className="group/seek relative mb-3 h-1 cursor-pointer rounded-full transition-[height] duration-200 hover:h-1.5"
-          style={{ background: 'var(--cp-seek-track)' }}
-          onClick={handleSeek}
-          onMouseMove={handleSeekHover}
-          onMouseLeave={() => setSeekHover(null)}
-        >
-          {/* Buffered */}
+        {/* ── Big play button (paused overlay) */}
+        {!playing && !transitioning && (
           <div
-            className="absolute inset-y-0 left-0 rounded-full"
-            style={{ width: `${bufPct}%`, background: 'var(--cp-seek-buffer)' }}
-          />
-          {/* Progress */}
-          <div
-            className="absolute inset-y-0 left-0 rounded-full bg-(--accent) transition-[width] duration-100"
-            style={{ width: `${pct}%` }}
-          />
-          {/* Hover preview time */}
-          {seekHover !== null && (
+            className="absolute inset-0 flex cursor-pointer items-center justify-center"
+            style={{ background: "var(--cp-overlay)" }}
+            onClick={() => setPlaying(true)}
+          >
             <div
-              className="absolute -top-8 -translate-x-1/2 rounded px-2 py-0.5 text-[10px] font-mono"
-              style={{ left: `${(seekHover / duration) * 100}%`, background: 'var(--cp-panel-bg)', color: 'var(--cp-text-strong)' }}
+              className="flex h-20 w-20 items-center justify-center rounded-full backdrop-blur-md transition-transform hover:scale-110 active:scale-95"
+              style={{ background: "var(--cp-surface-hover)" }}
             >
-              {fmtTime(seekHover)}
-            </div>
-          )}
-          {/* Thumb */}
-          <div
-            className="absolute top-1/2 h-3.5 w-3.5 -translate-y-1/2 rounded-full border-2 border-(--accent) bg-white opacity-0 shadow-lg transition-opacity group-hover/seek:opacity-100"
-            style={{ left: `calc(${pct}% - 7px)` }}
-          />
-        </div>
-
-        {/* Buttons row */}
-        <div className="flex items-center gap-1">
-          {/* Left: playback controls */}
-          <button className="cp-btn" onClick={() => setPlaying((p) => !p)} title={playing ? 'Pause (k)' : 'Play (k)'}>
-            {playing ? <Pause className="h-5 w-5" fill="currentColor" /> : <Play className="h-5 w-5 translate-x-px" fill="currentColor" />}
-          </button>
-          <button className="cp-btn" onClick={skipPrev} title="Previous (p)">
-            <SkipBack className="h-4 w-4" fill="currentColor" />
-          </button>
-          <button className="cp-btn" onClick={skipNext} title="Next (n)">
-            <SkipForward className="h-4 w-4" fill="currentColor" />
-          </button>
-
-          {/* Volume */}
-          <div className="group/vol ml-1 flex items-center">
-            <button className="cp-btn" onClick={() => setMuted((m) => !m)} title={muted ? 'Unmute' : 'Mute'}>
-              {muted || volume === 0 ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
-            </button>
-            <div className="flex w-0 items-center overflow-hidden transition-all duration-300 group-hover/vol:w-20">
-              <input
-                type="range"
-                min={0}
-                max={1}
-                step={0.01}
-                value={muted ? 0 : volume}
-                onChange={(e) => { setVolume(Number(e.target.value)); if (muted) setMuted(false); }}
-                className="h-1 w-full cursor-pointer appearance-none rounded-full accent-(--accent)"
-                style={{ background: 'var(--cp-seek-track)' }}
+              <Play
+                className="h-10 w-10 translate-x-0.5"
+                fill="currentColor"
+                style={{ color: "var(--cp-text-strong)" }}
               />
             </div>
           </div>
+        )}
 
-          {/* Time */}
-          <span className="ml-2 min-w-0 shrink-0 font-mono text-xs" style={{ color: 'var(--cp-text-muted)' }}>
-            {fmtTime(progress)} / {fmtTime(duration)}
-          </span>
+        {/* ── Track title toast ──────────── */}
+        {transitioning && (
+          <div className="absolute left-6 top-6 z-20 animate-[fade-in_0.4s_ease-out]">
+            <div
+              className="rounded-lg px-4 py-2 backdrop-blur-md"
+              style={{ background: "var(--cp-panel-bg)" }}
+            >
+              <div className="text-sm font-semibold" style={{ color: "var(--cp-text-strong)" }}>
+                {track.title}
+              </div>
+              {track.subtitle && (
+                <div className="text-xs" style={{ color: "var(--cp-text-muted)" }}>
+                  {track.subtitle}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
-          {/* Spacer */}
-          <div className="flex-1" />
+        {/* ── Title bar (top gradient) ───── */}
+        <div
+          className={cn(
+            "absolute inset-x-0 top-0 z-10 bg-linear-to-b from-black/70 to-transparent px-5 pb-8 pt-4 transition-opacity duration-500",
+            controlsVisible ? "opacity-100" : "pointer-events-none opacity-0",
+          )}
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <h3
+                className="text-sm font-semibold drop-shadow-md"
+                style={{ color: "var(--cp-text-strong)" }}
+              >
+                {track.title}
+              </h3>
+              {track.subtitle && (
+                <p className="text-xs" style={{ color: "var(--cp-text-muted)" }}>
+                  {track.subtitle}
+                </p>
+              )}
+            </div>
+            {track.type && (
+              <span
+                className="rounded-full bg-(--accent)/70 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider backdrop-blur-sm"
+                style={{ color: "var(--cp-text-strong)" }}
+              >
+                {track.type}
+              </span>
+            )}
+          </div>
+        </div>
 
-          {/* Right: mode controls */}
-          <button className={cn('cp-btn', shuffleOn && accentOn)} onClick={() => setShuffleOn((s) => !s)} title="Shuffle">
-            <Shuffle className="h-4 w-4" />
-          </button>
-          <button className={cn('cp-btn', loopOn && accentOn)} onClick={() => setLoopOn((l) => !l)} title="Loop">
-            <Repeat1 className="h-4 w-4" />
-          </button>
-          <button className={cn('cp-btn', showPlaylist && accentOn)} onClick={togglePlaylist} title="Playlist">
-            <ListVideo className="h-4 w-4" />
-          </button>
-          <button className={cn('cp-btn', cinemaMode && accentOn)} onClick={toggleCinema} title="Cinema mode (t)">
-            <Theater className="h-4 w-4" />
-          </button>
-          <button className="cp-btn" onClick={toggleFullscreen} title="Fullscreen (f)">
-            {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
-          </button>
+        {/* ── Controls bar (bottom) ──────── */}
+        <div
+          className={cn(
+            "absolute inset-x-0 bottom-0 z-10 bg-linear-to-t from-black/80 via-black/40 to-transparent px-4 pb-3 pt-10 transition-all duration-500",
+            controlsVisible
+              ? "translate-y-0 opacity-100"
+              : "pointer-events-none translate-y-2 opacity-0",
+          )}
+        >
+          {/* Seek bar */}
+          <div
+            className="group/seek relative mb-3 h-1 cursor-pointer rounded-full transition-[height] duration-200 hover:h-1.5"
+            style={{ background: "var(--cp-seek-track)" }}
+            onClick={handleSeek}
+            onMouseMove={handleSeekHover}
+            onMouseLeave={() => setSeekHover(null)}
+          >
+            {/* Buffered */}
+            <div
+              className="absolute inset-y-0 left-0 rounded-full"
+              style={{ width: `${bufPct}%`, background: "var(--cp-seek-buffer)" }}
+            />
+            {/* Progress */}
+            <div
+              className="absolute inset-y-0 left-0 rounded-full bg-(--accent) transition-[width] duration-100"
+              style={{ width: `${pct}%` }}
+            />
+            {/* Hover preview time */}
+            {seekHover !== null && (
+              <div
+                className="absolute -top-8 -translate-x-1/2 rounded px-2 py-0.5 text-[10px] font-mono"
+                style={{
+                  left: `${(seekHover / duration) * 100}%`,
+                  background: "var(--cp-panel-bg)",
+                  color: "var(--cp-text-strong)",
+                }}
+              >
+                {fmtTime(seekHover)}
+              </div>
+            )}
+            {/* Thumb */}
+            <div
+              className="absolute top-1/2 h-3.5 w-3.5 -translate-y-1/2 rounded-full border-2 border-(--accent) bg-white opacity-0 shadow-lg transition-opacity group-hover/seek:opacity-100"
+              style={{ left: `calc(${pct}% - 7px)` }}
+            />
+          </div>
+
+          {/* Buttons row */}
+          <div className="flex items-center gap-1">
+            {/* Left: playback controls */}
+            <button
+              className="cp-btn"
+              onClick={() => setPlaying((p) => !p)}
+              title={playing ? "Pause (k)" : "Play (k)"}
+            >
+              {playing ? (
+                <Pause className="h-5 w-5" fill="currentColor" />
+              ) : (
+                <Play className="h-5 w-5 translate-x-px" fill="currentColor" />
+              )}
+            </button>
+            <button className="cp-btn" onClick={skipPrev} title="Previous (p)">
+              <SkipBack className="h-4 w-4" fill="currentColor" />
+            </button>
+            <button className="cp-btn" onClick={skipNext} title="Next (n)">
+              <SkipForward className="h-4 w-4" fill="currentColor" />
+            </button>
+
+            {/* Volume */}
+            <div className="group/vol ml-1 flex items-center">
+              <button
+                className="cp-btn"
+                onClick={() => setMuted((m) => !m)}
+                title={muted ? "Unmute" : "Mute"}
+              >
+                {muted || volume === 0 ? (
+                  <VolumeX className="h-4 w-4" />
+                ) : (
+                  <Volume2 className="h-4 w-4" />
+                )}
+              </button>
+              <div className="flex w-0 items-center overflow-hidden transition-all duration-300 group-hover/vol:w-20">
+                <input
+                  type="range"
+                  min={0}
+                  max={1}
+                  step={0.01}
+                  value={muted ? 0 : volume}
+                  onChange={(e) => {
+                    setVolume(Number(e.target.value));
+                    if (muted) setMuted(false);
+                  }}
+                  className="h-1 w-full cursor-pointer appearance-none rounded-full accent-(--accent)"
+                  style={{ background: "var(--cp-seek-track)" }}
+                />
+              </div>
+            </div>
+
+            {/* Time */}
+            <span
+              className="ml-2 min-w-0 shrink-0 font-mono text-xs"
+              style={{ color: "var(--cp-text-muted)" }}
+            >
+              {fmtTime(progress)} / {fmtTime(duration)}
+            </span>
+
+            {/* Spacer */}
+            <div className="flex-1" />
+
+            {/* Right: mode controls */}
+            <button
+              className={cn("cp-btn", shuffleOn && accentOn)}
+              onClick={() => setShuffleOn((s) => !s)}
+              title="Shuffle"
+            >
+              <Shuffle className="h-4 w-4" />
+            </button>
+            <button
+              className={cn("cp-btn", loopOn && accentOn)}
+              onClick={() => setLoopOn((l) => !l)}
+              title="Loop"
+            >
+              <Repeat1 className="h-4 w-4" />
+            </button>
+            <button
+              className={cn("cp-btn", showPlaylist && accentOn)}
+              onClick={togglePlaylist}
+              title="Playlist"
+            >
+              <ListVideo className="h-4 w-4" />
+            </button>
+            <button
+              className={cn("cp-btn", cinemaMode && accentOn)}
+              onClick={toggleCinema}
+              title="Cinema mode (t)"
+            >
+              <Theater className="h-4 w-4" />
+            </button>
+            <button className="cp-btn" onClick={toggleFullscreen} title="Fullscreen (f)">
+              {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
+            </button>
+          </div>
         </div>
       </div>
-
-      </div>{/* end video area */}
+      {/* end video area */}
 
       {/* ── Playlist panel (right side) ── */}
       <div
         className={cn(
-          'h-full shrink-0 overflow-hidden transition-[width] duration-300 ease-out',
-          showPlaylist ? 'w-72' : 'w-0',
+          "h-full shrink-0 overflow-hidden transition-[width] duration-300 ease-out",
+          showPlaylist ? "w-72" : "w-0",
         )}
       >
-        <div className="flex h-full w-72 flex-col backdrop-blur-xl" style={{ borderLeft: `1px solid var(--cp-border)`, background: 'var(--cp-panel-bg)' }}>
+        <div
+          className="flex h-full w-72 flex-col backdrop-blur-xl"
+          style={{ borderLeft: `1px solid var(--cp-border)`, background: "var(--cp-panel-bg)" }}
+        >
           {/* Playlist header */}
-          <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: `1px solid var(--cp-border)` }}>
-            <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--cp-text)' }}>Playlist</span>
+          <div
+            className="flex items-center justify-between px-4 py-3"
+            style={{ borderBottom: `1px solid var(--cp-border)` }}
+          >
+            <span
+              className="text-xs font-semibold uppercase tracking-wider"
+              style={{ color: "var(--cp-text)" }}
+            >
+              Playlist
+            </span>
             <div className="flex items-center gap-1">
               <button
                 className="flex items-center gap-1 rounded px-2 py-1 text-[10px] font-medium transition-colors"
-                style={{ color: 'var(--cp-text-muted)' }}
+                style={{ color: "var(--cp-text-muted)" }}
                 onClick={cycleSort}
-                title={`Sort: ${sortKey} ${sortAsc ? '↑' : '↓'}`}
+                title={`Sort: ${sortKey} ${sortAsc ? "↑" : "↓"}`}
               >
                 <ArrowUpDown className="h-3 w-3" />
-                {sortKey}{sortAsc ? ' ↑' : ' ↓'}
+                {sortKey}
+                {sortAsc ? " ↑" : " ↓"}
               </button>
               <button className="cp-btn p-1!" onClick={togglePlaylist} title="Close">
                 <X className="h-3.5 w-3.5" />
@@ -606,25 +713,38 @@ export function CinePlayer({
                 <button
                   key={originalIndex}
                   className={cn(
-                    'flex w-full items-center gap-3 px-4 py-2.5 text-left transition-all duration-200',
+                    "flex w-full items-center gap-3 px-4 py-2.5 text-left transition-all duration-200",
                     isCurrent
-                      ? 'bg-(--accent)/20 text-(--accent)'
-                      : 'hover:text-(--cp-text-strong)',
+                      ? "bg-(--accent)/20 text-(--accent)"
+                      : "hover:text-(--cp-text-strong)",
                   )}
-                  style={!isCurrent ? { color: 'var(--cp-text)' } : undefined}
-                  onClick={() => { goToTrack(originalIndex); }}
+                  style={!isCurrent ? { color: "var(--cp-text)" } : undefined}
+                  onClick={() => {
+                    goToTrack(originalIndex);
+                  }}
                 >
                   {/* Thumbnail */}
-                  <div className="relative h-10 w-16 shrink-0 overflow-hidden rounded" style={{ background: 'var(--cp-surface)' }}>
+                  <div
+                    className="relative h-10 w-16 shrink-0 overflow-hidden rounded"
+                    style={{ background: "var(--cp-surface)" }}
+                  >
                     {media.poster ? (
-                      <img src={media.poster} alt="" className="h-full w-full object-cover" draggable={false} />
+                      <img
+                        src={media.poster}
+                        alt=""
+                        className="h-full w-full object-cover"
+                        draggable={false}
+                      />
                     ) : (
                       <div className="flex h-full w-full items-center justify-center">
-                        <Play className="h-4 w-4" style={{ color: 'var(--cp-seek-track)' }} />
+                        <Play className="h-4 w-4" style={{ color: "var(--cp-seek-track)" }} />
                       </div>
                     )}
                     {isCurrent && playing && (
-                      <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'var(--cp-overlay)' }}>
+                      <div
+                        className="absolute inset-0 flex items-center justify-center"
+                        style={{ background: "var(--cp-overlay)" }}
+                      >
                         <div className="flex items-end gap-px">
                           {[1, 2, 3, 4].map((b) => (
                             <div
@@ -646,17 +766,19 @@ export function CinePlayer({
                     <div className="truncate text-xs font-medium">{media.title}</div>
                     <div className="flex items-center gap-2">
                       {media.type && (
-                        <span className="text-[10px] uppercase tracking-wide opacity-50">{media.type}</span>
+                        <span className="text-[10px] uppercase tracking-wide opacity-50">
+                          {media.type}
+                        </span>
                       )}
                       {media.duration != null && (
-                        <span className="font-mono text-[10px] opacity-40">{fmtTime(media.duration)}</span>
+                        <span className="font-mono text-[10px] opacity-40">
+                          {fmtTime(media.duration)}
+                        </span>
                       )}
                     </div>
                   </div>
 
-                  {isCurrent && (
-                    <ChevronRight className="h-3.5 w-3.5 shrink-0 text-(--accent)" />
-                  )}
+                  {isCurrent && <ChevronRight className="h-3.5 w-3.5 shrink-0 text-(--accent)" />}
                 </button>
               );
             })}
@@ -689,14 +811,21 @@ export function CinePlayer({
   return (
     <div
       className={cn(
-        cinemaMode && 'fixed inset-0 z-100 flex items-center justify-center p-8',
-        cinemaMode && (cinemaExiting
-          ? 'animate-[cp-cinema-out_0.5s_ease-in_both]'
-          : 'animate-[cp-cinema-in_0.5s_ease-out_both]'),
+        cinemaMode && "fixed inset-0 z-100 flex items-center justify-center p-8",
+        cinemaMode &&
+          (cinemaExiting
+            ? "animate-[cp-cinema-out_0.5s_ease-in_both]"
+            : "animate-[cp-cinema-in_0.5s_ease-out_both]"),
       )}
-      onClick={cinemaMode ? (e: React.MouseEvent) => { if (e.target === e.currentTarget) toggleCinema(); } : undefined}
+      onClick={
+        cinemaMode
+          ? (e: React.MouseEvent) => {
+              if (e.target === e.currentTarget) toggleCinema();
+            }
+          : undefined
+      }
     >
-      <div className={cn(cinemaMode && 'w-full', cinemaMode && !isFullscreen && 'max-w-5xl')}>
+      <div className={cn(cinemaMode && "w-full", cinemaMode && !isFullscreen && "max-w-5xl")}>
         {playerContent}
       </div>
     </div>

@@ -1,10 +1,10 @@
-import React, { useEffect, useRef, useSyncExternalStore } from 'react';
-import { createPortal } from 'react-dom';
-import { createRoot } from 'react-dom/client';
-import { type VariantProps } from 'class-variance-authority';
-import { CircleCheck, TriangleAlert, CircleX, Info, X } from 'lucide-react';
-import { cn } from '../lib/utils';
-import { alertVariants } from '../styles/theme';
+import React, { useEffect, useRef, useSyncExternalStore } from "react";
+import { createPortal } from "react-dom";
+import { createRoot } from "react-dom/client";
+import { type VariantProps } from "class-variance-authority";
+import { CircleCheck, TriangleAlert, CircleX, Info, X } from "lucide-react";
+import { cn } from "../lib/utils";
+import { alertVariants } from "../styles/theme";
 
 /* ═══════════════════════════════════════════════════════════
    1.  Static Alert — inline banner for in-page use
@@ -21,14 +21,22 @@ export function Alert({ intent, className, children, ...props }: AlertProps) {
 }
 
 export function AlertTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
-  return <h5 className={cn('flex items-center gap-1.5 font-semibold [&_svg]:h-4 [&_svg]:w-4 [&_svg]:shrink-0', className)} {...props} />;
+  return (
+    <h5
+      className={cn(
+        "flex items-center gap-1.5 font-semibold [&_svg]:h-4 [&_svg]:w-4 [&_svg]:shrink-0",
+        className,
+      )}
+      {...props}
+    />
+  );
 }
 
 export function AlertDescription({
   className,
   ...props
 }: React.HTMLAttributes<HTMLParagraphElement>) {
-  return <p className={cn('text-sm opacity-90', className)} {...props} />;
+  return <p className={cn("text-sm opacity-90", className)} {...props} />;
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -36,14 +44,14 @@ export function AlertDescription({
    ═══════════════════════════════════════════════════════════ */
 
 export type AlertPosition =
-  | 'top-right'
-  | 'top-left'
-  | 'bottom-right'
-  | 'bottom-left'
-  | 'top-center'
-  | 'bottom-center';
+  | "top-right"
+  | "top-left"
+  | "bottom-right"
+  | "bottom-left"
+  | "top-center"
+  | "bottom-center";
 
-type AlertIntent = NonNullable<VariantProps<typeof alertVariants>['intent']>;
+type AlertIntent = NonNullable<VariantProps<typeof alertVariants>["intent"]>;
 
 export type AlertOptions = {
   intent?: AlertIntent;
@@ -117,21 +125,21 @@ export function configureAlertTopOffset(offset: number) {
 /* ── positioning & animation maps ──────────────────────── */
 
 const positionClasses: Record<AlertPosition, string> = {
-  'top-right': 'right-4 items-end',
-  'top-left': 'left-4 items-start',
-  'bottom-right': 'bottom-4 right-4 items-end',
-  'bottom-left': 'bottom-4 left-4 items-start',
-  'top-center': 'left-1/2 -translate-x-1/2 items-center',
-  'bottom-center': 'bottom-4 left-1/2 -translate-x-1/2 items-center',
+  "top-right": "right-4 items-end",
+  "top-left": "left-4 items-start",
+  "bottom-right": "bottom-4 right-4 items-end",
+  "bottom-left": "bottom-4 left-4 items-start",
+  "top-center": "left-1/2 -translate-x-1/2 items-center",
+  "bottom-center": "bottom-4 left-1/2 -translate-x-1/2 items-center",
 };
 
 const enterAnimation: Record<AlertPosition, string> = {
-  'top-right': 'animate-slide-in-right',
-  'top-left': 'animate-slide-in-left',
-  'bottom-right': 'animate-slide-in-right',
-  'bottom-left': 'animate-slide-in-left',
-  'top-center': 'animate-slide-in-top',
-  'bottom-center': 'animate-slide-in-bottom',
+  "top-right": "animate-slide-in-right",
+  "top-left": "animate-slide-in-left",
+  "bottom-right": "animate-slide-in-right",
+  "bottom-left": "animate-slide-in-left",
+  "top-center": "animate-slide-in-top",
+  "bottom-center": "animate-slide-in-bottom",
 };
 
 const intentIcons: Record<AlertIntent, React.FC<React.SVGProps<SVGSVGElement>>> = {
@@ -144,24 +152,24 @@ const intentIcons: Record<AlertIntent, React.FC<React.SVGProps<SVGSVGElement>>> 
 /* ── single toast item ─────────────────────────────────── */
 
 function ToastItem({ alert, onClose }: { alert: AlertItem; onClose: () => void }) {
-  const intent = alert.intent ?? 'info';
+  const intent = alert.intent ?? "info";
   const Icon = intentIcons[intent];
-  const position = alert.position ?? 'top-right';
+  const position = alert.position ?? "top-right";
 
   return (
     <div
       className={cn(
         alertVariants({ intent }),
         enterAnimation[position],
-        alert.exiting && 'opacity-0 transition-opacity duration-200',
-        'w-80',
+        alert.exiting && "opacity-0 transition-opacity duration-200",
+        "w-80",
       )}
       role="alert"
     >
       <Icon className="mt-0.5 h-5 w-5 shrink-0" />
       <div className="flex-1">
         {alert.title && <p className="font-semibold">{alert.title}</p>}
-        <p className={cn(alert.title && 'text-sm opacity-90')}>{alert.message}</p>
+        <p className={cn(alert.title && "text-sm opacity-90")}>{alert.message}</p>
       </div>
       <button
         onClick={onClose}
@@ -176,7 +184,7 @@ function ToastItem({ alert, onClose }: { alert: AlertItem; onClose: () => void }
 
 /* ── toast container (portal, auto-mounted) ────────────── */
 
-const isTopPosition = (pos: AlertPosition) => pos.startsWith('top');
+const isTopPosition = (pos: AlertPosition) => pos.startsWith("top");
 
 function ToastContainer() {
   const items = useSyncExternalStore((cb) => {
@@ -193,7 +201,7 @@ function ToastContainer() {
   if (items.length === 0) return null;
 
   const grouped = items.reduce<Partial<Record<AlertPosition, AlertItem[]>>>((acc, alert) => {
-    const pos = alert.position ?? 'top-right';
+    const pos = alert.position ?? "top-right";
     (acc[pos] ??= []).push(alert);
     return acc;
   }, {});
@@ -205,7 +213,7 @@ function ToastContainer() {
           key={position}
           style={isTopPosition(position) ? { top: `${topOffsetRef.current}px` } : undefined}
           className={cn(
-            'pointer-events-none fixed z-100 flex flex-col gap-2',
+            "pointer-events-none fixed z-100 flex flex-col gap-2",
             positionClasses[position],
           )}
         >
@@ -227,8 +235,8 @@ function ensureContainer() {
   if (containerMounted) return;
   containerMounted = true;
 
-  const root = document.createElement('div');
-  root.id = 'alert-toast-root';
+  const root = document.createElement("div");
+  root.id = "alert-toast-root";
   document.body.appendChild(root);
 
   createRoot(root).render(<ToastContainer />);

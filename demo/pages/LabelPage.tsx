@@ -1,5 +1,5 @@
-import { Label } from '../../src';
-import { Section, PageTitle } from './helpers';
+import { Label } from "../../src";
+import { Section, PageTitle } from "./helpers";
 
 export default function LabelPage() {
   return (
