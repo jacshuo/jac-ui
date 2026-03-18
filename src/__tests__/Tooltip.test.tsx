@@ -44,7 +44,9 @@ describe("Tooltip", () => {
       </Tooltip>,
     );
     await user.hover(screen.getByRole("button"));
-    vi.advanceTimersByTime(0);
+    await act(() => {
+      vi.advanceTimersByTime(0);
+    });
     expect(screen.getByRole("tooltip")).toBeInTheDocument();
     await user.unhover(screen.getByRole("button"));
     expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
@@ -58,7 +60,9 @@ describe("Tooltip", () => {
       </Tooltip>,
     );
     await user.hover(screen.getByText("X"));
-    vi.advanceTimersByTime(0);
+    await act(() => {
+      vi.advanceTimersByTime(0);
+    });
     expect(screen.getByRole("tooltip")).toHaveClass("my-tip");
   });
 });
