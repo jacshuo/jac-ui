@@ -5,6 +5,10 @@
   <img src="https://img.shields.io/npm/dm/@jacshuo/onyx?color=10b981&style=flat-square" alt="downloads" />
 </p>
 
+<p align="right">
+  <strong>English</strong> | <a href="./README.zh-CN.md">中文</a>
+</p>
+
 # @jacshuo/onyx
 
 A **React UI component library** built with Tailwind CSS v4 — crafted for responsive web apps and Electron desktop applications alike. Ships tree-shakeable ESM + CJS bundles with per-component subpath exports, modular CSS, and full TypeScript declarations.

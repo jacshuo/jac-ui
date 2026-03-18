@@ -49,7 +49,7 @@ describe("DropdownButton", () => {
 
   it("closes on Escape", async () => {
     const user = userEvent.setup();
-    render(<DropdownButton label="Close" items={items} />);
+    render(<DropdownButton label="Close" items={items} animated={false} />);
     await user.click(screen.getByRole("button", { name: /Close/i }));
     expect(screen.getByText("Edit")).toBeInTheDocument();
     await user.keyboard("{Escape}");
