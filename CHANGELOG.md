@@ -6,6 +6,41 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 ---
 
+## [0.1.8] — 2026-03-18
+
+### Added
+
+- **Per-component subpath exports** — Every component is now importable from its own entry point (e.g., `@jacshuo/onyx/Button`, `@jacshuo/onyx/Dialog`). Barrel import from `@jacshuo/onyx` still works.
+- **Modular CSS** — CSS is split into independent files:
+  - `styles.css` — full pre-compiled bundle (backward compatible)
+  - `styles/base.css` — Tailwind utilities + core design tokens (no component extras)
+  - `styles/tokens.css` — raw `@theme` tokens only (for projects with their own Tailwind setup)
+  - `styles/CinePlayer.css`, `styles/MiniPlayer.css`, `styles/FileExplorer.css`, `styles/FilmReel.css` — per-component keyframes and design tokens
+- **`.env` support** — Dev server port is now configurable via `DEV_PORT` in `.env` (defaults to 8080). Added `.env.example`.
+- **Auto-discovery** — `tsup.config.ts` auto-discovers components from `src/components/`; no manual list needed when adding new components.
+
+### Changed
+
+- **Build system migrated from Webpack to tsup** (esbuild-based). Per-component ESM entries with code splitting; shared code extracted to `dist/chunks/`. CJS output also per-component.
+- **Tree-shaking** fully enabled — `splitting: true`, `treeshake: true`, and `sideEffects: ["*.css"]` ensure bundlers can eliminate unused code.
+- **`package.json` exports map** uses wildcard subpath patterns (`./*`) instead of listing every component — scales automatically as new components are added.
+- Updated README with new import strategies (full, per-component, CSS options) and updated project structure.
+
+### Removed
+
+- `webpack.config.cjs` — Library builds now use tsup; only demo webpack configs remain.
+
+### Build output (before → after)
+
+| | Before (0.1.7) | After (0.1.8) |
+|---|---|---|
+| ESM | 1 file, 104.5 KB | 53 files, 117.3 KB total (0.08–0.23 KB per component entry, shared chunks) |
+| CJS | 1 file, 112.5 KB | 53 files, 145 KB total |
+| DTS | 1 file | 27 files, 43.2 KB |
+| CSS | 1 file, 102 KB | 7 files: full (102 KB), base (95 KB), tokens (4.2 KB), 4 component CSS (0.6–2.5 KB each) |
+
+---
+
 ## [0.1.7] — 2026-03-18
 
 ### Added

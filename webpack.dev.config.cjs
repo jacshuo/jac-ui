@@ -3,6 +3,7 @@
  *
  * Usage: webpack serve --config webpack.dev.config.cjs
  */
+require('dotenv').config();
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
@@ -60,7 +61,7 @@ module.exports = {
   ],
 
   devServer: {
-    port: 8080,
+    port: parseInt(process.env.DEV_PORT, 10) || 3001,
     hot: true,
     open: false,
     historyApiFallback: true,

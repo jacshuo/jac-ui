@@ -1,0 +1,38 @@
+/* ── FileExplorer design tokens ──────────── */
+
+:root {
+  --fe-bg:             linear-gradient(145deg, rgba(255,255,255,0.99), rgba(248,248,252,0.98));
+  --fe-shadow:         0 4px 30px rgba(0,0,0,0.10), 0 0 0 1px rgba(0,0,0,0.04);
+  --fe-text:           var(--color-primary-600);
+  --fe-text-strong:    var(--color-primary-900);
+  --fe-text-muted:     var(--color-primary-400);
+  --fe-border:         rgba(0,0,0,0.06);
+  --fe-surface:        rgba(0,0,0,0.015);
+  --fe-surface-hover:  rgba(0,0,0,0.04);
+  --fe-input-bg:       var(--color-primary-50);
+  --fe-input-border:   var(--color-primary-200);
+  --fe-btn-color:      rgba(0,0,0,0.45);
+  --fe-btn-hover:      rgba(0,0,0,0.80);
+  --fe-btn-hover-bg:   rgba(0,0,0,0.06);
+  --fe-badge-bg:       var(--color-primary-100);
+  --fe-dock-bg:        linear-gradient(135deg, color-mix(in srgb, var(--fe-accent, #8b5cf6) 12%, white), rgba(255,255,255,0.95));
+  --fe-dock-shadow:    0 0 15px color-mix(in srgb, var(--fe-accent, #8b5cf6) 15%, transparent);
+}
+.dark {
+  --fe-bg:             linear-gradient(145deg, rgba(10,10,18,0.97), rgba(15,12,28,0.98));
+  --fe-shadow:         0 4px 60px rgba(0,0,0,0.50), 0 0 1px var(--fe-accent, #8b5cf6), inset 0 1px 0 rgba(255,255,255,0.05);
+  --fe-text:           rgba(255,255,255,0.70);
+  --fe-text-strong:    #ffffff;
+  --fe-text-muted:     rgba(255,255,255,0.30);
+  --fe-border:         rgba(255,255,255,0.06);
+  --fe-surface:        rgba(255,255,255,0.02);
+  --fe-surface-hover:  rgba(255,255,255,0.06);
+  --fe-input-bg:       rgba(255,255,255,0.05);
+  --fe-input-border:   rgba(255,255,255,0.08);
+  --fe-btn-color:      rgba(255,255,255,0.50);
+  --fe-btn-hover:      rgba(255,255,255,0.90);
+  --fe-btn-hover-bg:   rgba(255,255,255,0.08);
+  --fe-badge-bg:       rgba(255,255,255,0.05);
+  --fe-dock-bg:        linear-gradient(135deg, color-mix(in srgb, var(--fe-accent, #8b5cf6) 20%, black), rgba(0,0,0,0.85));
+  --fe-dock-shadow:    0 0 20px color-mix(in srgb, var(--fe-accent, #8b5cf6) 30%, transparent);
+}

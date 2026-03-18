@@ -1,0 +1,54 @@
+/* ── CinePlayer animations & design tokens ──────────── */
+
+@keyframes cp-controls-up {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+@keyframes cp-curtain-open {
+  from { clip-path: inset(0 50% 0 50%); opacity: 0; }
+  to   { clip-path: inset(0 0 0 0); opacity: 1; }
+}
+@keyframes cp-curtain-close {
+  from { clip-path: inset(0 0 0 0); opacity: 1; }
+  to   { clip-path: inset(0 50% 0 50%); opacity: 0; }
+}
+@keyframes cp-cinema-in {
+  from { background: rgba(0,0,0,0); }
+  to   { background: rgba(0,0,0,0.92); }
+}
+@keyframes cp-cinema-out {
+  from { background: rgba(0,0,0,0.92); }
+  to   { background: rgba(0,0,0,0); }
+}
+@keyframes cp-playlist-in {
+  from { transform: translateX(100%); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
+}
+@keyframes cp-playlist-out {
+  from { transform: translateX(0); opacity: 1; }
+  to   { transform: translateX(100%); opacity: 0; }
+}
+@keyframes cp-track-transition {
+  0%   { filter: brightness(0); transform: scale(1.05); }
+  50%  { filter: brightness(0); }
+  100% { filter: brightness(1); transform: scale(1); }
+}
+@keyframes cp-volume-wave {
+  0%   { transform: scaleX(0); opacity: 1; }
+  100% { transform: scaleX(1); opacity: 0; }
+}
+
+/* ── CinePlayer design tokens ───────────── */
+:root {
+  --cp-bg:             #000000;
+  --cp-panel-bg:       rgba(0,0,0,0.85);
+  --cp-text:           rgba(255,255,255,0.75);
+  --cp-text-muted:     rgba(255,255,255,0.50);
+  --cp-text-strong:    #ffffff;
+  --cp-border:         rgba(255,255,255,0.10);
+  --cp-surface:        rgba(255,255,255,0.05);
+  --cp-surface-hover:  rgba(255,255,255,0.10);
+  --cp-overlay:        rgba(0,0,0,0.30);
+  --cp-seek-track:     rgba(255,255,255,0.20);
+  --cp-seek-buffer:    rgba(255,255,255,0.15);
+}

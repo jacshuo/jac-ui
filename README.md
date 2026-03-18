@@ -7,7 +7,7 @@
 
 # @jacshuo/onyx
 
-A cross-platform **React UI component library** built with Tailwind CSS v4 — designed for web browsers and Electron desktop apps. Ships ESM + CJS bundles with full TypeScript declarations.
+A cross-platform **React UI component library** built with Tailwind CSS v4 — designed for web browsers and Electron desktop apps. Ships tree-shakeable ESM + CJS bundles with per-component subpath exports, modular CSS, and full TypeScript declarations.
 
 Born out of a personal passion for **cross-platform desktop development**, Onyx focuses on delivering a polished, consistent look and feel across Electron and web — the kind of UI toolkit I always wished existed when building desktop apps with web technologies.
 
@@ -30,7 +30,9 @@ Born out of a personal passion for **cross-platform desktop development**, Onyx 
 - 🌗 **Dark / Light mode** — class-based, works out of the box
 - 🎯 **CSS variable design tokens** — override any color via `--cp-*`, `--mp-*`, `--fe-*` custom properties
 - ⚡ **Tailwind CSS v4** — zero config, `@theme` tokens, `color-mix()` accent support
-- 📦 **Tree-shakeable** — ESM + CJS dual output, `sideEffects: ["*.css"]`
+- 📦 **Tree-shakeable** — Per-component ESM entries with code splitting; import only what you use
+- 🗂️ **On-demand imports** — Subpath exports (`@jacshuo/onyx/Button`) for maximum control
+- 🎨 **Modular CSS** — Full bundle, base-only, or per-component CSS — pick exactly what you need
 - 🖥️ **Cross-platform** — built for web & Electron desktop apps
 - ⌨️ **Keyboard-first** — comprehensive keyboard shortcuts for CinePlayer, FileExplorer, and more
 - 🔤 **Full TypeScript** — every prop, event, and variant is typed
@@ -84,6 +86,51 @@ function App() {
     </Card>
   );
 }
+```
+
+---
+
+## Import Strategies
+
+Onyx supports multiple import styles — pick the one that best fits your bundler and performance requirements.
+
+### Full import (simplest)
+
+Import everything from the barrel entry. Modern bundlers (Vite, Next.js, webpack 5) will tree-shake unused components automatically.
+
+```tsx
+import { Button, Dialog, Tabs } from '@jacshuo/onyx';
+import '@jacshuo/onyx/styles.css';
+```
+
+### Per-component import (maximum tree-shaking)
+
+Import each component from its own subpath. This guarantees only the code you use is included, even with bundlers that don't tree-shake well.
+
+```tsx
+import { Button } from '@jacshuo/onyx/Button';
+import { Dialog, DialogContent } from '@jacshuo/onyx/Dialog';
+import { Tabs, TabList, TabTrigger } from '@jacshuo/onyx/Tabs';
+```
+
+### CSS options
+
+| Import | Size | Description |
+|---|---|---|
+| `@jacshuo/onyx/styles.css` | ~102 KB | Full pre-compiled bundle — all utilities + all component CSS. Simplest setup. |
+| `@jacshuo/onyx/styles/base.css` | ~95 KB | Tailwind utilities + core design tokens. No component-specific keyframes. |
+| `@jacshuo/onyx/styles/tokens.css` | ~4 KB | Raw `@theme` tokens only — for projects that already run Tailwind CSS v4. |
+| `@jacshuo/onyx/styles/CinePlayer.css` | ~2.5 KB | CinePlayer keyframes & `--cp-*` design tokens |
+| `@jacshuo/onyx/styles/MiniPlayer.css` | ~2.2 KB | MiniPlayer keyframes & `--mp-*` design tokens |
+| `@jacshuo/onyx/styles/FileExplorer.css` | ~1.6 KB | FileExplorer `--fe-*` design tokens |
+| `@jacshuo/onyx/styles/FilmReel.css` | ~0.6 KB | FilmReel keyframes |
+
+**Example — minimal setup with CinePlayer only:**
+
+```tsx
+import '@jacshuo/onyx/styles/base.css';
+import '@jacshuo/onyx/styles/CinePlayer.css';
+import { CinePlayer } from '@jacshuo/onyx/CinePlayer';
 ```
 
 ---
@@ -446,32 +493,6 @@ npm run typecheck
 
 ---
 
-## Release Process
-
-Releases are fully automated via GitHub Actions:
-
-1. Go to **Actions → Release → Run workflow**
-2. Choose version bump: `patch` / `minor` / `major`
-3. The pipeline will:
-   - Bump `package.json` version
-   - Commit & tag (e.g. `v0.2.0`)
-   - Build & publish to **npm**
-   - Create a **GitHub Release** with `.tar.gz` and `.zip` download artifacts
-   - Build & deploy the **demo site** to GitHub Pages
-
-### Required Secrets
-
-| Secret | Where | Description |
-|---|---|---|
-| `NPM_TOKEN` | GitHub repo → Settings → Secrets | npm access token with publish permission |
-
-### GitHub Pages Setup
-
-1. Go to **Settings → Pages**
-2. Source: **GitHub Actions**
-
----
-
 ## Project Structure
 
 ```
@@ -480,8 +501,15 @@ jac-ui/
 │   ├── components/      # All React components
 │   ├── lib/utils.ts     # cn() utility (clsx + tailwind-merge)
 │   └── styles/
-│       ├── theme.css    # Tailwind theme, keyframes, CSS custom properties
-│       └── theme.ts     # CVA variant definitions
+│       ├── index.css    # Full CSS entry (Tailwind + all tokens + all component CSS)
+│       ├── base.css     # Tailwind + core tokens only
+│       ├── tokens.css   # @theme semantic tokens & core keyframes
+│       ├── theme.ts     # CVA variant definitions
+│       └── components/  # Per-component CSS (keyframes & design tokens)
+│           ├── CinePlayer.css
+│           ├── MiniPlayer.css
+│           ├── FileExplorer.css
+│           └── FilmReel.css
 ├── demo/                # Demo site (GitHub Pages)
 │   ├── App.tsx
 │   ├── main.tsx
@@ -489,7 +517,11 @@ jac-ui/
 ├── .github/workflows/
 │   ├── ci.yml           # PR/push: typecheck + build
 │   └── release.yml      # Manual: version bump → npm → GitHub Release → Pages
-├── dist/                # Library build output
+├── dist/                # Library build output (ESM + CJS + DTS + CSS)
+│   ├── *.js / *.cjs     # Per-component entry points
+│   ├── chunks/          # Shared code (auto-extracted by tsup)
+│   ├── styles.css       # Full pre-compiled CSS bundle
+│   └── styles/          # Modular CSS files
 └── dist-demo/           # Demo build output
 ```
 
