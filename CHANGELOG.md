@@ -6,23 +6,33 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 ---
 
+## [1.3.1] — 2026-03-19
+
+### Fixed
+
+- **shiki restored to `dependencies`** — `1.3.0` incorrectly declared `shiki` as an optional peer dependency, which required consumers to manually install it before `CodeBlock` would work. `shiki` is now back in `dependencies` and is installed automatically. The package size remains ~1.7 MB because `shiki` is still declared as `external` in the tsup build config and is never bundled into the library output.
+
+### Docs
+
+- Removed the `shiki` manual-install note from the `CodeBlock` section in README (no longer needed).
+
+---
+
 ## [1.3.0] — 2026-03-19
 
 ### Fixed
 
 - **Critical: shiki grammars no longer bundled** — In `1.2.0`, all shiki language grammars were accidentally included in the library bundle, inflating the published package from ~1.7 MB to **13.4 MB**. `shiki` and every `@shikijs/langs/*` entry are now declared as `external` in the tsup build config so they are never bundled into the library output.
-- **shiki moved to optional peerDependencies** — `shiki` has been removed from `dependencies` and re-declared as an `optionalPeerDependencies`. Consumers who use `CodeBlock` must install `shiki` themselves; consumers who do not use `CodeBlock` incur zero shiki cost.
 
 ### Docs
 
-- Updated README import paths to reflect the category-scoped subpath structure (e.g. `@jacshuo/onyx/Extras/CodeBlock`).
-- Fixed `Header` component import example in README.
-- Added a note to the `CodeBlock` section clarifying that `shiki` must be installed separately as of 1.3.0.
+- Updated README import paths to reflect the category-scoped subpath structure (e.g. `@jacshuo/onyx/Extras/CinePlayer`).
+- Fixed `Header` component example in README (corrected `title` → `brand` prop, updated `actions` format).
 - Fixed `CinePlayer` import path in README.
 
 ### Deprecated
 
-> **⚠️ `1.2.0` is deprecated.** The published package was accidentally bloated to **13.4 MB** due to shiki language grammars being bundled into the library. Please upgrade to `>=1.3.0` immediately. The package size is restored to **~1.7 MB**.
+> **⚠️ `1.2.0` is deprecated.** The published package was accidentally bloated to **13.4 MB** due to shiki language grammars being bundled into the library. Please upgrade to `>=1.3.1` immediately. The package size is restored to **~1.7 MB**.
 
 ---
 
