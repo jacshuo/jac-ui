@@ -121,15 +121,48 @@ const cssVarTheme = {
   ],
 };
 
-// Shared highlighter singleton (lazy)
+// Explicit per-language loaders — only these langs get bundled (no full @shikijs/langs pull-in).
+// Uses @shikijs/langs individual exports so webpack creates one small chunk per language.
+const LANG_LOADERS: Record<string, () => Promise<unknown>> = {
+  typescript: () => import("@shikijs/langs/typescript"),
+  javascript: () => import("@shikijs/langs/javascript"),
+  tsx: () => import("@shikijs/langs/tsx"),
+  jsx: () => import("@shikijs/langs/jsx"),
+  html: () => import("@shikijs/langs/html"),
+  css: () => import("@shikijs/langs/css"),
+  json: () => import("@shikijs/langs/json"),
+  markdown: () => import("@shikijs/langs/markdown"),
+  python: () => import("@shikijs/langs/python"),
+  rust: () => import("@shikijs/langs/rust"),
+  go: () => import("@shikijs/langs/go"),
+  java: () => import("@shikijs/langs/java"),
+  c: () => import("@shikijs/langs/c"),
+  cpp: () => import("@shikijs/langs/cpp"),
+  csharp: () => import("@shikijs/langs/csharp"),
+  vue: () => import("@shikijs/langs/vue"),
+  xml: () => import("@shikijs/langs/xml"),
+  yaml: () => import("@shikijs/langs/yaml"),
+  sql: () => import("@shikijs/langs/sql"),
+  bash: () => import("@shikijs/langs/bash"),
+  shell: () => import("@shikijs/langs/shell"),
+};
+
+// Shared highlighter singleton (lazy) — uses shiki/core + JS regex engine (no WASM)
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let highlighterPromise: Promise<any> | null = null;
 const loadedLanguages = new Set<string>();
 
 function getHighlighter() {
   if (!highlighterPromise) {
-    highlighterPromise = import("shiki").then((m) =>
-      m.createHighlighter({ themes: [cssVarTheme], langs: [] }),
+    highlighterPromise = Promise.all([
+      import("shiki/core"),
+      import("shiki/engine/javascript"),
+    ]).then(([{ createHighlighterCore }, { createJavaScriptRegexEngine }]) =>
+      createHighlighterCore({
+        themes: [cssVarTheme],
+        langs: [],
+        engine: createJavaScriptRegexEngine(),
+      }),
     );
   }
   return highlighterPromise;
@@ -138,10 +171,17 @@ function getHighlighter() {
 async function highlight(code: string, lang: string, lineNumbers: boolean): Promise<string> {
   const highlighter = await getHighlighter();
   if (lang && !loadedLanguages.has(lang)) {
-    try {
-      await highlighter.loadLanguage(lang);
-      loadedLanguages.add(lang);
-    } catch {
+    const loader = LANG_LOADERS[lang];
+    if (loader) {
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const mod = (await loader()) as any;
+        await highlighter.loadLanguage(mod.default ?? mod);
+        loadedLanguages.add(lang);
+      } catch {
+        lang = "text";
+      }
+    } else {
       // Unknown language — fall back to plain text
       lang = "text";
     }

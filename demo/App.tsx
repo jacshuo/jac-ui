@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, lazy, Suspense } from "react";
 import { Routes, Route, NavLink, Navigate } from "react-router-dom";
 import {
   Sun,
@@ -20,40 +20,40 @@ import {
   type SideNavCollapseMode,
 } from "../src";
 
-import ButtonPage from "./pages/ButtonPage";
-import BadgePage from "./pages/BadgePage";
-import IndicatorPage from "./pages/IndicatorPage";
-import LabelPage from "./pages/LabelPage";
-import InputPage from "./pages/InputPage";
-import DropdownPage from "./pages/DropdownPage";
-import CardPage from "./pages/CardPage";
-import ImageCardPage from "./pages/ImageCardPage";
-import PanelPage from "./pages/PanelPage";
-import TablePage from "./pages/TablePage";
-import ListPage from "./pages/ListPage";
-import TreePage from "./pages/TreePage";
-import ChatPage from "./pages/ChatPage";
-import SideNavPage from "./pages/SideNavPage";
-import AccordionPage from "./pages/AccordionPage";
-import TabsPage from "./pages/TabsPage";
-import DialogPage from "./pages/DialogPage";
-import TooltipPage from "./pages/TooltipPage";
-import AlertPage from "./pages/AlertPage";
-import HeaderPage from "./pages/HeaderPage";
-import NavLinkPage from "./pages/NavLinkPage";
-import FilmReelPage from "./pages/FilmReelPage";
-import MiniPlayerPage from "./pages/MiniPlayerPage";
-import CinePlayerPage from "./pages/CinePlayerPage";
-import FileExplorerPage from "./pages/FileExplorerPage";
-import CodeBlockPage from "./pages/CodeBlockPage";
-import ProgressBarPage from "./pages/ProgressBarPage";
-import SpinPage from "./pages/SpinPage";
-import SwitchPage from "./pages/SwitchPage";
-import CheckboxPage from "./pages/CheckboxPage";
-import RadioPage from "./pages/RadioPage";
-import TextBoxPage from "./pages/TextBoxPage";
-import MasonryPage from "./pages/MasonryPage";
-import FormPage from "./pages/FormPage";
+const ButtonPage = lazy(() => import("./pages/ButtonPage"));
+const BadgePage = lazy(() => import("./pages/BadgePage"));
+const IndicatorPage = lazy(() => import("./pages/IndicatorPage"));
+const LabelPage = lazy(() => import("./pages/LabelPage"));
+const InputPage = lazy(() => import("./pages/InputPage"));
+const DropdownPage = lazy(() => import("./pages/DropdownPage"));
+const CardPage = lazy(() => import("./pages/CardPage"));
+const ImageCardPage = lazy(() => import("./pages/ImageCardPage"));
+const PanelPage = lazy(() => import("./pages/PanelPage"));
+const TablePage = lazy(() => import("./pages/TablePage"));
+const ListPage = lazy(() => import("./pages/ListPage"));
+const TreePage = lazy(() => import("./pages/TreePage"));
+const ChatPage = lazy(() => import("./pages/ChatPage"));
+const SideNavPage = lazy(() => import("./pages/SideNavPage"));
+const AccordionPage = lazy(() => import("./pages/AccordionPage"));
+const TabsPage = lazy(() => import("./pages/TabsPage"));
+const DialogPage = lazy(() => import("./pages/DialogPage"));
+const TooltipPage = lazy(() => import("./pages/TooltipPage"));
+const AlertPage = lazy(() => import("./pages/AlertPage"));
+const HeaderPage = lazy(() => import("./pages/HeaderPage"));
+const NavLinkPage = lazy(() => import("./pages/NavLinkPage"));
+const FilmReelPage = lazy(() => import("./pages/FilmReelPage"));
+const MiniPlayerPage = lazy(() => import("./pages/MiniPlayerPage"));
+const CinePlayerPage = lazy(() => import("./pages/CinePlayerPage"));
+const FileExplorerPage = lazy(() => import("./pages/FileExplorerPage"));
+const CodeBlockPage = lazy(() => import("./pages/CodeBlockPage"));
+const ProgressBarPage = lazy(() => import("./pages/ProgressBarPage"));
+const SpinPage = lazy(() => import("./pages/SpinPage"));
+const SwitchPage = lazy(() => import("./pages/SwitchPage"));
+const CheckboxPage = lazy(() => import("./pages/CheckboxPage"));
+const RadioPage = lazy(() => import("./pages/RadioPage"));
+const TextBoxPage = lazy(() => import("./pages/TextBoxPage"));
+const MasonryPage = lazy(() => import("./pages/MasonryPage"));
+const FormPage = lazy(() => import("./pages/FormPage"));
 
 /* ── Sidebar nav items ───────────────────────────────── */
 
@@ -244,43 +244,51 @@ export default function App() {
 
         {/* ── Content ────────────────────── */}
         <main className="flex-1 overflow-y-auto overscroll-y-contain p-4 pb-20 sm:p-6 sm:pb-20 md:p-8">
-          <Routes>
-            <Route path="/" element={<Navigate to="/button" replace />} />
-            <Route path="/button" element={<ButtonPage />} />
-            <Route path="/badge" element={<BadgePage />} />
-            <Route path="/indicator" element={<IndicatorPage />} />
-            <Route path="/label" element={<LabelPage />} />
-            <Route path="/input" element={<InputPage />} />
-            <Route path="/dropdown" element={<DropdownPage />} />
-            <Route path="/switch" element={<SwitchPage />} />
-            <Route path="/checkbox" element={<CheckboxPage />} />
-            <Route path="/radio" element={<RadioPage />} />
-            <Route path="/textbox" element={<TextBoxPage />} />
-            <Route path="/card" element={<CardPage />} />
-            <Route path="/image-card" element={<ImageCardPage />} />
-            <Route path="/panel" element={<PanelPage />} />
-            <Route path="/table" element={<TablePage />} />
-            <Route path="/list" element={<ListPage />} />
-            <Route path="/tree" element={<TreePage />} />
-            <Route path="/chat" element={<ChatPage />} />
-            <Route path="/code-block" element={<CodeBlockPage />} />
-            <Route path="/header" element={<HeaderPage />} />
-            <Route path="/sidenav" element={<SideNavPage />} />
-            <Route path="/nav-link" element={<NavLinkPage />} />
-            <Route path="/accordion" element={<AccordionPage />} />
-            <Route path="/tabs" element={<TabsPage />} />
-            <Route path="/dialog" element={<DialogPage />} />
-            <Route path="/tooltip" element={<TooltipPage />} />
-            <Route path="/alert" element={<AlertPage />} />
-            <Route path="/progress-bar" element={<ProgressBarPage />} />
-            <Route path="/spin" element={<SpinPage />} />
-            <Route path="/film-reel" element={<FilmReelPage />} />
-            <Route path="/mini-player" element={<MiniPlayerPage />} />
-            <Route path="/cine-player" element={<CinePlayerPage />} />
-            <Route path="/file-explorer" element={<FileExplorerPage />} />
-            <Route path="/masonry" element={<MasonryPage />} />
-            <Route path="/form" element={<FormPage />} />
-          </Routes>
+          <Suspense
+            fallback={
+              <div className="flex h-40 items-center justify-center text-primary-400 text-sm">
+                Loading…
+              </div>
+            }
+          >
+            <Routes>
+              <Route path="/" element={<Navigate to="/button" replace />} />
+              <Route path="/button" element={<ButtonPage />} />
+              <Route path="/badge" element={<BadgePage />} />
+              <Route path="/indicator" element={<IndicatorPage />} />
+              <Route path="/label" element={<LabelPage />} />
+              <Route path="/input" element={<InputPage />} />
+              <Route path="/dropdown" element={<DropdownPage />} />
+              <Route path="/switch" element={<SwitchPage />} />
+              <Route path="/checkbox" element={<CheckboxPage />} />
+              <Route path="/radio" element={<RadioPage />} />
+              <Route path="/textbox" element={<TextBoxPage />} />
+              <Route path="/card" element={<CardPage />} />
+              <Route path="/image-card" element={<ImageCardPage />} />
+              <Route path="/panel" element={<PanelPage />} />
+              <Route path="/table" element={<TablePage />} />
+              <Route path="/list" element={<ListPage />} />
+              <Route path="/tree" element={<TreePage />} />
+              <Route path="/chat" element={<ChatPage />} />
+              <Route path="/code-block" element={<CodeBlockPage />} />
+              <Route path="/header" element={<HeaderPage />} />
+              <Route path="/sidenav" element={<SideNavPage />} />
+              <Route path="/nav-link" element={<NavLinkPage />} />
+              <Route path="/accordion" element={<AccordionPage />} />
+              <Route path="/tabs" element={<TabsPage />} />
+              <Route path="/dialog" element={<DialogPage />} />
+              <Route path="/tooltip" element={<TooltipPage />} />
+              <Route path="/alert" element={<AlertPage />} />
+              <Route path="/progress-bar" element={<ProgressBarPage />} />
+              <Route path="/spin" element={<SpinPage />} />
+              <Route path="/film-reel" element={<FilmReelPage />} />
+              <Route path="/mini-player" element={<MiniPlayerPage />} />
+              <Route path="/cine-player" element={<CinePlayerPage />} />
+              <Route path="/file-explorer" element={<FileExplorerPage />} />
+              <Route path="/masonry" element={<MasonryPage />} />
+              <Route path="/form" element={<FormPage />} />
+            </Routes>
+          </Suspense>
         </main>
       </div>
     </div>

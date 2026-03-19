@@ -84,20 +84,46 @@ module.exports = {
     }),
   ],
 
+  performance: {
+    hints: false,
+  },
+
   optimization: {
     minimizer: [
-      new TerserPlugin(),
+      new TerserPlugin({
+        terserOptions: {
+          compress: { drop_console: true, passes: 2 },
+          format: { comments: false },
+        },
+        extractComments: false,
+      }),
       new CssMinimizerPlugin(),
     ],
     splitChunks: {
       chunks: 'all',
+      maxInitialRequests: 10,
+      minSize: 20_000,
       cacheGroups: {
+        react: {
+          test: /[\\/]node_modules[\\/](react|react-dom|react-router|react-router-dom|scheduler)[\\/]/,
+          name: 'react',
+          chunks: 'all',
+          priority: 30,
+        },
+        lucide: {
+          test: /[\\/]node_modules[\\/]lucide-react[\\/]/,
+          name: 'lucide',
+          chunks: 'all',
+          priority: 20,
+        },
         vendor: {
           test: /[\\/]node_modules[\\/]/,
           name: 'vendor',
           chunks: 'all',
+          priority: 10,
         },
       },
     },
+    runtimeChunk: 'single',
   },
 };
