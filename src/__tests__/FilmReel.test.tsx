@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { FilmReel, type FilmReelPhoto } from "../components/FilmReel";
+import { FilmReel, type FilmReelPhoto } from "../components/Extras/FilmReel";
 
 const photos: FilmReelPhoto[] = [
   { src: "photo1.jpg", alt: "Sunset", title: "Sunset" },

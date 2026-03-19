@@ -3,12 +3,11 @@ import { join } from "path";
 import { defineConfig } from "tsup";
 
 // Discover category entrypoints:
-// - src/components/<Category>/index.ts               -> dist/<Category>.js
+// - src/components/<Category>/index.ts               -> dist/<Category>/index.js
 // - src/components/<Category>/<Component>/index.ts   -> dist/<Category>/<Component>.js
 const categoryEntries = Object.fromEntries(
   readdirSync("src/components", { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
-    .filter((entry) => entry.name !== "Form")
     .flatMap((categoryDir) => {
       const categoryName = categoryDir.name;
       const categoryRoot = join("src/components", categoryName);
@@ -16,7 +15,7 @@ const categoryEntries = Object.fromEntries(
 
       const categoryIndex = join(categoryRoot, "index.ts");
       if (existsSync(categoryIndex)) {
-        entries.push([categoryName, categoryIndex]);
+        entries.push([`${categoryName}/index`, categoryIndex]);
       }
 
       const componentEntries = readdirSync(categoryRoot, { withFileTypes: true })
@@ -44,7 +43,7 @@ export default defineConfig({
     theme: "src/styles/theme.ts",
   },
   format: ["esm", "cjs"],
-  dts: true,
+  experimentalDts: true,
   splitting: false,
   treeshake: true,
   minify: true,

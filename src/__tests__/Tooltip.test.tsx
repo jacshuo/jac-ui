@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, act, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { Tooltip } from "../components/Tooltip";
+import { Tooltip } from "../components/Overlay/Tooltip";
 
 describe("Tooltip", () => {
   beforeEach(() => {

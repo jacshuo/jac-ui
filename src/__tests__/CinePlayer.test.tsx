@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { CinePlayer, type CinePlayerMedia } from "../components/CinePlayer";
+import { CinePlayer, type CinePlayerMedia } from "../components/Extras/CinePlayer";
 
 const playlist: CinePlayerMedia[] = [
   { title: "Track 1", subtitle: "First clip", src: "video1.mp4", poster: "poster1.jpg" },

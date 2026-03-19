@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { Header, type HeaderNavItem, type HeaderAction } from "../components/Header";
+import { Header, type HeaderNavItem, type HeaderAction } from "../components/Navigation/Header";
 
 describe("Header", () => {
   it("renders brand text", () => {

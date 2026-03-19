@@ -4,6 +4,41 @@
 // ─── Utilities
 export { cn } from "./lib/utils";
 
+// ─── Category modules (ergonomic grouped API)
+export { default as Primitives } from "./components/Primitives/index";
+export { default as Layout } from "./components/Layout/index";
+export { default as DataDisplay } from "./components/DataDisplay/index";
+export { default as Navigation } from "./components/Navigation/index";
+export { default as Disclosure } from "./components/Disclosure/index";
+export { default as Overlay } from "./components/Overlay/index";
+export { default as Feedback } from "./components/Feedback/index";
+export { default as Extras } from "./components/Extras/index";
+export { default as Forms } from "./components/Forms/index";
+
+import PrimitivesGroup from "./components/Primitives/index";
+import LayoutGroup from "./components/Layout/index";
+import DataDisplayGroup from "./components/DataDisplay/index";
+import NavigationGroup from "./components/Navigation/index";
+import DisclosureGroup from "./components/Disclosure/index";
+import OverlayGroup from "./components/Overlay/index";
+import FeedbackGroup from "./components/Feedback/index";
+import ExtrasGroup from "./components/Extras/index";
+import FormsGroup from "./components/Forms/index";
+
+const Onyx = {
+  Primitives: PrimitivesGroup,
+  Layout: LayoutGroup,
+  DataDisplay: DataDisplayGroup,
+  Navigation: NavigationGroup,
+  Disclosure: DisclosureGroup,
+  Overlay: OverlayGroup,
+  Feedback: FeedbackGroup,
+  Extras: ExtrasGroup,
+  Forms: FormsGroup,
+};
+
+export default Onyx;
+
 // ─── Theme (CVA variant definitions)
 export {
   buttonVariants,
@@ -35,27 +70,32 @@ export {
 } from "./styles/theme";
 
 // ─── Primitives
-export { Button } from "./components/Button";
+export { Button } from "./components/Primitives/Button/index";
 export {
   Dropdown,
   type DropdownOption,
   type DropdownProps,
   type DropdownSingleProps,
   type DropdownMultipleProps,
-} from "./components/Dropdown";
+} from "./components/Primitives/Dropdown/index";
 export {
   DropdownButton,
   type DropdownItem,
   type DropdownButtonProps,
-} from "./components/DropdownButton";
-export { Badge } from "./components/Badge";
-export { Indicator, type IndicatorProps } from "./components/Indicator";
-export { Label } from "./components/Label";
-export { Input } from "./components/Input";
-export { TextBox, type TextBoxProps } from "./components/TextBox";
-export { Switch, type SwitchProps } from "./components/Switch";
-export { Checkbox, type CheckboxProps } from "./components/Checkbox";
-export { Radio, RadioGroup, type RadioProps, type RadioGroupProps } from "./components/Radio";
+} from "./components/Primitives/DropdownButton/index";
+export { Badge } from "./components/Primitives/Badge/index";
+export { Indicator, type IndicatorProps } from "./components/Primitives/Indicator/index";
+export { Label } from "./components/Primitives/Label/index";
+export { Input } from "./components/Primitives/Input/index";
+export { TextBox, type TextBoxProps } from "./components/Primitives/TextBox/index";
+export { Switch, type SwitchProps } from "./components/Primitives/Switch/index";
+export { Checkbox, type CheckboxProps } from "./components/Primitives/Checkbox/index";
+export {
+  Radio,
+  RadioGroup,
+  type RadioProps,
+  type RadioGroupProps,
+} from "./components/Primitives/Radio/index";
 
 // ─── Layout
 export {
@@ -66,15 +106,15 @@ export {
   CardContent,
   CardFooter,
   HorizontalCard,
-} from "./components/Card";
+} from "./components/Layout/Card/index";
 export {
   ImageCard,
   ImageCardBody,
   ImageCardTitle,
   ImageCardDescription,
   ImageCardActions,
-} from "./components/ImageCard";
-export { Panel, PanelHeader, PanelContent } from "./components/Panel";
+} from "./components/Layout/ImageCard/index";
+export { Panel, PanelHeader, PanelContent } from "./components/Layout/Panel/index";
 
 // ─── Data Display
 export {
@@ -93,11 +133,15 @@ export {
   type SelectionMode,
   type DataTableProps,
   type TableEmptyProps,
-} from "./components/Table";
-export { List, ListItem, type ListItemProps } from "./components/List";
-export { Tree, TreeItem } from "./components/Tree";
-export { Chat, type ChatMessage, type ChatProps } from "./components/Chat";
-export { CodeBlock, type CodeBlockLanguage, type CodeBlockProps } from "./components/CodeBlock";
+} from "./components/DataDisplay/Table/index";
+export { List, ListItem, type ListItemProps } from "./components/DataDisplay/List/index";
+export { Tree, TreeItem } from "./components/DataDisplay/Tree/index";
+export { Chat, type ChatMessage, type ChatProps } from "./components/DataDisplay/Chat/index";
+export {
+  CodeBlock,
+  type CodeBlockLanguage,
+  type CodeBlockProps,
+} from "./components/DataDisplay/CodeBlock/index";
 
 // ─── Navigation
 export {
@@ -106,14 +150,14 @@ export {
   type SideNavItem,
   type SideNavProps,
   type SideNavLinkComponentProps,
-} from "./components/SideNav";
+} from "./components/Navigation/SideNav/index";
 export {
   Header,
   type HeaderProps,
   type HeaderNavItem,
   type HeaderAction,
-} from "./components/Header";
-export { NavLink } from "./components/NavLink";
+} from "./components/Navigation/Header/index";
+export { NavLink } from "./components/Navigation/NavLink/index";
 
 // ─── Disclosure
 export {
@@ -121,8 +165,14 @@ export {
   AccordionItem,
   AccordionTrigger,
   AccordionContent,
-} from "./components/Accordion";
-export { Tabs, TabList, TabTrigger, TabPanels, TabContent } from "./components/Tabs";
+} from "./components/Disclosure/Accordion/index";
+export {
+  Tabs,
+  TabList,
+  TabTrigger,
+  TabPanels,
+  TabContent,
+} from "./components/Disclosure/Tabs/index";
 
 // ─── Overlay
 export {
@@ -133,8 +183,8 @@ export {
   DialogDescription,
   DialogFooter,
   DialogClose,
-} from "./components/Dialog";
-export { Tooltip } from "./components/Tooltip";
+} from "./components/Overlay/Dialog/index";
+export { Tooltip } from "./components/Overlay/Tooltip/index";
 
 // ─── Feedback
 export {
@@ -147,9 +197,9 @@ export {
   configureAlertTopOffset,
   type AlertPosition,
   type AlertOptions,
-} from "./components/Alert";
-export { ProgressBar, type ProgressBarProps } from "./components/ProgressBar";
-export { Spin, useSpin, type SpinProps } from "./components/Spin";
+} from "./components/Feedback/Alert/index";
+export { ProgressBar, type ProgressBarProps } from "./components/Feedback/ProgressBar/index";
+export { Spin, useSpin, type SpinProps } from "./components/Feedback/Spin/index";
 
 // ─── Extras
 export {
@@ -158,7 +208,7 @@ export {
   type FilmReelAction,
   type FilmReelLayout,
   type FilmReelProps,
-} from "./components/FilmReel";
+} from "./components/Extras/FilmReel/index";
 
 export {
   MiniPlayer,
@@ -166,14 +216,14 @@ export {
   type MiniPlayerPosition,
   type MiniPlayerEntrance,
   type MiniPlayerProps,
-} from "./components/MiniPlayer";
+} from "./components/Extras/MiniPlayer/index";
 
 export {
   CinePlayer,
   type CinePlayerMedia,
   type CinePlayerSortKey,
   type CinePlayerProps,
-} from "./components/CinePlayer";
+} from "./components/Extras/CinePlayer/index";
 
 export {
   FileExplorer,
@@ -183,9 +233,13 @@ export {
   type FileExplorerInputMode,
   type FileExplorerAction,
   type FileExplorerProps,
-} from "./components/FileExplorer";
+} from "./components/Extras/FileExplorer/index";
 
-export { Masonry, type MasonryProps, type MasonryItemData } from "./components/Masonry";
+export {
+  Masonry,
+  type MasonryProps,
+  type MasonryItemData,
+} from "./components/Extras/Masonry/index";
 
 // ─── Form
 export {
@@ -201,4 +255,4 @@ export {
   type FormValidation,
   type ValidationResult,
   type ValidateCallback,
-} from "./components/Form";
+} from "./components/Forms/Form/index";

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { Badge } from "../components/Badge";
+import { Badge } from "../components/Primitives/Badge";
 
 describe("Badge", () => {
   it("renders children", () => {

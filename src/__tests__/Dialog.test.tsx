@@ -9,7 +9,7 @@ import {
   DialogDescription,
   DialogFooter,
   DialogClose,
-} from "../components/Dialog";
+} from "../components/Overlay/Dialog";
 
 describe("Dialog", () => {
   it("does not render when closed", () => {

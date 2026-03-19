@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { Chat, type ChatMessage } from "../components/Chat";
+import { Chat, type ChatMessage } from "../components/DataDisplay/Chat";
 
 beforeAll(() => {
   Element.prototype.scrollIntoView = () => {};

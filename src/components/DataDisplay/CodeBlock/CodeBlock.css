@@ -1,0 +1,31 @@
+:root {
+  --color-syntax-keyword: var(--color-primary-600);
+  --color-syntax-string: var(--color-success-600);
+  --color-syntax-comment: var(--color-secondary-400);
+  --color-syntax-function: var(--color-warning-600);
+  --color-syntax-variable: var(--color-danger-600);
+  --color-syntax-number: var(--color-warning-500);
+  --color-syntax-operator: var(--color-secondary-600);
+  --color-syntax-tag: var(--color-danger-500);
+  --color-syntax-attr: var(--color-warning-600);
+  --color-syntax-punctuation: var(--color-secondary-500);
+  --color-syntax-type: var(--color-success-700);
+  --color-syntax-plain: var(--color-primary-800);
+  --color-syntax-bg: var(--color-primary-50);
+}
+
+.dark {
+  --color-syntax-keyword: var(--color-primary-400);
+  --color-syntax-string: var(--color-success-400);
+  --color-syntax-comment: var(--color-secondary-500);
+  --color-syntax-function: var(--color-warning-400);
+  --color-syntax-variable: var(--color-danger-400);
+  --color-syntax-number: var(--color-warning-300);
+  --color-syntax-operator: var(--color-secondary-400);
+  --color-syntax-tag: var(--color-danger-400);
+  --color-syntax-attr: var(--color-warning-300);
+  --color-syntax-punctuation: var(--color-secondary-400);
+  --color-syntax-type: var(--color-success-300);
+  --color-syntax-plain: var(--color-primary-200);
+  --color-syntax-bg: var(--color-primary-900);
+}

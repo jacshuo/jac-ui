@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { TextBox } from "../components/TextBox";
+import { TextBox } from "../components/Primitives/TextBox";
 
 describe("TextBox", () => {
   it("renders a textarea", () => {

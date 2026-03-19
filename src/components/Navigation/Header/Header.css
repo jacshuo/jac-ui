@@ -1,0 +1,9 @@
+:root {
+  --header-mobile-bg: theme(colors.white);
+  --header-mobile-border: theme(colors.primary.200);
+}
+
+.dark {
+  --header-mobile-bg: theme(colors.primary.900);
+  --header-mobile-border: theme(colors.primary.700);
+}

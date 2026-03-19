@@ -5,6 +5,17 @@ describe("Public API exports", () => {
   const expected = [
     // Utilities
     "cn",
+    // Category modules
+    "Primitives",
+    "Layout",
+    "DataDisplay",
+    "Navigation",
+    "Disclosure",
+    "Overlay",
+    "Feedback",
+    "Extras",
+    "Forms",
+    "default",
     // Theme variants
     "buttonVariants",
     "badgeVariants",

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { MiniPlayer, type MiniPlayerTrack } from "../components/MiniPlayer";
+import { MiniPlayer, type MiniPlayerTrack } from "../components/Extras/MiniPlayer";
 
 const playlist: MiniPlayerTrack[] = [
   { title: "Song A", artist: "Artist 1", src: "song1.mp3", cover: "cover1.jpg" },

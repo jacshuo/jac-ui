@@ -1,0 +1,26 @@
+:root {
+  --animate-dropdown-item-in: dropdown-item-in 200ms ease-out both;
+  --animate-dropdown-item-out: dropdown-item-out 150ms ease-in both;
+  --animate-dropdown-container-in: dropdown-container-in 150ms ease-out both;
+  --animate-dropdown-container-out: dropdown-container-out 120ms ease-in both;
+}
+
+@keyframes dropdown-item-in {
+  from { opacity: 0; transform: perspective(400px) rotateX(-50deg); transform-origin: top center; }
+  to { opacity: 1; transform: perspective(400px) rotateX(0deg); transform-origin: top center; }
+}
+
+@keyframes dropdown-item-out {
+  from { opacity: 1; transform: perspective(400px) rotateX(0deg); transform-origin: top center; }
+  to { opacity: 0; transform: perspective(400px) rotateX(-50deg); transform-origin: top center; }
+}
+
+@keyframes dropdown-container-in {
+  from { opacity: 0; transform: scaleY(0.96); transform-origin: top center; }
+  to { opacity: 1; transform: scaleY(1); transform-origin: top center; }
+}
+
+@keyframes dropdown-container-out {
+  from { opacity: 1; transform: scaleY(1); transform-origin: top center; }
+  to { opacity: 0; transform: scaleY(0.96); transform-origin: top center; }
+}

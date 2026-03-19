@@ -1,0 +1,12 @@
+:root {
+  --list-item-py-sm: 0.25rem;
+  --list-item-py-md: 0.375rem;
+  --list-item-py-lg: 0.5rem;
+  --list-item-text-sm: 0.75rem;
+  --list-item-text-md: 0.875rem;
+  --list-item-text-lg: 1rem;
+  --list-item-icon-sm: 0.75rem;
+  --list-item-icon-md: 0.875rem;
+  --list-item-icon-lg: 1rem;
+  --row-action-touch-min: 2.25rem;
+}

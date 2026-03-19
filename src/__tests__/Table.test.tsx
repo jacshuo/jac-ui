@@ -12,7 +12,7 @@ import {
   SortableTable,
   DataTable,
   type ColumnDef,
-} from "../components/Table";
+} from "../components/DataDisplay/Table";
 
 /* ── Primitive elements ─────────────────────── */
 

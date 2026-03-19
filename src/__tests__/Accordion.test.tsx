@@ -6,7 +6,7 @@ import {
   AccordionItem,
   AccordionTrigger,
   AccordionContent,
-} from "../components/Accordion";
+} from "../components/Disclosure/Accordion";
 
 function renderAccordion(type: "single" | "multiple" = "single") {
   return render(

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { Panel, PanelHeader, PanelContent } from "../components/Panel";
+import { Panel, PanelHeader, PanelContent } from "../components/Layout/Panel";
 
 describe("Panel", () => {
   it("renders children", () => {

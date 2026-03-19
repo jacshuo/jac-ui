@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { List, ListItem } from "../components/List";
+import { List, ListItem } from "../components/DataDisplay/List";
 
 describe("List", () => {
   it("renders as ul", () => {

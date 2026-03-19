@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { SideNav, type SideNavItem } from "../components/SideNav";
+import { SideNav, type SideNavItem } from "../components/Navigation/SideNav";
 
 const items: SideNavItem[] = [
   { label: "Home", path: "/home", icon: <span>🏠</span> },

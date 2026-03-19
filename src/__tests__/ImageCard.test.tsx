@@ -6,7 +6,7 @@ import {
   ImageCardTitle,
   ImageCardDescription,
   ImageCardActions,
-} from "../components/ImageCard";
+} from "../components/Layout/ImageCard";
 
 describe("ImageCard", () => {
   it("renders the image with src and alt", () => {

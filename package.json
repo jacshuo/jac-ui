@@ -12,10 +12,20 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
+    "./theme": {
+      "types": "./dist/theme.d.ts",
+      "import": "./dist/theme.js",
+      "require": "./dist/theme.cjs"
+    },
+    "./utils": {
+      "types": "./dist/utils.d.ts",
+      "import": "./dist/utils.js",
+      "require": "./dist/utils.cjs"
+    },
     "./*": {
-      "types": "./dist/*.d.ts",
-      "import": "./dist/*.js",
-      "require": "./dist/*.cjs"
+      "types": "./dist/*/index.d.ts",
+      "import": "./dist/*/index.js",
+      "require": "./dist/*/index.cjs"
     },
     "./*/*": {
       "types": "./dist/*/*.d.ts",
@@ -50,7 +60,7 @@
     "dev": "webpack serve --config webpack.dev.config.cjs",
     "build": "npm run clean && npm run build:js && npm run build:css",
     "dist": "npm run clean && npm run build:js && npm run build:css",
-    "build:js": "tsup",
+    "build:js": "cross-env NODE_OPTIONS=--max-old-space-size=4096 tsup",
     "build:css": "node scripts/build-css.mjs",
     "build:demo": "webpack --config webpack.demo.config.cjs",
     "test": "vitest run",
@@ -78,6 +88,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
+    "@microsoft/api-extractor": "^7.57.7",
     "@tailwindcss/postcss": "^4.2.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",

@@ -1,15 +1,13 @@
 /**
  * Build CSS — produces:
- *   dist/styles.css                    Full pre-compiled bundle (Tailwind + all tokens + all animations)
- *   dist/styles/base.css               Tailwind + core tokens (no component-specific extras)
- *   dist/styles/tokens.css             Raw theme tokens & core keyframes (for own-Tailwind consumers)
- *   dist/styles/CinePlayer.css         CinePlayer keyframes + design tokens
- *   dist/styles/MiniPlayer.css         MiniPlayer keyframes + design tokens
- *   dist/styles/FileExplorer.css       FileExplorer design tokens
- *   dist/styles/FilmReel.css           FilmReel keyframes
+ *   dist/styles.css                         Full pre-compiled bundle (Tailwind + all tokens + all component CSS)
+ *   dist/styles/base.css                    Tailwind + core tokens (no component-specific extras)
+ *   dist/styles/tokens.css                  Raw theme tokens & keyframes (for own-Tailwind consumers)
+ *   dist/styles/tailwind.css                Tailwind v4 integration (@source + tokens, for own-Tailwind consumers)
+ *   dist/styles/<Category>/<Component>.css  Per-component CSS for tree-shakeable imports
  */
 import { execSync } from "node:child_process";
-import { mkdirSync, copyFileSync } from "node:fs";
+import { mkdirSync, copyFileSync, readdirSync, statSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -19,6 +17,7 @@ const run = (cmd) => execSync(cmd, { stdio: "inherit", cwd: root });
 const postcss = resolve(root, "node_modules/.bin/postcss");
 
 mkdirSync(resolve(root, "dist/styles"), { recursive: true });
+mkdirSync(resolve(root, "dist/styles/tokens"), { recursive: true });
 
 // 1. Full bundle (PostCSS-processed: Tailwind + everything)
 run(`"${postcss}" src/styles/index.css -o dist/styles.css --no-map`);
@@ -28,17 +27,40 @@ run(`"${postcss}" src/styles/base.css -o dist/styles/base.css --no-map`);
 
 // 3. Raw tokens (for consumers who have their own Tailwind setup)
 copyFileSync(resolve(root, "src/styles/tokens.css"), resolve(root, "dist/styles/tokens.css"));
+copyFileSync(
+  resolve(root, "src/styles/tokens/core.css"),
+  resolve(root, "dist/styles/tokens/core.css"),
+);
+copyFileSync(
+  resolve(root, "src/styles/tokens/animations-shared.css"),
+  resolve(root, "dist/styles/tokens/animations-shared.css"),
+);
 
 // 3b. Tailwind integration file (for own-Tailwind consumers — @source + tokens)
 copyFileSync(resolve(root, "src/styles/tailwind.css"), resolve(root, "dist/styles/tailwind.css"));
 
-// 4. Per-component CSS (pure CSS — no Tailwind processing needed)
-const extras = ["CinePlayer", "MiniPlayer", "FileExplorer", "FilmReel"];
-for (const name of extras) {
-  copyFileSync(
-    resolve(root, `src/styles/components/${name}.css`),
-    resolve(root, `dist/styles/${name}.css`),
-  );
+// 4. Hierarchical per-component CSS: dist/styles/<Category>/<Component>.css
+const componentsRoot = resolve(root, "src/components");
+for (const category of readdirSync(componentsRoot)) {
+  const categoryPath = resolve(componentsRoot, category);
+  if (!statSync(categoryPath).isDirectory()) continue;
+
+  const distCategoryPath = resolve(root, "dist/styles", category);
+  mkdirSync(distCategoryPath, { recursive: true });
+
+  for (const maybeComponent of readdirSync(categoryPath)) {
+    const componentPath = resolve(categoryPath, maybeComponent);
+    if (!statSync(componentPath).isDirectory()) continue;
+
+    const cssFile = resolve(componentPath, `${maybeComponent}.css`);
+    try {
+      if (statSync(cssFile).isFile()) {
+        copyFileSync(cssFile, resolve(distCategoryPath, `${maybeComponent}.css`));
+      }
+    } catch {
+      // Component has no colocated CSS file — skip.
+    }
+  }
 }
 
 console.log("✓ CSS build complete");

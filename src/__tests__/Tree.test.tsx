@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { Tree, TreeItem } from "../components/Tree";
+import { Tree, TreeItem } from "../components/DataDisplay/Tree";
 
 describe("Tree", () => {
   it('renders with role="tree"', () => {

@@ -1,0 +1,21 @@
+:root {
+  --form-label-w-sm: 5rem;
+  --form-label-w-md: 7rem;
+  --form-label-w-lg: 9rem;
+
+  --form-item-gap-sm: 0.5rem;
+  --form-item-gap-md: 0.75rem;
+  --form-item-gap-lg: 1rem;
+
+  --form-row-gap-sm: 0.75rem;
+  --form-row-gap-md: 1.25rem;
+  --form-row-gap-lg: 1.75rem;
+
+  --form-hint-text: 0.75rem;
+
+  --form-header-mb: 1.5rem;
+  --form-footer-pt: 1.5rem;
+  --form-footer-gap: 0.5rem;
+
+  --form-radius: 0.5rem;
+}

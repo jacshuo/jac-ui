@@ -1,7 +1,23 @@
 /* Legacy compatibility — imports all split CSS modules.
    Prefer importing tokens.css + only the component CSS you need. */
 @import "./tokens.css";
+@import "../components/Primitives/Badge/Badge.css";
+@import "../components/Primitives/Dropdown/Dropdown.css";
+@import "../components/Primitives/Indicator/Indicator.css";
+@import "../components/Disclosure/Accordion/Accordion.css";
+@import "../components/DataDisplay/Table/Table.css";
+@import "../components/DataDisplay/List/List.css";
+@import "../components/DataDisplay/Tree/Tree.css";
+@import "../components/DataDisplay/CodeBlock/CodeBlock.css";
+@import "../components/Navigation/Header/Header.css";
+@import "../components/Overlay/Dialog/Dialog.css";
+@import "../components/Overlay/Tooltip/Tooltip.css";
+@import "../components/Feedback/Alert/Alert.css";
+@import "../components/Feedback/ProgressBar/ProgressBar.css";
+@import "../components/Feedback/Spin/Spin.css";
+@import "../components/Forms/Form/Form.css";
 @import "./components/FilmReel.css";
 @import "./components/MiniPlayer.css";
 @import "./components/CinePlayer.css";
 @import "./components/FileExplorer.css";
+@import "./components/Masonry.css";

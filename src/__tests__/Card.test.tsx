@@ -8,7 +8,7 @@ import {
   CardContent,
   CardFooter,
   HorizontalCard,
-} from "../components/Card";
+} from "../components/Layout/Card";
 
 describe("Card", () => {
   it("renders children", () => {

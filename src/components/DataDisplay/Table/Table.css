@@ -1,0 +1,8 @@
+:root {
+  --table-cell-px-compact: 0.5rem;
+  --table-cell-py-compact: 0.25rem;
+  --table-cell-px-default: 1rem;
+  --table-cell-py-default: 0.75rem;
+  --table-cell-px-relaxed: 1.5rem;
+  --table-cell-py-relaxed: 1.25rem;
+}

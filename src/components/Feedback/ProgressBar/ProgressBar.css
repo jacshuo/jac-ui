@@ -1,0 +1,25 @@
+:root {
+  --animate-progress-indeterminate: progress-indeterminate 1.5s ease-in-out infinite;
+  --animate-progress-shine: progress-shine 2s ease-in-out infinite;
+}
+
+@keyframes progress-indeterminate {
+  0% { left: -40%; width: 40%; }
+  50% { left: 30%; width: 50%; }
+  100% { left: 100%; width: 10%; }
+}
+
+@keyframes progress-shine {
+  0% { background-image: none; }
+  50% {
+    background-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.35) 50%,
+      transparent 100%
+    );
+    background-size: 50% 100%;
+    background-position: -100% 0;
+  }
+  100% { background-image: none; }
+}
