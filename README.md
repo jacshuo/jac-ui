@@ -574,10 +574,7 @@ import { NavLink } from '@jacshuo/onyx';
 
 ### CodeBlock
 
-> **Note:** `CodeBlock` uses [Shiki](https://shiki.style/) for syntax highlighting. Install it as a peer dependency if you use this component:
-> ```sh
-> npm install shiki
-> ```
+> **Note:** `CodeBlock` uses [Shiki](https://shiki.style/) for syntax highlighting. Shiki is included as a direct dependency and installed automatically with Onyx — no extra steps needed.
 
 ```tsx
 import { CodeBlock } from '@jacshuo/onyx';
