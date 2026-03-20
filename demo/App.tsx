@@ -209,12 +209,14 @@ function useTheme() {
  * Strategy:
  *  1. Set `--app-height` once and only grow it (keyboard open never shrinks it,
  *     so no gap appears between content and keyboard).
- *  2. On `focusin` for any form field, capture <main>.scrollTop BEFORE iOS
- *     auto-scrolls to bring the input into view.
- *  3. On `focusout` (with a short debounce to skip focus moving between inputs),
- *     restore that scroll position so the page snaps back cleanly.
- * This avoids relying on window.innerHeight vs visualViewport.height comparison,
- * which breaks on iOS≤14 where both shrink together when the keyboard opens.
+ *  2. On `focusin` for any form field, capture <main>.scrollTop BEFORE the
+ *     browser auto-scrolls to bring the input into view.
+ *  3. On `focusout` (debounced) OR on `visualViewport resize` growing back to
+ *     near-full height (= keyboard closed), restore the saved scrollTop.
+ *
+ * The dual-trigger (focusout + resize) is needed because Chrome iOS dismisses
+ * the keyboard via the "Done" button WITHOUT blurring the focused element, so
+ * focusout never fires. Safari reliably fires focusout; Chrome does not.
  */
 function useVisualViewportHeight() {
   useEffect(() => {
@@ -223,6 +225,8 @@ function useVisualViewportHeight() {
     const getMain = () => document.querySelector<HTMLElement>("main");
     let savedScrollTop: number | null = null;
     let dismissTimer: ReturnType<typeof setTimeout> | null = null;
+    // Tracks whether a virtual keyboard is likely open (height shrank > 100px).
+    let keyboardMayBeOpen = false;
 
     // Set initial height
     document.documentElement.style.setProperty(
@@ -230,13 +234,45 @@ function useVisualViewportHeight() {
       `${window.visualViewport?.height ?? window.innerHeight}px`,
     );
 
+    // Shared restore: resets any stray window scroll and restores <main>.scrollTop.
+    // Idempotent — clears savedScrollTop on first call so double-invocations are no-ops.
+    const restoreScroll = () => {
+      if (savedScrollTop === null) return;
+      const top = savedScrollTop;
+      savedScrollTop = null;
+      if (dismissTimer !== null) {
+        clearTimeout(dismissTimer);
+        dismissTimer = null;
+      }
+      window.scrollTo(0, 0);
+      requestAnimationFrame(() => {
+        const main = getMain();
+        if (main) main.scrollTop = top;
+      });
+    };
+
     // Only grow --app-height (desktop resize, landscape→portrait).
-    // Never shrink: keeps the container full-height when keyboard opens.
+    // Never shrink: keeps the container full-height when keyboard opens,
+    // preventing the gap between content and keyboard.
+    // ALSO: detect keyboard open/close via height delta to trigger scroll
+    // restoration for browsers that don't fire focusout on keyboard dismiss
+    // (e.g. Chrome iOS "Done" button).
     const onResize = () => {
       const next = window.visualViewport?.height ?? window.innerHeight;
       const cur = parseFloat(
         document.documentElement.style.getPropertyValue("--app-height") || "0",
       );
+
+      if (cur > 0 && next < cur - 100) {
+        // Height shrank > 100px → keyboard opened.
+        keyboardMayBeOpen = true;
+      } else if (keyboardMayBeOpen && next >= cur - 50) {
+        // Height grew back to near-full → keyboard closed.
+        // Restore scroll here for Chrome iOS which may not fire focusout.
+        keyboardMayBeOpen = false;
+        restoreScroll();
+      }
+
       if (next > cur || cur === 0) {
         document.documentElement.style.setProperty("--app-height", `${next}px`);
       }
@@ -248,7 +284,7 @@ function useVisualViewportHeight() {
     };
 
     // Save <main>.scrollTop the moment any input is focused — this is BEFORE
-    // iOS auto-scrolls to bring the input above the keyboard.
+    // the browser auto-scrolls to bring the input above the keyboard.
     const onFocusIn = (e: FocusEvent) => {
       if (!isFormField(e.target as Element)) return;
       if (dismissTimer !== null) {
@@ -263,26 +299,19 @@ function useVisualViewportHeight() {
 
     // When focus leaves a form field, debounce to distinguish "keyboard closed"
     // from "focus moved to the next input".
+    // This path handles Safari iOS which reliably fires focusout.
     const onFocusOut = (e: FocusEvent) => {
       if (!isFormField(e.target as Element)) return;
       dismissTimer = setTimeout(() => {
         dismissTimer = null;
         // Still focused on another input → keyboard is still open, do nothing.
         if (isFormField(document.activeElement)) return;
-        // Keyboard dismissed — restore pre-keyboard scroll.
-        window.scrollTo(0, 0); // reset any stray iOS window-level scroll
-        const top = savedScrollTop;
-        savedScrollTop = null;
-        if (top !== null) {
-          requestAnimationFrame(() => {
-            const main = getMain();
-            if (main) main.scrollTop = top;
-          });
-        }
+        restoreScroll();
       }, 150);
     };
 
     const onOrientationChange = () => {
+      keyboardMayBeOpen = false;
       savedScrollTop = null;
       if (dismissTimer !== null) {
         clearTimeout(dismissTimer);
