@@ -506,14 +506,34 @@ export function FileExplorer({
     [maximized, size, pos],
   );
 
-  useEffect(() => {
-    const onMove = (e: MouseEvent) => {
-      if (!resizing.current) return;
-      const edge = resizing.current;
-      const dx = e.clientX - resizeStart.current.x;
-      const dy = e.clientY - resizeStart.current.y;
-      let { w, h, px, py } = resizeStart.current;
+  const handleResizeTouchStart = useCallback(
+    (edge: string, e: React.TouchEvent) => {
+      if (maximized) return;
+      e.preventDefault();
+      e.stopPropagation();
+      userMoved.current = true;
+      const touch = e.touches[0];
+      resizing.current = edge;
+      resizeStart.current = {
+        x: touch.clientX,
+        y: touch.clientY,
+        w: size.width,
+        h: size.height,
+        px: pos.x,
+        py: pos.y,
+      };
+      document.body.style.userSelect = "none";
+    },
+    [maximized, size, pos],
+  );
 
+  useEffect(() => {
+    const applyResize = (cx: number, cy: number) => {
+      const edge = resizing.current;
+      if (!edge) return;
+      const dx = cx - resizeStart.current.x;
+      const dy = cy - resizeStart.current.y;
+      let { w, h, px, py } = resizeStart.current;
       if (edge.includes("e")) w = Math.max(minSize.width, w + dx);
       if (edge.includes("w")) {
         const nw = Math.max(minSize.width, w - dx);
@@ -529,6 +549,15 @@ export function FileExplorer({
       setSize({ width: w, height: h });
       setPos({ x: px, y: py });
     };
+    const onMove = (e: MouseEvent) => {
+      if (!resizing.current) return;
+      applyResize(e.clientX, e.clientY);
+    };
+    const onTouchMove = (e: TouchEvent) => {
+      if (!resizing.current) return;
+      e.preventDefault();
+      applyResize(e.touches[0].clientX, e.touches[0].clientY);
+    };
     const onUp = () => {
       resizing.current = false;
       document.body.style.cursor = "";
@@ -536,9 +565,13 @@ export function FileExplorer({
     };
     window.addEventListener("mousemove", onMove);
     window.addEventListener("mouseup", onUp);
+    window.addEventListener("touchmove", onTouchMove, { passive: false });
+    window.addEventListener("touchend", onUp);
     return () => {
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("mouseup", onUp);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("touchend", onUp);
     };
   }, [minSize]);
 
@@ -919,8 +952,10 @@ export function FileExplorer({
           {inspectedFile && (
             <div
               className={cn(
-                "fe-panel flex h-full flex-col border-l border-(--fe-border) p-4",
-                panelNarrow ? "w-44" : "w-56",
+                "flex h-full flex-col p-4",
+                panelNarrow
+                  ? "fe-panel-narrow w-44"
+                  : "fe-panel w-56 border-l border-(--fe-border)",
               )}
             >
               {panelNarrow && (
@@ -1023,39 +1058,47 @@ export function FileExplorer({
       {/* ── Resize handles ─────────────── */}
       {resizable && !maximized && (
         <>
-          {/* edges */}
+          {/* edges — h-3/w-3 gives a 12 px touch target */}
           <div
-            className="absolute top-0 left-2 right-2 h-1.5 cursor-ns-resize"
+            className="absolute top-0 left-4 right-4 h-3 cursor-ns-resize"
             onMouseDown={(e) => handleResizeStart("n", e)}
+            onTouchStart={(e) => handleResizeTouchStart("n", e)}
           />
           <div
-            className="absolute bottom-0 left-2 right-2 h-1.5 cursor-ns-resize"
+            className="absolute bottom-0 left-4 right-4 h-3 cursor-ns-resize"
             onMouseDown={(e) => handleResizeStart("s", e)}
+            onTouchStart={(e) => handleResizeTouchStart("s", e)}
           />
           <div
-            className="absolute top-2 left-0 bottom-2 w-1.5 cursor-ew-resize"
+            className="absolute top-4 left-0 bottom-4 w-3 cursor-ew-resize"
             onMouseDown={(e) => handleResizeStart("w", e)}
+            onTouchStart={(e) => handleResizeTouchStart("w", e)}
           />
           <div
-            className="absolute top-2 right-0 bottom-2 w-1.5 cursor-ew-resize"
+            className="absolute top-4 right-0 bottom-4 w-3 cursor-ew-resize"
             onMouseDown={(e) => handleResizeStart("e", e)}
+            onTouchStart={(e) => handleResizeTouchStart("e", e)}
           />
-          {/* corners */}
+          {/* corners — h-6 w-6 = 24 px, easy to grab on mobile */}
           <div
-            className="absolute top-0 left-0 h-3 w-3 cursor-nwse-resize"
+            className="absolute top-0 left-0 h-6 w-6 cursor-nwse-resize"
             onMouseDown={(e) => handleResizeStart("nw", e)}
+            onTouchStart={(e) => handleResizeTouchStart("nw", e)}
           />
           <div
-            className="absolute top-0 right-0 h-3 w-3 cursor-nesw-resize"
+            className="absolute top-0 right-0 h-6 w-6 cursor-nesw-resize"
             onMouseDown={(e) => handleResizeStart("ne", e)}
+            onTouchStart={(e) => handleResizeTouchStart("ne", e)}
           />
           <div
-            className="absolute bottom-0 left-0 h-3 w-3 cursor-nesw-resize"
+            className="absolute bottom-0 left-0 h-6 w-6 cursor-nesw-resize"
             onMouseDown={(e) => handleResizeStart("sw", e)}
+            onTouchStart={(e) => handleResizeTouchStart("sw", e)}
           />
           <div
-            className="absolute bottom-0 right-0 h-3 w-3 cursor-nwse-resize"
+            className="absolute bottom-0 right-0 h-6 w-6 cursor-nwse-resize"
             onMouseDown={(e) => handleResizeStart("se", e)}
+            onTouchStart={(e) => handleResizeTouchStart("se", e)}
           />
         </>
       )}
@@ -1076,6 +1119,13 @@ export function FileExplorer({
         }
         .fe-panel {
           background: var(--fe-surface);
+        }
+        .fe-panel-narrow {
+          background: color-mix(in srgb, var(--fe-bg) 82%, transparent);
+          backdrop-filter: blur(20px) saturate(160%);
+          -webkit-backdrop-filter: blur(20px) saturate(160%);
+          border-left: 1px solid color-mix(in srgb, var(--fe-border) 80%, transparent);
+          box-shadow: -6px 0 32px rgba(0,0,0,0.35), inset 1px 0 0 color-mix(in srgb, var(--fe-accent) 10%, transparent);
         }
         .fe-statusbar {
           border-top: 1px solid var(--fe-border);
