@@ -163,6 +163,11 @@ export function MiniPlayer({
   const audioRef = useRef<HTMLAudioElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
   const animTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  // Web Audio API — GainNode is the only cross-platform way to control volume on iOS.
+  // Must be wired up BEFORE audio.play() is called (inside a user-gesture handler)
+  // to avoid the "captured by suspended context" silence bug.
+  const audioCtxRef = useRef<AudioContext | null>(null);
+  const gainRef = useRef<GainNode | null>(null);
 
   const visible = visibleProp ?? internalVisible;
   const entrance = entranceProp ?? defaultEntrance(position);
@@ -217,7 +222,15 @@ export function MiniPlayer({
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
-    audio.volume = muted ? 0 : volume;
+    // Mute via the element itself (works on iOS)
+    audio.muted = muted;
+    // Volume: use GainNode if the graph is set up (works on iOS),
+    // otherwise fall back to audio.volume (desktop only).
+    if (gainRef.current) {
+      gainRef.current.gain.value = muted ? 0 : volume;
+    } else {
+      audio.volume = volume;
+    }
   }, [volume, muted]);
 
   useEffect(() => {
@@ -327,6 +340,42 @@ export function MiniPlayer({
     [],
   );
 
+  useEffect(
+    () => () => {
+      audioCtxRef.current?.close();
+    },
+    [],
+  );
+
+  /**
+   * Wire up Web Audio GainNode graph. Must be called synchronously inside a
+   * user-gesture handler, BEFORE audio.play(), so that:
+   *  1. AudioContext creation is allowed by iOS policy.
+   *  2. createMediaElementSource intercepts the element before it streams directly.
+   *  3. ctx.resume() fires while still inside the gesture — iOS grants it immediately.
+   */
+  function setupAudioGraph() {
+    if (audioCtxRef.current || !audioRef.current) {
+      // Already set up — just ensure it’s running
+      audioCtxRef.current?.resume();
+      return;
+    }
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const Ctx = window.AudioContext ?? (window as any).webkitAudioContext;
+      if (!Ctx) return;
+      const ctx = new Ctx() as AudioContext;
+      const gain = ctx.createGain();
+      gain.gain.value = muted ? 0 : volume;
+      ctx.createMediaElementSource(audioRef.current).connect(gain).connect(ctx.destination);
+      audioCtxRef.current = ctx;
+      gainRef.current = gain;
+      ctx.resume(); // synchronous call inside gesture handler — iOS grants without await
+    } catch {
+      /* Web Audio API unavailable */
+    }
+  }
+
   /* ── Animations ─────────────────────────── */
   const enterAnim = dockHover
     ? "fade-in 0.2s ease-out both"
@@ -342,7 +391,7 @@ export function MiniPlayer({
   if (isDockedMode && !visible && !exiting) {
     return (
       <>
-        <audio ref={audioRef} preload="metadata" />
+        <audio ref={audioRef} preload="metadata" crossOrigin="anonymous" />
         <div
           className={cn(
             "fixed z-100 cursor-pointer transition-all duration-300",
@@ -383,13 +432,13 @@ export function MiniPlayer({
   }
 
   if (!visible && !exiting) {
-    return <audio ref={audioRef} preload="metadata" />;
+    return <audio ref={audioRef} preload="metadata" crossOrigin="anonymous" />;
   }
 
   /* ── Main player ────────────────────────── */
   return (
     <>
-      <audio ref={audioRef} preload="metadata" />
+      <audio ref={audioRef} preload="metadata" crossOrigin="anonymous" />
 
       <div
         className={cn(
@@ -602,7 +651,13 @@ export function MiniPlayer({
                 "bg-(--accent) text-white shadow-lg active:scale-95",
               )}
               style={{ boxShadow: `0 6px 20px color-mix(in srgb, var(--accent) 35%, transparent)` }}
-              onClick={() => setPlaying((p) => !p)}
+              onClick={() => {
+                // Set up audio graph BEFORE setPlaying triggers audio.play().
+                // This is the key: wire the GainNode while audio is not yet playing,
+                // inside a user-gesture, so iOS grants the AudioContext immediately.
+                setupAudioGraph();
+                setPlaying((p) => !p);
+              }}
               title={playing ? "Pause" : "Play"}
             >
               {playing ? (
@@ -632,7 +687,12 @@ export function MiniPlayer({
                   textSub,
                   "hover:text-(--mp-text)",
                 )}
-                onClick={() => setMuted((m) => !m)}
+                onClick={() => {
+                  setupAudioGraph();
+                  const next = !muted;
+                  setMuted(next);
+                  if (gainRef.current) gainRef.current.gain.value = next ? 0 : volume;
+                }}
                 title={muted ? "Unmute" : "Mute"}
               >
                 {muted || volume === 0 ? (
@@ -648,8 +708,12 @@ export function MiniPlayer({
                 step={0.01}
                 value={muted ? 0 : volume}
                 onChange={(e) => {
-                  setVolume(Number(e.target.value));
+                  setupAudioGraph();
+                  const v = Number(e.target.value);
+                  setVolume(v);
                   if (muted) setMuted(false);
+                  // Apply immediately to GainNode — don’t wait for the useEffect cycle
+                  if (gainRef.current) gainRef.current.gain.value = v;
                 }}
                 className="mp-volume-slider h-1 w-14 cursor-pointer appearance-none rounded-full bg-(--mp-surface) accent-(--accent)"
               />
