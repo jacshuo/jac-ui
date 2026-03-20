@@ -11,6 +11,7 @@ import {
   Square,
   Bell,
   Clapperboard,
+  TrendingUp,
 } from "lucide-react";
 import { Input, SideNav, type SideNavItem, type SideNavLinkComponentProps } from "../../../src";
 
@@ -50,6 +51,11 @@ const FilmReelDoc = lazy(() => import("./FilmReelDoc"));
 const MiniPlayerDoc = lazy(() => import("./MiniPlayerDoc"));
 const CinePlayerDoc = lazy(() => import("./CinePlayerDoc"));
 const FileExplorerDoc = lazy(() => import("./FileExplorerDoc"));
+const BarChartDoc = lazy(() => import("./BarChartDoc"));
+const LineChartDoc = lazy(() => import("./LineChartDoc"));
+const PieChartDoc = lazy(() => import("./PieChartDoc"));
+const ScatterChartDoc = lazy(() => import("./ScatterChartDoc"));
+const TypewriterTextDoc = lazy(() => import("./TypewriterTextDoc"));
 
 /* ── Docs nav items ───────────────────────────────────── */
 
@@ -138,10 +144,22 @@ const docsNavItems: SideNavItem[] = [
     icon: <Clapperboard className="h-4 w-4" />,
     defaultOpen: true,
     children: [
+      { label: "TypewriterText", path: "typewriter-text" },
       { label: "FilmReel", path: "film-reel" },
       { label: "MiniPlayer", path: "mini-player" },
       { label: "CinePlayer", path: "cine-player" },
       { label: "FileExplorer", path: "file-explorer" },
+    ],
+  },
+  {
+    label: "Charts",
+    icon: <TrendingUp className="h-4 w-4" />,
+    defaultOpen: true,
+    children: [
+      { label: "BarChart", path: "bar-chart" },
+      { label: "LineChart", path: "line-chart" },
+      { label: "PieChart", path: "pie-chart" },
+      { label: "ScatterChart", path: "scatter-chart" },
     ],
   },
 ];
@@ -516,6 +534,95 @@ const componentSearchIndex: Record<string, string[]> = {
     "extension",
     "mimeType",
   ],
+  "bar-chart": [
+    "series",
+    "ChartSeries",
+    "orientation",
+    "grouped",
+    "stacked",
+    "horizontal",
+    "vertical",
+    "barRadius",
+    "barPadding",
+    "groupPadding",
+    "xAxis",
+    "yAxis",
+    "y2Axis",
+    "y2Series",
+    "AxisConfig",
+    "legend",
+    "animateOnMount",
+  ],
+  "line-chart": [
+    "series",
+    "ChartSeries",
+    "smooth",
+    "area",
+    "showDots",
+    "strokeWidth",
+    "xAxis",
+    "yAxis",
+    "y2Axis",
+    "y2Series",
+    "AxisConfig",
+    "legend",
+    "animateOnMount",
+    "bezier",
+    "curve",
+  ],
+  "pie-chart": [
+    "data",
+    "PieSlice",
+    "donut",
+    "donutThickness",
+    "startAngle",
+    "padAngle",
+    "labelType",
+    "percent",
+    "centerLabel",
+    "centerSubLabel",
+    "explodeOnHover",
+    "explodeOffset",
+    "legend",
+    "animateOnMount",
+  ],
+  "scatter-chart": [
+    "series",
+    "ChartSeries",
+    "dotRadius",
+    "dotOpacity",
+    "clusters",
+    "jitter",
+    "jitterAmount",
+    "linkedLines",
+    "xAxis",
+    "yAxis",
+    "AxisConfig",
+    "legend",
+    "animateOnMount",
+    "scatter",
+    "bubble",
+  ],
+  "typewriter-text": [
+    "text",
+    "mode",
+    "typewriter",
+    "stream",
+    "instant",
+    "speed",
+    "cursor",
+    "cursorChar",
+    "thinking",
+    "streaming",
+    "delay",
+    "onComplete",
+    "as",
+    "polymorphic",
+    "LLM",
+    "token",
+    "copilot",
+    "animate",
+  ],
 };
 
 /* ── Search filter ────────────────────────────────────── */
@@ -646,6 +753,11 @@ export default function DocsLayout() {
             <Route path="mini-player" element={<MiniPlayerDoc />} />
             <Route path="cine-player" element={<CinePlayerDoc />} />
             <Route path="file-explorer" element={<FileExplorerDoc />} />
+            <Route path="bar-chart" element={<BarChartDoc />} />
+            <Route path="line-chart" element={<LineChartDoc />} />
+            <Route path="pie-chart" element={<PieChartDoc />} />
+            <Route path="scatter-chart" element={<ScatterChartDoc />} />
+            <Route path="typewriter-text" element={<TypewriterTextDoc />} />
             <Route path="*" element={<Navigate to="button" replace />} />
           </Routes>
         </Suspense>

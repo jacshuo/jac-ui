@@ -1,0 +1,284 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`PieChart > snapshot smoke test 1`] = `
+<div>
+  <div
+    class="relative w-full font-sans select-none text-sm"
+  >
+    <h3
+      class="mb-2 text-sm font-semibold text-primary-700 dark:text-primary-200"
+    >
+      Smoke Test
+    </h3>
+    <div
+      class="flex items-start justify-center"
+    >
+      <div
+        class="flex-1 min-w-0 overflow-hidden"
+      >
+        <svg
+          aria-label="Smoke Test"
+          height="300"
+          role="img"
+          shape-rendering="geometricPrecision"
+          viewBox="0 0 400 300"
+          width="400"
+        >
+          <g
+            class=""
+          >
+            <path
+              aria-label="Chrome: 65%"
+              class="chart-slice"
+              d="M 200.000 150.000 L 78.000 150.000 A 122 122 0 1 1 271.710 248.700 Z"
+              fill="var(--color-chart-1)"
+              stroke="var(--color-chart-1)"
+              stroke-width="0.6"
+            />
+            <path
+              aria-label="Safari: 19%"
+              class="chart-slice"
+              d="M 200.000 150.000 L 271.710 248.700 A 122 122 0 0 1 134.629 253.008 Z"
+              fill="var(--color-chart-2)"
+              stroke="var(--color-chart-2)"
+              stroke-width="0.6"
+            />
+            <path
+              aria-label="Firefox: 4%"
+              class="chart-slice"
+              d="M 200.000 150.000 L 134.629 253.008 A 122 122 0 0 1 111.066 233.515 Z"
+              fill="var(--color-chart-3)"
+              stroke="var(--color-chart-3)"
+              stroke-width="0.6"
+            />
+            <path
+              aria-label="Edge: 12%"
+              class="chart-slice"
+              d="M 200.000 150.000 L 111.066 233.515 A 122 122 0 0 1 78.000 150.000 Z"
+              fill="var(--color-chart-4)"
+              stroke="var(--color-chart-4)"
+              stroke-width="0.6"
+            />
+            <g
+              style="user-select: none;"
+            >
+              <polyline
+                fill="none"
+                opacity="0.85"
+                points="84.71,195.65 69.83,201.54 55.83,201.54"
+                stroke="var(--color-chart-4)"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.2"
+                style="pointer-events: none;"
+              />
+              <text
+                class="text-primary-700 dark:text-primary-300"
+                dominant-baseline="middle"
+                fill="currentColor"
+                font-size="10"
+                style="pointer-events: none;"
+                text-anchor="end"
+                x="52.83"
+                y="201.54"
+              >
+                12%
+              </text>
+              <rect
+                fill="transparent"
+                height="24"
+                style="cursor: grab; touch-action: none;"
+                width="43"
+                x="26.831291975644803"
+                y="189.5374373758549"
+              />
+            </g>
+            <g
+              style="user-select: none;"
+            >
+              <polyline
+                fill="none"
+                opacity="0.85"
+                points="120.96,245.54 110.76,257.87 96.76,257.87"
+                stroke="var(--color-chart-3)"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.2"
+                style="pointer-events: none;"
+              />
+              <text
+                class="text-primary-700 dark:text-primary-300"
+                dominant-baseline="middle"
+                fill="currentColor"
+                font-size="10"
+                style="pointer-events: none;"
+                text-anchor="end"
+                x="93.76"
+                y="257.87"
+              >
+                4%
+              </text>
+              <rect
+                fill="transparent"
+                height="24"
+                style="cursor: grab; touch-action: none;"
+                width="36"
+                x="74.76064143518339"
+                y="245.87185398861044"
+              />
+            </g>
+            <g
+              style="user-select: none;"
+            >
+              <polyline
+                fill="none"
+                opacity="0.85"
+                points="256.29,39.52 263.56,25.26 277.56,25.26"
+                stroke="var(--color-chart-1)"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.2"
+                style="pointer-events: none;"
+              />
+              <text
+                class="text-primary-700 dark:text-primary-300"
+                dominant-baseline="middle"
+                fill="currentColor"
+                font-size="10"
+                style="pointer-events: none;"
+                text-anchor="start"
+                x="280.56"
+                y="25.26"
+              >
+                65%
+              </text>
+              <rect
+                fill="transparent"
+                height="24"
+                style="cursor: grab; touch-action: none;"
+                width="43"
+                x="263.55866996353654"
+                y="13.259086613628511"
+              />
+            </g>
+            <g
+              style="user-select: none;"
+            >
+              <polyline
+                fill="none"
+                opacity="0.85"
+                points="203.89,273.94 204.40,289.00 218.40,289.00"
+                stroke="var(--color-chart-2)"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.2"
+                style="pointer-events: none;"
+              />
+              <text
+                class="text-primary-700 dark:text-primary-300"
+                dominant-baseline="middle"
+                fill="currentColor"
+                font-size="10"
+                style="pointer-events: none;"
+                text-anchor="start"
+                x="221.40"
+                y="289.00"
+              >
+                19%
+              </text>
+              <rect
+                fill="transparent"
+                height="24"
+                style="cursor: grab; touch-action: none;"
+                width="43"
+                x="204.397506270938"
+                y="277"
+              />
+            </g>
+          </g>
+        </svg>
+      </div>
+    </div>
+    <div
+      class="flex flex-wrap gap-3 items-center justify-center mt-3"
+    >
+      <button
+        aria-pressed="true"
+        class="flex items-center gap-1.5 cursor-pointer rounded px-1.5 py-1 text-xs text-primary-700 transition-opacity hover:bg-primary-100 dark:text-primary-300 dark:hover:bg-primary-800"
+      >
+        <span
+          class="h-2.5 w-2.5 rounded-full shrink-0"
+          style="background: var(--color-chart-1);"
+        />
+        <span>
+          Chrome
+        </span>
+        <span
+          class="text-secondary-400"
+        >
+          (
+          65
+          %)
+        </span>
+      </button>
+      <button
+        aria-pressed="true"
+        class="flex items-center gap-1.5 cursor-pointer rounded px-1.5 py-1 text-xs text-primary-700 transition-opacity hover:bg-primary-100 dark:text-primary-300 dark:hover:bg-primary-800"
+      >
+        <span
+          class="h-2.5 w-2.5 rounded-full shrink-0"
+          style="background: var(--color-chart-2);"
+        />
+        <span>
+          Safari
+        </span>
+        <span
+          class="text-secondary-400"
+        >
+          (
+          19
+          %)
+        </span>
+      </button>
+      <button
+        aria-pressed="true"
+        class="flex items-center gap-1.5 cursor-pointer rounded px-1.5 py-1 text-xs text-primary-700 transition-opacity hover:bg-primary-100 dark:text-primary-300 dark:hover:bg-primary-800"
+      >
+        <span
+          class="h-2.5 w-2.5 rounded-full shrink-0"
+          style="background: var(--color-chart-3);"
+        />
+        <span>
+          Firefox
+        </span>
+        <span
+          class="text-secondary-400"
+        >
+          (
+          4
+          %)
+        </span>
+      </button>
+      <button
+        aria-pressed="true"
+        class="flex items-center gap-1.5 cursor-pointer rounded px-1.5 py-1 text-xs text-primary-700 transition-opacity hover:bg-primary-100 dark:text-primary-300 dark:hover:bg-primary-800"
+      >
+        <span
+          class="h-2.5 w-2.5 rounded-full shrink-0"
+          style="background: var(--color-chart-4);"
+        />
+        <span>
+          Edge
+        </span>
+        <span
+          class="text-secondary-400"
+        >
+          (
+          12
+          %)
+        </span>
+      </button>
+    </div>
+  </div>
+</div>
+`;

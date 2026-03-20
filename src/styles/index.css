@@ -24,6 +24,11 @@
 @import "./components/FileExplorer.css";
 @import "./components/Masonry.css";
 
+@import "../components/Chart/LineChart/LineChart.css";
+@import "../components/Chart/BarChart/BarChart.css";
+@import "../components/Chart/PieChart/PieChart.css";
+@import "../components/Chart/ScatterChart/ScatterChart.css";
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {

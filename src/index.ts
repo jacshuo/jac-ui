@@ -14,6 +14,7 @@ export { default as Overlay } from "./components/Overlay/index";
 export { default as Feedback } from "./components/Feedback/index";
 export { default as Extras } from "./components/Extras/index";
 export { default as Forms } from "./components/Forms/index";
+export { default as Chart } from "./components/Chart/index";
 
 import PrimitivesGroup from "./components/Primitives/index";
 import LayoutGroup from "./components/Layout/index";
@@ -24,6 +25,7 @@ import OverlayGroup from "./components/Overlay/index";
 import FeedbackGroup from "./components/Feedback/index";
 import ExtrasGroup from "./components/Extras/index";
 import FormsGroup from "./components/Forms/index";
+import ChartGroup from "./components/Chart/index";
 
 const Onyx = {
   Primitives: PrimitivesGroup,
@@ -35,6 +37,7 @@ const Onyx = {
   Feedback: FeedbackGroup,
   Extras: ExtrasGroup,
   Forms: FormsGroup,
+  Chart: ChartGroup,
 };
 
 export default Onyx;
@@ -241,6 +244,8 @@ export {
   type MasonryItemData,
 } from "./components/Extras/Masonry/index";
 
+export { TypewriterText, type TypewriterTextProps } from "./components/Extras/TypewriterText/index";
+
 // ─── Form
 export {
   Form,
@@ -256,3 +261,18 @@ export {
   type ValidationResult,
   type ValidateCallback,
 } from "./components/Forms/Form/index";
+
+// ─── Chart
+export { LineChart, type LineChartProps } from "./components/Chart/LineChart";
+export { BarChart, type BarChartProps } from "./components/Chart/BarChart";
+export { PieChart, type PieChartProps } from "./components/Chart/PieChart";
+export { ScatterChart, type ScatterChartProps } from "./components/Chart/ScatterChart";
+export type {
+  ChartSeries,
+  ChartDataPoint,
+  PieSlice,
+  AxisConfig,
+  LegendItem,
+  BaseChartProps,
+} from "./components/Chart/types";
+export { chartContainerVariants, chartLegendVariants, chartTooltipVariants } from "./styles/theme";

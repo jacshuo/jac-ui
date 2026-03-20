@@ -6,7 +6,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 ---
 
+## [2.0.0] — 2026-03-20
+
+### Added
+
+- **TypewriterText**: new Extras component — renders text with a Copilot-style typewriter animation, supporting three modes: `typewriter` (full-replay on each text change), `stream` (append-only, designed for live LLM token streams), and `instant` (no animation)
+- **TypewriterText**: `thinking` prop — displays a blinking block cursor before the first token arrives (model-is-thinking state)
+- **TypewriterText**: `streaming` prop — keeps cursor blinking while the parent is still receiving data; fades cursor out when flipped to `false`
+- **TypewriterText**: polymorphic `as` prop — renders as any HTML element (`span`, `p`, `div`, `pre`, `code`, `h1`–`h6`, `label`, `li`)
+- **TypewriterText**: `cursorChar`, `speed`, `delay`, and `onComplete` props for full control over animation behaviour
+- **TypewriterText**: complete demo page at `/typewriter-text` with AI chat simulation, speed, cursor, and thinking-state showcases
+- **TypewriterText**: doc page added to API Reference under Extras, with prop table and usage examples for all three modes
+- **TypewriterText**: 25 unit tests covering instant, typewriter, and stream modes, cursor state machine, and barrel exports
+
+---
+
 ## [1.4.1] — 2026-03-20
+
 
 ### Added
 

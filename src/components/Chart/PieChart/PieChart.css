@@ -1,0 +1,56 @@
+/* PieChart animations */
+
+@keyframes chart-pie-scale-in {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes chart-pie-slice-appear {
+  from {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Animate entire pie container */
+.chart-pie-animate {
+  transform-origin: center;
+  animation: chart-pie-scale-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Each slice entrance with stagger */
+.chart-slice {
+  transform-origin: center;
+  transition: transform 0.2s ease, filter 0.15s ease;
+  cursor: pointer;
+}
+
+.chart-slice-animate-0 { animation: chart-pie-slice-appear 0.4s ease-out 0.0s both; }
+.chart-slice-animate-1 { animation: chart-pie-slice-appear 0.4s ease-out 0.06s both; }
+.chart-slice-animate-2 { animation: chart-pie-slice-appear 0.4s ease-out 0.12s both; }
+.chart-slice-animate-3 { animation: chart-pie-slice-appear 0.4s ease-out 0.18s both; }
+.chart-slice-animate-4 { animation: chart-pie-slice-appear 0.4s ease-out 0.24s both; }
+.chart-slice-animate-5 { animation: chart-pie-slice-appear 0.4s ease-out 0.30s both; }
+.chart-slice-animate-6 { animation: chart-pie-slice-appear 0.4s ease-out 0.36s both; }
+.chart-slice-animate-7 { animation: chart-pie-slice-appear 0.4s ease-out 0.42s both; }
+
+/* Explosion */
+.chart-slice--exploded {
+  filter: brightness(1.12) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.25));
+}
+
+/* Fade out hidden slices */
+.chart-slice--hidden {
+  opacity: 0.12;
+  pointer-events: none;
+}

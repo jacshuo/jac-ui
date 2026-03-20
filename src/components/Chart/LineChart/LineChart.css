@@ -1,0 +1,72 @@
+/* LineChart animations */
+
+@keyframes chart-line-draw {
+  from {
+    stroke-dashoffset: 3000;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes chart-dot-pop {
+  from {
+    r: 0;
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes chart-area-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Draw animation applied to line paths and polylines */
+.chart-line-animate {
+  stroke-dasharray: 3000;
+  stroke-dashoffset: 3000;
+  animation: chart-line-draw 1s ease-out forwards;
+}
+
+/* Stagger each series */
+.chart-line-animate:nth-child(2) { animation-delay: 0.1s; }
+.chart-line-animate:nth-child(3) { animation-delay: 0.2s; }
+.chart-line-animate:nth-child(4) { animation-delay: 0.3s; }
+.chart-line-animate:nth-child(5) { animation-delay: 0.4s; }
+
+/* Area fill entrance */
+.chart-area-animate {
+  animation: chart-area-fade 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+/* Dot entrance animation */
+.chart-dot-animate {
+  animation: chart-dot-pop 0.4s ease-out forwards;
+  animation-delay: 0.8s;
+  opacity: 0;
+}
+
+/* Dot hover glow */
+circle.chart-dot {
+  transition: r 0.15s ease, filter 0.15s ease;
+  cursor: crosshair;
+}
+
+circle.chart-dot:hover,
+circle.chart-dot.chart-dot--active {
+  filter: drop-shadow(0 0 4px currentColor);
+}
+
+/* Crosshair */
+.chart-crosshair {
+  pointer-events: none;
+  transition: opacity 0.1s ease;
+}

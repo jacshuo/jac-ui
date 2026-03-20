@@ -34,3 +34,5 @@ export { navLinkVariants } from "./theme/navigation";
 export { progressBarVariants, spinVariants, alertVariants } from "./theme/feedback";
 
 export { formVariants, formItemVariants, formValidationVariants } from "./theme/form";
+
+export { chartContainerVariants, chartLegendVariants, chartTooltipVariants } from "./theme/chart";

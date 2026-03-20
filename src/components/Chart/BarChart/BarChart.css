@@ -1,0 +1,44 @@
+/* BarChart animations */
+
+/* Vertical: reveal from bottom upward using clip-path */
+@keyframes chart-bar-rise {
+  from { clip-path: inset(100% 0 0 0); opacity: 0.5; }
+  to   { clip-path: inset(0% 0 0 0);   opacity: 1;   }
+}
+
+/* Horizontal: reveal from left rightward using clip-path */
+@keyframes chart-bar-extend {
+  from { clip-path: inset(0 100% 0 0); opacity: 0.5; }
+  to   { clip-path: inset(0 0%   0 0); opacity: 1;   }
+}
+
+/* Vertical bars */
+.chart-bar-v {
+  transition: filter 0.18s ease;
+}
+
+.chart-bar-v.chart-bar-animate {
+  animation: chart-bar-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Horizontal bars */
+.chart-bar-h {
+  transition: filter 0.18s ease;
+}
+
+.chart-bar-h.chart-bar-animate {
+  animation: chart-bar-extend 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Hover — pure filter, never touches animation */
+.chart-bar-v:hover,
+.chart-bar-h:hover {
+  filter: brightness(1.18);
+  cursor: pointer;
+}
+
+/* Hidden series bars */
+.chart-bar-hidden {
+  opacity: 0;
+  pointer-events: none;
+}

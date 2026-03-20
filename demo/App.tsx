@@ -48,6 +48,7 @@ const FilmReelPage = lazy(() => import("./pages/FilmReelPage"));
 const MiniPlayerPage = lazy(() => import("./pages/MiniPlayerPage"));
 const CinePlayerPage = lazy(() => import("./pages/CinePlayerPage"));
 const FileExplorerPage = lazy(() => import("./pages/FileExplorerPage"));
+const TypewriterTextPage = lazy(() => import("./pages/TypewriterTextPage"));
 const CodeBlockPage = lazy(() => import("./pages/CodeBlockPage"));
 const ProgressBarPage = lazy(() => import("./pages/ProgressBarPage"));
 const SpinPage = lazy(() => import("./pages/SpinPage"));
@@ -58,6 +59,10 @@ const TextBoxPage = lazy(() => import("./pages/TextBoxPage"));
 const MasonryPage = lazy(() => import("./pages/MasonryPage"));
 const FormPage = lazy(() => import("./pages/FormPage"));
 const DocsLayout = lazy(() => import("./pages/docs/DocsLayout"));
+const LineChartPage = lazy(() => import("./pages/LineChartPage"));
+const BarChartPage = lazy(() => import("./pages/BarChartPage"));
+const PieChartPage = lazy(() => import("./pages/PieChartPage"));
+const ScatterChartPage = lazy(() => import("./pages/ScatterChartPage"));
 
 /* ── Sidebar nav items ───────────────────────────────── */
 
@@ -142,6 +147,17 @@ const navItems: SideNavItem[] = [
       { label: "CinePlayer", path: "cine-player" },
       { label: "FileExplorer", path: "file-explorer" },
       { label: "Masonry", path: "masonry" },
+      { label: "TypewriterText", path: "typewriter-text" },
+    ],
+  },
+  {
+    label: "Chart",
+    icon: <BarChart3 className="h-4 w-4" />,
+    children: [
+      { label: "LineChart", path: "linechart" },
+      { label: "BarChart", path: "barchart" },
+      { label: "PieChart", path: "piechart" },
+      { label: "ScatterChart", path: "scatterchart" },
     ],
   },
 ];
@@ -372,7 +388,12 @@ export default function App() {
               <Route path="/cine-player" element={<CinePlayerPage />} />
               <Route path="/file-explorer" element={<FileExplorerPage />} />
               <Route path="/masonry" element={<MasonryPage />} />
+              <Route path="/typewriter-text" element={<TypewriterTextPage />} />
               <Route path="/form" element={<FormPage />} />
+              <Route path="/linechart" element={<LineChartPage />} />
+              <Route path="/barchart" element={<BarChartPage />} />
+              <Route path="/piechart" element={<PieChartPage />} />
+              <Route path="/scatterchart" element={<ScatterChartPage />} />
               <Route path="/docs" element={<Navigate to="/docs/button" replace />} />
               <Route path="/docs/*" element={<DocsLayout />} />
             </Routes>
