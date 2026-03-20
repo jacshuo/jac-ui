@@ -470,7 +470,7 @@ export function CinePlayer({
         )}
 
         {/* ── Track title toast ──────────── */}
-        {transitioning && (
+        {transitioning && !controlsVisible && (
           <div className="absolute left-6 top-6 z-20 animate-[fade-in_0.4s_ease-out]">
             <div
               className="rounded-lg px-4 py-2 backdrop-blur-md"
