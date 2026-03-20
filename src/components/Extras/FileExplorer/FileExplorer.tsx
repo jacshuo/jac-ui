@@ -301,6 +301,13 @@ export function FileExplorer({
   const resizing = useRef<string | false>(false);
   const resizeStart = useRef({ x: 0, y: 0, w: 0, h: 0, px: 0, py: 0 });
 
+  // Track whether user has manually moved/resized so viewport changes don't override them
+  const userMoved = useRef(false);
+  const maximizedRef = useRef(maximized);
+  useEffect(() => {
+    maximizedRef.current = maximized;
+  }, [maximized]);
+
   const visible = visibleProp !== undefined ? visibleProp : internalVisible;
 
   /* ── Derived data ─────────────────────── */
@@ -319,6 +326,38 @@ export function FileExplorer({
   }, [sortedFiles, searchQuery, inputMode]);
 
   const inspectedFile = inspectedIndex != null ? filteredFiles[inspectedIndex] : null;
+
+  /* ── Viewport resize → adapt position & size ── */
+  useEffect(() => {
+    let prevMobile = window.innerWidth < 640;
+    const onResize = () => {
+      if (maximizedRef.current) return;
+      const nowMobile = window.innerWidth < 640;
+      // Always clamp position to keep window fully on screen
+      setPos((p) => ({
+        x: clamp(p.x, 0, Math.max(0, window.innerWidth - 100)),
+        y: clamp(p.y, 0, Math.max(0, window.innerHeight - 40)),
+      }));
+      // Auto-resize when crossing the breakpoint (only if user hasn't manually moved the window)
+      if (nowMobile !== prevMobile && !userMoved.current && !initialSize) {
+        if (nowMobile) {
+          setSize({ width: window.innerWidth - 16, height: window.innerHeight - 48 });
+          setPos({ x: 8, y: 24 });
+        } else {
+          const w = 720,
+            h = 520;
+          setSize({ width: w, height: h });
+          setPos({
+            x: Math.max(0, Math.round((window.innerWidth - w) / 2)),
+            y: Math.max(0, Math.round((window.innerHeight - h) / 2)),
+          });
+        }
+      }
+      prevMobile = nowMobile;
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [initialSize]);
 
   /* ── Selection ────────────────────────── */
   const handleSelect = useCallback((index: number, e: React.MouseEvent) => {
@@ -364,6 +403,7 @@ export function FileExplorer({
       if (maximized) return;
       // Don't drag on button clicks
       if ((e.target as HTMLElement).closest("button")) return;
+      userMoved.current = true;
       dragging.current = true;
       dragOffset.current = { x: e.clientX - pos.x, y: e.clientY - pos.y };
       e.preventDefault();
@@ -375,6 +415,7 @@ export function FileExplorer({
     (e: React.TouchEvent) => {
       if (maximized) return;
       if ((e.target as HTMLElement).closest("button")) return;
+      userMoved.current = true;
       const touch = e.touches[0];
       dragging.current = true;
       dragOffset.current = { x: touch.clientX - pos.x, y: touch.clientY - pos.y };
@@ -427,6 +468,7 @@ export function FileExplorer({
       if (maximized) return;
       e.preventDefault();
       e.stopPropagation();
+      userMoved.current = true;
       resizing.current = edge;
       resizeStart.current = {
         x: e.clientX,
