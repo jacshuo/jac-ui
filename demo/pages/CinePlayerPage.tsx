@@ -23,6 +23,24 @@ const samplePlaylist: CinePlayerMedia[] = [
     duration: 653,
   },
   {
+    title: "Tears of Steel",
+    subtitle: "Blender Foundation — Sci-Fi Short",
+    type: "movie",
+    src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+    poster:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Tears_of_Steel_poster.jpg/220px-Tears_of_Steel_poster.jpg",
+    duration: 734,
+  },
+  {
+    title: "Subaru Outback",
+    subtitle: "On Street and Dirt",
+    type: "ad",
+    src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
+    poster:
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/SubaruOutbackOnStreetAndDirt.jpg",
+    duration: 15,
+  },
+  {
     title: "For Bigger Blazes",
     subtitle: "Google Chrome Ad",
     type: "clip",
@@ -41,22 +59,40 @@ const samplePlaylist: CinePlayerMedia[] = [
     duration: 15,
   },
   {
-    title: "Subaru Outback",
-    subtitle: "On Street and Dirt",
-    type: "ad",
-    src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
+    title: "For Bigger Fun",
+    subtitle: "Google Chrome Ad",
+    type: "clip",
+    src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
     poster:
-      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/SubaruOutbackOnStreetAndDirt.jpg",
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerFun.jpg",
+    duration: 60,
+  },
+  {
+    title: "For Bigger Joyrides",
+    subtitle: "Google Chrome Ad",
+    type: "clip",
+    src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+    poster:
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerJoyrides.jpg",
     duration: 15,
   },
   {
-    title: "Tears of Steel",
-    subtitle: "Blender Foundation — Sci-Fi Short",
-    type: "movie",
-    src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+    title: "Volkswagen GTI",
+    subtitle: "Mark Drives the GTI",
+    type: "ad",
+    src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4",
     poster:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Tears_of_Steel_poster.jpg/220px-Tears_of_Steel_poster.jpg",
-    duration: 734,
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/VolkswagenGTIReview.jpg",
+    duration: 396,
+  },
+  {
+    title: "We Are Going On Bullrun",
+    subtitle: "Adventure Documentary",
+    type: "clip",
+    src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
+    poster:
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/WeAreGoingOnBullrun.jpg",
+    duration: 51,
   },
 ];
 
