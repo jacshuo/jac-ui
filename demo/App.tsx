@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, lazy, Suspense } from "react";
-import { Routes, Route, NavLink, Navigate, useLocation } from "react-router-dom";
+import { Routes, Route, NavLink, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { siGithub } from "simple-icons";
 import {
   Sun,
@@ -321,6 +321,7 @@ export default function App() {
   const { dark, toggle } = useTheme();
   const [sideNavMode, setSideNavMode] = useState<SideNavCollapseMode>("expanded");
   const location = useLocation();
+  const navigate = useNavigate();
   const isDocsPage = location.pathname.startsWith("/docs");
 
   return (
@@ -337,8 +338,22 @@ export default function App() {
           </span>
         }
         navItems={[
-          { label: "Home", href: "/" },
-          { label: "Docs", href: "/docs" },
+          {
+            label: "Home",
+            href: "/",
+            onClick: (e) => {
+              e.preventDefault();
+              navigate("/");
+            },
+          },
+          {
+            label: "Docs",
+            href: "/docs/button",
+            onClick: (e) => {
+              e.preventDefault();
+              navigate("/docs/button");
+            },
+          },
         ]}
         actions={[
           {
