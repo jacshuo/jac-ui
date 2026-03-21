@@ -603,8 +603,19 @@ export function Dropdown(props: DropdownProps) {
         selectedValues.map((v) => <input key={v} type="hidden" name={`${name}[]`} value={v} />)}
 
       {/* Trigger */}
+      {/* sr-only input carries id so <label htmlFor> has a valid labelable target */}
+      {id && !editable && (
+        <input
+          type="text"
+          id={id}
+          className="sr-only"
+          readOnly
+          tabIndex={-1}
+          value={displayLabel ?? ""}
+          onChange={() => {}}
+        />
+      )}
       <div
-        id={id}
         className={cn(
           inputVariants({ state: showError ? "error" : "default", size }),
           "flex cursor-pointer items-center gap-1",
@@ -620,6 +631,7 @@ export function Dropdown(props: DropdownProps) {
         {editable ? (
           <input
             ref={inputRef}
+            id={id}
             className="min-w-0 flex-1 bg-transparent outline-none placeholder:text-secondary-400 dark:placeholder:text-secondary-600"
             value={open ? search : displayLabel}
             placeholder={placeholder}

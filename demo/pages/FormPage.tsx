@@ -176,9 +176,7 @@ export default function FormPage() {
               <TextBox placeholder="Tell us about yourself…" rows={3} />
             </FormItem>
             <FormItem label="Notifications">
-              <div className="pt-1">
-                <Switch label="Receive email notifications" />
-              </div>
+              <Switch className="mt-1" label="Receive email notifications" />
             </FormItem>
           </Form>
         </div>
@@ -274,9 +272,7 @@ export default function FormPage() {
         <div className="max-w-2xl">
           <Form intent="inset" title="Preferences" layout="inline">
             <FormItem label="Notifications">
-              <div className="pt-1">
-                <Switch label="Email notifications" />
-              </div>
+              <Switch className="mt-1" label="Email notifications" />
             </FormItem>
             <FormItem label="Theme">
               <Dropdown options={themeOptions} placeholder="Choose theme…" />
@@ -325,9 +321,7 @@ export default function FormPage() {
             </FormSection>
             <FormSection title="Notifications">
               <FormItem label="Email alerts">
-                <div className="pt-1">
-                  <Switch label="Send me email notifications" />
-                </div>
+                <Switch className="mt-1" label="Send me email notifications" />
               </FormItem>
             </FormSection>
           </Form>
