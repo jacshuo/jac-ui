@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, lazy, Suspense } from "react";
+import { useState, useEffect, useCallback, useMemo, lazy, Suspense } from "react";
 import { Routes, Route, NavLink, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { siGithub } from "simple-icons";
 import {
@@ -13,10 +13,13 @@ import {
   Bell,
   Clapperboard,
   Gem,
+  Search,
+  X,
 } from "lucide-react";
 import {
   Header,
   SideNav,
+  Input,
   ToastProvider,
   type SideNavItem,
   type SideNavLinkComponentProps,
@@ -193,6 +196,123 @@ const navItems: SideNavItem[] = [
   },
 ];
 
+/* ── Demo component search index ────────────────────── */
+
+const componentSearchIndex: Record<string, string[]> = {
+  button: [
+    "click",
+    "primary",
+    "secondary",
+    "danger",
+    "ghost",
+    "link",
+    "loading",
+    "icon",
+    "size",
+    "disabled",
+    "variant",
+    "intent",
+  ],
+  badge: ["count", "dot", "status", "notification", "pill", "intent", "color"],
+  tag: ["chip", "label", "removable", "close", "intent", "color", "pill"],
+  indicator: ["dot", "pulse", "status", "online", "busy", "away", "offline"],
+  label: ["form", "text", "required", "optional", "htmlFor"],
+  input: [
+    "text",
+    "password",
+    "search",
+    "prefix",
+    "suffix",
+    "clearable",
+    "disabled",
+    "error",
+    "form",
+    "field",
+  ],
+  dropdown: ["select", "menu", "multi", "search", "filterable", "creatable", "group", "option"],
+  switch: ["toggle", "on", "off", "boolean", "controlled", "disabled"],
+  checkbox: ["checked", "indeterminate", "form", "disabled", "group"],
+  radio: ["group", "option", "form", "disabled", "selected"],
+  textbox: ["textarea", "multiline", "rows", "resize", "autosize", "form"],
+  form: ["validation", "submit", "fieldset", "layout", "control", "label", "error"],
+  avatar: ["image", "initials", "fallback", "size", "ring", "status", "group", "stack"],
+  slider: ["range", "dual", "thumb", "step", "marks", "tooltip", "vertical"],
+  card: ["container", "shadow", "border", "layout", "header", "footer"],
+  "image-card": ["photo", "thumbnail", "cover", "aspect", "overlay", "media"],
+  panel: ["container", "section", "box", "surface", "padding"],
+  table: ["data", "rows", "columns", "sort", "pagination", "selectable", "striped"],
+  list: ["items", "ordered", "unordered", "avatar", "icon", "divider"],
+  tree: ["hierarchy", "nested", "expand", "collapse", "folder", "node"],
+  chat: ["message", "bubble", "avatar", "timestamp", "thread", "LLM", "AI"],
+  "code-block": ["syntax", "highlight", "copy", "shiki", "language", "theme"],
+  stat: ["KPI", "metric", "number", "label", "icon", "value"],
+  "metric-card": ["KPI", "trend", "delta", "sparkline", "up", "down"],
+  header: ["navbar", "top bar", "logo", "brand", "nav", "actions", "mobile"],
+  sidenav: ["sidebar", "navigation", "menu", "collapse", "icons", "links"],
+  "nav-link": ["link", "active", "router", "anchor", "navigation"],
+  breadcrumb: ["path", "trail", "navigation", "separator", "collapse"],
+  pagination: ["pages", "next", "prev", "first", "last", "page size", "total"],
+  "ribbon-bar": ["toolbar", "office", "tabs", "groups", "buttons", "collapse"],
+  accordion: ["expand", "collapse", "panel", "faq", "disclosure"],
+  tabs: ["tab", "panel", "switch", "active", "indicator"],
+  dialog: ["modal", "popup", "overlay", "confirm", "alert", "close"],
+  tooltip: ["hover", "popover", "hint", "placement", "arrow"],
+  drawer: ["slide", "panel", "side", "overlay", "bottom sheet", "right", "left"],
+  "context-menu": ["right click", "long press", "menu", "actions", "submenu"],
+  alert: ["toast", "notification", "success", "error", "warning", "info", "dismiss"],
+  toast: ["notification", "snackbar", "position", "duration", "success", "error"],
+  "progress-bar": ["loading", "percent", "fill", "indeterminate", "animated"],
+  spin: ["loading", "spinner", "circular", "indeterminate"],
+  skeleton: ["loading", "placeholder", "pulse", "shimmer", "text", "circle"],
+  "film-reel": ["video", "media", "reel", "film", "gallery", "scroll"],
+  "mini-player": ["audio", "video", "player", "media", "controls", "compact"],
+  "cine-player": ["video", "cinema", "player", "fullscreen", "controls", "media"],
+  "file-explorer": ["files", "tree", "folder", "directory", "search", "explorer"],
+  masonry: ["grid", "columns", "layout", "responsive", "gallery", "waterfall"],
+  "typewriter-text": ["animate", "type", "cursor", "word", "LLM", "AI", "token"],
+  "command-palette": ["search", "shortcut", "keyboard", "spotlight", "actions", "Cmd+K"],
+  timeline: ["events", "history", "vertical", "horizontal", "date", "step"],
+  "date-time-picker": [
+    "date",
+    "time",
+    "picker",
+    "calendar",
+    "scroll",
+    "drum roll",
+    "iOS",
+    "Android",
+    "datetime",
+    "month",
+    "year",
+    "hour",
+    "minute",
+    "second",
+  ],
+  linechart: ["chart", "graph", "line", "trend", "data", "recharts"],
+  barchart: ["chart", "graph", "bar", "histogram", "data", "recharts"],
+  piechart: ["chart", "graph", "pie", "donut", "slice", "recharts"],
+  scatterchart: ["chart", "graph", "scatter", "bubble", "points", "recharts"],
+};
+
+/* ── Demo nav search filter ──────────────────────────── */
+
+function filterDemoNavItems(items: SideNavItem[], query: string): SideNavItem[] {
+  if (!query.trim()) return items;
+  const q = query.toLowerCase();
+  return items.reduce<SideNavItem[]>((acc, group) => {
+    if (!group.children) return acc;
+    const filteredChildren = group.children.filter((child) => {
+      if (child.label.toLowerCase().includes(q)) return true;
+      const terms = componentSearchIndex[child.path ?? ""] ?? [];
+      return terms.some((t) => t.toLowerCase().includes(q));
+    });
+    if (filteredChildren.length > 0) {
+      acc.push({ ...group, children: filteredChildren, defaultOpen: true });
+    }
+    return acc;
+  }, []);
+}
+
 /* ── NavLink adapter for SideNav ─────────────────────── */
 
 function RouterLink({ to, className, style, children }: SideNavLinkComponentProps) {
@@ -287,6 +407,9 @@ export default function App() {
   useIOSKeyboardFix();
   const { dark, toggle } = useTheme();
   const [sideNavMode, setSideNavMode] = useState<SideNavCollapseMode>("expanded");
+  const [searchQuery, setSearchQuery] = useState("");
+  const filteredNavItems = useMemo(() => filterDemoNavItems(navItems, searchQuery), [searchQuery]);
+  const noResults = searchQuery.trim() !== "" && filteredNavItems.length === 0;
   const location = useLocation();
   const navigate = useNavigate();
   const isDocsPage = location.pathname.startsWith("/docs");
@@ -350,7 +473,7 @@ export default function App() {
           {/* ── Sidebar ────────────────────── */}
           {!isDocsPage && (
             <aside
-              className={`hidden md:block shrink-0 border-r border-primary-200 bg-white dark:border-primary-700 dark:bg-primary-900 transition-all duration-200 ${
+              className={`hidden md:flex md:flex-col shrink-0 border-r border-primary-200 bg-white dark:border-primary-700 dark:bg-primary-900 transition-all duration-200 ${
                 sideNavMode === "expanded"
                   ? "w-48 overflow-y-auto overscroll-y-contain p-3"
                   : sideNavMode === "icons"
@@ -358,14 +481,66 @@ export default function App() {
                     : "w-auto p-1"
               }`}
             >
+              {sideNavMode === "expanded" && (
+                <div className="mb-3 shrink-0">
+                  <Input
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search components…"
+                    prefix={<Search size={14} />}
+                    suffix={
+                      searchQuery ? (
+                        <button
+                          onClick={() => setSearchQuery("")}
+                          className="flex items-center text-primary-400 hover:text-primary-600 dark:hover:text-primary-300"
+                          aria-label="Clear search"
+                        >
+                          <X size={14} />
+                        </button>
+                      ) : null
+                    }
+                    inputSize="sm"
+                    className="w-full"
+                  />
+                </div>
+              )}
+              {noResults && (
+                <p className="px-2 py-4 text-center text-xs text-secondary-500">No results</p>
+              )}
               <SideNav
-                items={navItems}
-                title="UI Components"
+                items={filteredNavItems}
+                title={searchQuery ? undefined : "UI Components"}
                 basePath="/"
                 LinkComponent={RouterLink}
                 collapsible
                 collapseMode={sideNavMode}
                 onCollapseModeChange={setSideNavMode}
+                mobileDrawerSlot={
+                  <>
+                    <Input
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search components…"
+                      prefix={<Search size={14} />}
+                      suffix={
+                        searchQuery ? (
+                          <button
+                            onClick={() => setSearchQuery("")}
+                            className="flex items-center text-primary-400 hover:text-primary-600 dark:hover:text-primary-300"
+                            aria-label="Clear search"
+                          >
+                            <X size={14} />
+                          </button>
+                        ) : null
+                      }
+                      inputSize="sm"
+                      className="w-full"
+                    />
+                    {noResults && (
+                      <p className="mt-2 text-center text-xs text-secondary-500">No results</p>
+                    )}
+                  </>
+                }
               />
             </aside>
           )}

@@ -11,15 +11,16 @@
 
 ## Key Directories
 ```
-src/components/        9 categories: Primitives, Layout, DataDisplay, Navigation,
-                       Disclosure, Overlay, Feedback, Extras, Forms
+src/components/        10 categories: Primitives, Layout, DataDisplay, Navigation,
+                       Disclosure, Overlay, Feedback, Extras, Forms, Chart
 src/styles/            tokens.css, index.css, base.css, theme.ts (CVA variant barrel)
 src/styles/tokens/     core.css (@theme semantic colors), animations-shared.css
 src/lib/utils.ts       cn() helper (clsx + tailwind-merge)
 src/index.ts           full public export barrel (named + category namespaces + Onyx default)
-src/__tests__/         27+ test files (one per component/module)
+src/__tests__/         36+ test files (one per component/module)
 demo/                  webpack SPA demo site
-demo/pages/            one *Page.tsx per component (lazy-loaded via React.lazy)
+demo/pages/            one *Page.tsx per component + docs/ for doc pages (lazy-loaded)
+demo/pages/docs/       one *Doc.tsx per component; auto cross-linked via PageTitle helper
 .github/agents/        6 custom AI agent files
 .github/instructions/  component-generation.instructions.md (auto-loaded for src/demo files)
 .github/skills/        changelog-writer, component-audit, project-architecture

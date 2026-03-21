@@ -9,8 +9,8 @@ applyTo: ["src/components/**/*.tsx", "demo/pages/**/*.tsx", "demo/App.tsx", "src
 
 | Task type | Delegate to |
 |---|---|
-| New component (source + demo + tests) | `Onyx Component Expansion Agent` |
-| Enhance / iterate existing component or demo | `Onyx Component Enhancer Agent` |
+| New component (source + demo page + doc page + tests) | `Onyx Component Expansion Agent` |
+| Enhance / iterate existing component or demo page | `Onyx Component Enhancer Agent` |
 | Bug fix / reproduce / debug | `Onyx Bug Hunter Agent` |
 | Dependency audit / upgrade / security | `Onyx Dependencies Maintainer Agent` |
 | Refactor / architecture cleanup | `Onyx Refactor Agent` |
@@ -23,54 +23,54 @@ applyTo: ["src/components/**/*.tsx", "demo/pages/**/*.tsx", "demo/App.tsx", "src
 ## 1. Tree-shaking and exports
 
 - Every component must be tree-shakeable and side-effect-free.
-- Export each component and its types individually from `src/index.ts` — never bundle unrelated modules together.
-- `index.ts` barrel files must be export-only; no business logic, rendering, or side effects.
+- Export each component and its types individually from `src/index.ts`.
+- `index.ts` barrel files must be export-only — no business logic, rendering, or side effects.
 
 ## 2. File organization
 
-Simple components may be a single file. Heavy/complex components must use a folder:
-
+**Simple component (3 files minimum):**
 ```
-ComponentName/
-├── index.ts               # export-only barrel
-├── ComponentName.tsx      # main view / composition
-├── ComponentName.logic.ts # state & interaction orchestration
-├── ComponentName.hooks.ts # component-specific hooks
-├── ComponentName.utils.ts # pure helpers
-├── ComponentName.css      # component-local styles (when needed)
-└── types.ts               # public + internal types
+src/components/<Category>/<Name>/
+├── index.ts          export * from "./<Name>"
+├── <Name>.tsx        implementation
+└── <Name>.css        component-local CSS (may be empty)
 ```
 
-- Soft file size limit: ~500 lines per file.
-- Components already in `Extras` stay there unless an explicit migration is requested.
+**Heavy/complex component (expand when needed):**
+```
+src/components/<Category>/<Name>/
+├── index.ts
+├── <Name>.tsx          main view / composition
+├── <Name>.logic.ts     state & interaction orchestration
+├── <Name>.hooks.ts     component-specific hooks
+├── <Name>.utils.ts     pure helpers
+├── <Name>.css
+└── types.ts            public + internal types
+```
 
-**Complexity evaluation** — assess holistically across all related files:
+- Soft file limit: ~500 lines per file.
+- When borderline complex, place in `Extras` for maintainability.
+- Components already in `Extras` stay there unless explicitly migrated.
 
-| Signal | Weight |
-|---|---|
-| Total code size across related files | baseline |
-| Logic complexity (branching, state orchestration) | high |
-| Third-party dependency weight | high |
-| API surface breadth (props / modes / events / variants) | medium |
-| Animation complexity (multi-stage, state-coupled) | medium |
-| Performance cost (re-render pressure, large data sets) | medium |
+**10 categories** (choose the right one):
+`Primitives` · `Layout` · `DataDisplay` · `Navigation` · `Disclosure` · `Overlay` · `Feedback` · `Extras` · `Forms` · `Chart`
 
-When borderline, prefer `Extras` for maintainability and discoverability.
+## 3. CSS strategy (Tailwind CSS v4)
 
-## 3. CSS strategy (Tailwind CSS v4+)
-
-- Use Tailwind CSS v4+ utilities directly on elements.
-- Component-local styles go in a component-scoped CSS file when needed.
-- Shared design tokens → `src/styles/tokens.css`; foundational styles → `src/styles/base.css`.
-- Never duplicate or move token/base definitions into component CSS.
-- Components must **not** reference raw color names or tightly coupled hardcoded class names — use semantic tokens.
-- New reusable token names: `组件缩写+语义化类名` so consumers can override.
+- Use Tailwind v4+ utilities directly on elements. No config file.
+- Component-local styles → component-scoped `.css` file.
+- Shared tokens → `src/styles/tokens.css` (do not duplicate).
+- **Never** use raw Tailwind palette names (`slate-500`, `rose-600`).
+- **Always** use semantic tokens: `primary-*`, `secondary-*`, `success-*`, `danger-*`, `warning-*`.
+- CVA variant functions → `src/styles/theme/<category>.ts` (not inside the component file).
+- Always set `defaultVariants` in every CVA call.
+- className: `cn(variants({…}), className)` — `cn()` always last.
 
 ## 4. Responsive and cross-platform parity
 
 - All components must support responsive layouts.
-- Every interaction on desktop must have a mobile equivalent (and vice versa).
-- Document cross-platform interaction decisions inside the component demo page.
+- Every desktop interaction must have a mobile equivalent (and vice versa).
+- Document cross-platform decisions inside the component demo page.
 
 ## 5. Animation quality
 
@@ -79,31 +79,60 @@ When borderline, prefer `Extras` for maintainability and discoverability.
 
 ## 6. Demo page requirements
 
-- File name: `ComponentNamePage.tsx` in `demo/pages/`.
+**Demo page:** `demo/pages/<Name>Page.tsx`
+- Import from `../../src` (local, not npm).
+- Use `Section`, `PageTitle`, `CodeExample`, `PropTable` from `./helpers`.
+- `PageTitle` auto-renders a cross-link badge to the corresponding doc page — no manual wiring needed.
 - Every public prop / variant / state must have at least one demo block.
-- Use one scenario + one representative code snippet per section.
-- Snippets may omit boilerplate loops with comments, but API call style must be explicit and correct.
-- Match existing demo page visual style and helper patterns.
+- One scenario + one representative code snippet per section.
 
-## 7. Verification gate
+**Doc page:** `demo/pages/docs/<Name>Doc.tsx`
+- Import from `../helpers`.
+- `PageTitle` auto-renders a cross-link badge back to the demo page.
+- Must include: Import snippet, PropTable for every exported type/interface, Usage example, Type Reference.
 
-After any component or demo change, run all of the following and fix failures before marking done:
+**Wiring (both must be done for new components):**
+1. Add demo route to `demo/App.tsx` `<Routes>`
+2. Add lazy import at top of `demo/App.tsx`
+3. Add nav item (with correct category group) to `navItems` in `demo/App.tsx`
+4. Add to `componentSearchIndex` in `demo/App.tsx` with relevant keywords
+5. Add doc route to `demo/pages/docs/DocsLayout.tsx` `<Routes>`
+6. Add lazy import at top of `DocsLayout.tsx`
+7. Add nav item to docs `navItems` in `DocsLayout.tsx`
+8. Add slug to `KNOWN_DOC_SLUGS` and `KNOWN_DEMO_SLUGS` in `demo/pages/helpers.tsx`
+9. Export component + types from `src/index.ts` (flat, namespace, and default object)
+10. Export from category barrel `src/components/<Category>/index.ts`
 
+**Chart slug difference:** demo uses `/linechart` `/barchart` `/piechart` `/scatterchart`; docs use `/docs/line-chart` etc. The `DEMO_TO_DOC` / `DOC_TO_DEMO` maps in `helpers.tsx` handle this.
+
+## 7. Testing
+
+- One test file per component: `src/__tests__/<Name>.test.tsx`
+- Runner: Vitest (globals: true — no need to import describe/it/expect)
+- Environment: jsdom; CSS disabled in tests
+- Cover: render, all variants/states, key interactions, edge cases
+- Naming: `describe("<Name>") { it("<behavior>") }`
+
+## 8. Verification gate
+
+After any component or demo change:
 ```
-npm run build
-npm test
-npm run dev   # open in editor-browser and visually confirm
+npm run build    # must complete without errors
+npm test         # all tests must pass
+npm run dev      # visually confirm in browser at localhost:3001
+npx tsc --noEmit # must be clean
 ```
 
-## 8. Delivery checklist
+## 9. Delivery checklist
 
-Before concluding, verify every item:
-
-- [ ] Tree-shaking-friendly module structure and exports
-- [ ] Tailwind CSS v4+ styling; no hardcoded color tokens
-- [ ] Responsive layout and cross-platform interaction parity validated
+- [ ] Tree-shaking-friendly exports (index.ts + category barrel + src/index.ts)
+- [ ] Tailwind v4 semantic tokens only — no raw palette names
+- [ ] CVA variants in `src/styles/theme/<category>.ts`
+- [ ] Responsive layout and mobile parity
 - [ ] Animation quality reviewed
-- [ ] Demo category correct (`Extras` if heavy/complex)
-- [ ] `ComponentNamePage` covers all public API surfaces with examples
-- [ ] Editor-browser visual verification completed
-- [ ] CHANGELOG update prompted (for component source changes)
+- [ ] Demo page covers all public API surfaces with code snippets
+- [ ] Doc page with PropTable, Import, Usage, Type Reference
+- [ ] All 10 wiring steps completed for new components
+- [ ] Test file added with meaningful coverage
+- [ ] Verification gate passed (build + test + typecheck + visual)
+- [ ] CHANGELOG.md updated (load changelog-writer skill)

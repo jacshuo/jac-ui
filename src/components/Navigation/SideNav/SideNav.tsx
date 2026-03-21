@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useRef, useLayoutEffect, useEffect, useMemo } from "react";
 import { createPortal } from "react-dom";
-import { ChevronRight, ChevronsLeft, Menu, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronsLeft, Menu, X } from "lucide-react";
 import { cn } from "../../../lib/utils";
 
 /* ── Types ─────────────────────────────────────────────── */
@@ -79,6 +79,12 @@ export interface SideNavProps extends React.HTMLAttributes<HTMLElement> {
    * Set this to the height of your app's top bar. @default 48
    */
   mobileTopOffset?: number;
+  /**
+   * Optional slot rendered inside the mobile slide-in drawer, between the
+   * header row and the scrollable nav body. Use it to inject a search input
+   * or other controls that should appear on mobile too.
+   */
+  mobileDrawerSlot?: React.ReactNode;
 }
 
 /* ── Styles ────────────────────────────────────────────── */
@@ -429,6 +435,7 @@ export function SideNav({
   responsive = true,
   mobileBreakpoint = 768,
   mobileTopOffset = 48,
+  mobileDrawerSlot,
   ...props
 }: SideNavProps) {
   const [internalMode, setInternalMode] = useState(defaultCollapseMode);
@@ -465,6 +472,97 @@ export function SideNav({
   );
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  // ── Draggable pull-tab: side + vertical position ───────
+  const [tabSide, setTabSide] = useState<"left" | "right">(() => {
+    if (typeof window === "undefined") return "left";
+    try {
+      return (localStorage.getItem("onyx-sidenav-side") as "left" | "right") || "left";
+    } catch {
+      return "left";
+    }
+  });
+  const [tabTopPct, setTabTopPct] = useState<number>(() => {
+    if (typeof window === "undefined") return 50;
+    try {
+      return Number(localStorage.getItem("onyx-sidenav-top")) || 50;
+    } catch {
+      return 50;
+    }
+  });
+  // Live drag visual: null when not dragging
+  const [tabDragLive, setTabDragLive] = useState<{ side: "left" | "right"; y: number } | null>(
+    null,
+  );
+  const tabDragRef = useRef({ dragging: false, startX: 0, startY: 0, moved: false });
+
+  const handleTabPointerDown = useCallback(
+    (e: React.PointerEvent<Element>) => {
+      // Only primary button (left-click) or touch/pen
+      if (e.pointerType === "mouse" && e.button !== 0) return;
+      e.preventDefault();
+
+      tabDragRef.current = { dragging: true, startX: e.clientX, startY: e.clientY, moved: false };
+
+      // Use window listeners so native drag on desktop Chrome can't steal the events
+      const onMove = (ev: PointerEvent) => {
+        if (!tabDragRef.current.dragging) return;
+        const dx = Math.abs(ev.clientX - tabDragRef.current.startX);
+        const dy = Math.abs(ev.clientY - tabDragRef.current.startY);
+        if (dx > 6 || dy > 6) tabDragRef.current.moved = true;
+        if (!tabDragRef.current.moved) return;
+        const liveSide: "left" | "right" = ev.clientX < window.innerWidth / 2 ? "left" : "right";
+        const minY = mobileTopOffset + 28;
+        const maxY = window.innerHeight - 28;
+        const liveY = Math.max(minY, Math.min(maxY, ev.clientY));
+        setTabDragLive({ side: liveSide, y: liveY });
+      };
+
+      const onUp = (ev: PointerEvent) => {
+        window.removeEventListener("pointermove", onMove);
+        window.removeEventListener("pointerup", onUp);
+        window.removeEventListener("pointercancel", onUp);
+
+        if (!tabDragRef.current.dragging) return;
+        tabDragRef.current.dragging = false;
+
+        if (!tabDragRef.current.moved) {
+          // Tap: open drawer.
+          // On desktop Chrome a stray `click` fires after `pointerup` and hits
+          // the freshly-mounted backdrop, closing the drawer instantly.
+          // Swallow it with a one-time capture-phase listener.
+          const swallowClick = (ev: MouseEvent) => {
+            ev.stopPropagation();
+            ev.preventDefault();
+            window.removeEventListener("click", swallowClick, true);
+          };
+          window.addEventListener("click", swallowClick, true);
+          setTabDragLive(null);
+          setMobileOpen(true);
+          return;
+        }
+        const newSide: "left" | "right" = ev.clientX < window.innerWidth / 2 ? "left" : "right";
+        const minY = mobileTopOffset + 28;
+        const maxY = window.innerHeight - 28;
+        const clampedY = Math.max(minY, Math.min(maxY, ev.clientY));
+        const pct = (clampedY / window.innerHeight) * 100;
+        setTabSide(newSide);
+        setTabTopPct(pct);
+        setTabDragLive(null);
+        try {
+          localStorage.setItem("onyx-sidenav-side", newSide);
+          localStorage.setItem("onyx-sidenav-top", String(pct));
+        } catch (_) {
+          // localStorage unavailable (e.g. private browsing with storage blocked)
+        }
+      };
+
+      window.addEventListener("pointermove", onMove);
+      window.addEventListener("pointerup", onUp);
+      window.addEventListener("pointercancel", onUp);
+    },
+    [mobileTopOffset],
+  );
+
   useEffect(() => {
     if (!responsive || typeof window === "undefined" || !window.matchMedia) return;
     const mql = window.matchMedia(`(max-width: ${mobileBreakpoint - 1}px)`);
@@ -481,41 +579,53 @@ export function SideNav({
     if ((e.target as HTMLElement).closest("a")) setMobileOpen(false);
   }, []);
 
-  // ── Swipe-to-close (left swipe) ───────────────────────
+  // ── Swipe-to-close (direction depends on tabSide) ────────
   const drawerRef = useRef<HTMLElement>(null);
   const swipeState = useRef({ startX: 0, startY: 0, dragging: false });
-  const SWIPE_THRESHOLD = 60; // px left to trigger close
+  const SWIPE_THRESHOLD = 60;
 
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     const t = e.touches[0];
     swipeState.current = { startX: t.clientX, startY: t.clientY, dragging: true };
   }, []);
 
-  const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    if (!swipeState.current.dragging || !drawerRef.current) return;
-    const t = e.touches[0];
-    const dx = t.clientX - swipeState.current.startX;
-    const dy = t.clientY - swipeState.current.startY;
-    // Only track primarily-horizontal leftward swipes
-    if (dx >= 0 || Math.abs(dy) > Math.abs(dx)) return;
-    // Clamp: don't move drawer further right than open position
-    drawerRef.current.style.transform = `translateX(${Math.max(dx, -224)}px)`;
-    drawerRef.current.style.transition = "none";
-  }, []);
+  const handleTouchMove = useCallback(
+    (e: React.TouchEvent) => {
+      if (!swipeState.current.dragging || !drawerRef.current) return;
+      const t = e.touches[0];
+      const dx = t.clientX - swipeState.current.startX;
+      const dy = t.clientY - swipeState.current.startY;
+      if (tabSide === "left") {
+        // Left drawer: close by swiping left
+        if (dx >= 0 || Math.abs(dy) > Math.abs(dx)) return;
+        drawerRef.current.style.transform = `translateX(${Math.max(dx, -224)}px)`;
+      } else {
+        // Right drawer: close by swiping right
+        if (dx <= 0 || Math.abs(dy) > Math.abs(dx)) return;
+        drawerRef.current.style.transform = `translateX(${Math.min(dx, 224)}px)`;
+      }
+      drawerRef.current.style.transition = "none";
+    },
+    [tabSide],
+  );
 
-  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
-    if (!swipeState.current.dragging || !drawerRef.current) return;
-    swipeState.current.dragging = false;
-    const t = e.changedTouches[0];
-    const dx = t.clientX - swipeState.current.startX;
-    const dy = t.clientY - swipeState.current.startY;
-    // Restore CSS transition
-    drawerRef.current.style.transition = "";
-    drawerRef.current.style.transform = "";
-    if (dx < -SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy)) {
-      setMobileOpen(false);
-    }
-  }, []);
+  const handleTouchEnd = useCallback(
+    (e: React.TouchEvent) => {
+      if (!swipeState.current.dragging || !drawerRef.current) return;
+      swipeState.current.dragging = false;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - swipeState.current.startX;
+      const dy = t.clientY - swipeState.current.startY;
+      drawerRef.current.style.transition = "";
+      drawerRef.current.style.transform = "";
+      const isHorizontal = Math.abs(dx) > Math.abs(dy);
+      if (isHorizontal) {
+        if (tabSide === "left" && dx < -SWIPE_THRESHOLD) setMobileOpen(false);
+        if (tabSide === "right" && dx > SWIPE_THRESHOLD) setMobileOpen(false);
+      }
+    },
+    [tabSide],
+  );
 
   // On mobile, also close drawer when onItemClick fires (button-based navigation)
   const effectiveOnItemClick = useMemo(() => {
@@ -606,6 +716,35 @@ export function SideNav({
 
   // ── Mobile: portal-based FAB + slide-in drawer ────────
   if (responsive && isMobile) {
+    // Compute pull-tab rendering position (drag live overrides settled state)
+    const displaySide = tabDragLive ? tabDragLive.side : tabSide;
+    const displayY = tabDragLive
+      ? tabDragLive.y
+      : (tabTopPct / 100) * (typeof window !== "undefined" ? window.innerHeight : 600);
+
+    const tabStyle: React.CSSProperties = tabDragLive
+      ? {
+          top: displayY,
+          transform: "translateY(-50%)",
+          transition: "none",
+          ...(displaySide === "left" ? { left: 0 } : { right: 0 }),
+        }
+      : {
+          top: `${tabTopPct}%`,
+          transform: "translateY(-50%)",
+          transition: "top 0.15s ease",
+          ...(tabSide === "left" ? { left: 0 } : { right: 0 }),
+        };
+
+    const drawerLeftStyle =
+      tabSide === "left" ? { left: 0, right: "auto" } : { right: 0, left: "auto" };
+    const drawerOpenCls = mobileOpen
+      ? "translate-x-0"
+      : tabSide === "left"
+        ? "-translate-x-full"
+        : "translate-x-full";
+    const drawerBorderCls = tabSide === "left" ? "border-r" : "border-l";
+
     return (
       <>
         {/* Backdrop */}
@@ -619,21 +758,23 @@ export function SideNav({
             document.body,
           )}
 
-        {/* Slide-in drawer — close button lives here, no floating overlap */}
+        {/* Slide-in drawer */}
         {createPortal(
           <aside
             ref={drawerRef}
             className={cn(
-              "fixed bottom-0 left-0 z-50 flex flex-col w-56 border-r border-primary-200 dark:border-primary-700 bg-white dark:bg-primary-900 shadow-xl transition-transform duration-200",
-              mobileOpen ? "translate-x-0" : "-translate-x-full",
+              "fixed bottom-0 z-50 flex flex-col w-56 bg-white dark:bg-primary-900 shadow-xl transition-transform duration-200",
+              drawerBorderCls,
+              "border-primary-200 dark:border-primary-700",
+              drawerOpenCls,
             )}
-            style={{ top: mobileTopOffset }}
+            style={{ top: mobileTopOffset, ...drawerLeftStyle }}
             onClick={handleNavClick}
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
           >
-            {/* Sticky drawer header with close button */}
+            {/* Drawer header */}
             <div className="flex shrink-0 items-center justify-between border-b border-primary-200 px-3 py-2 dark:border-primary-700">
               <span className="text-xs font-semibold uppercase tracking-wide text-primary-500 dark:text-primary-400">
                 Navigation
@@ -650,6 +791,12 @@ export function SideNav({
                 <X className="h-4 w-4" />
               </button>
             </div>
+            {/* Optional slot (e.g. search input) */}
+            {mobileDrawerSlot && (
+              <div className="shrink-0 border-b border-primary-200 px-3 py-2 dark:border-primary-700">
+                {mobileDrawerSlot}
+              </div>
+            )}
             {/* Scrollable nav body */}
             <div className="flex-1 overflow-y-auto overscroll-y-contain p-3">
               <nav className="flex flex-col gap-0.5">{navBody}</nav>
@@ -658,18 +805,47 @@ export function SideNav({
           document.body,
         )}
 
-        {/* Pull-tab — flush with left edge, never overlaps page content */}
+        {/* Pull-tab — draggable, snaps to left or right edge */}
         {!mobileOpen &&
           createPortal(
-            <button
-              type="button"
-              className="fixed left-0 z-50 flex h-14 w-5 items-center justify-center rounded-r-xl bg-primary-800/80 text-white shadow-md backdrop-blur-sm transition-colors hover:bg-primary-700/90 dark:bg-primary-200/80 dark:text-primary-900 dark:hover:bg-primary-300/90"
-              style={{ top: `calc(50% + ${mobileTopOffset / 2}px)`, transform: "translateY(-50%)" }}
-              onClick={() => setMobileOpen(true)}
+            // Outer hit-area: wider & taller than the visual tab for easier finger grab
+            <div
+              className={cn(
+                "fixed z-50 flex items-center",
+                displaySide === "left" ? "justify-start" : "justify-end",
+                tabDragLive ? "cursor-grabbing" : "cursor-grab",
+              )}
+              style={{
+                ...tabStyle,
+                // Extend hit area: 44px wide, taller by 24px vertically
+                width: 44,
+                height: 80,
+                marginTop: -12, // vertically center the extended hit area
+                touchAction: "none",
+                userSelect: "none",
+              }}
+              onPointerDown={handleTabPointerDown}
+              onDragStart={(e) => e.preventDefault()}
+              role="button"
               aria-label="Open navigation"
+              tabIndex={0}
             >
-              <ChevronRight className="h-3.5 w-3.5" />
-            </button>,
+              {/* Visual tab — narrower, centered within the hit area */}
+              <div
+                className={cn(
+                  "flex h-16 w-6 items-center justify-center",
+                  "bg-primary-800/80 text-white shadow-md backdrop-blur-sm",
+                  "hover:bg-primary-700/90 dark:bg-primary-200/80 dark:text-primary-900 dark:hover:bg-primary-300/90",
+                  displaySide === "left" ? "rounded-r-xl" : "rounded-l-xl",
+                )}
+              >
+                {displaySide === "left" ? (
+                  <ChevronRight className="h-4 w-4" />
+                ) : (
+                  <ChevronLeft className="h-4 w-4" />
+                )}
+              </div>
+            </div>,
             document.body,
           )}
       </>

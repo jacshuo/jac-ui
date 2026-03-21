@@ -97,7 +97,7 @@ export function Input({
       {suffix && (
         <span
           className={cn(
-            "pointer-events-none flex shrink-0 items-center text-secondary-400 dark:text-secondary-500",
+            "flex shrink-0 items-center text-secondary-400 dark:text-secondary-500",
             sz.icon,
           )}
         >

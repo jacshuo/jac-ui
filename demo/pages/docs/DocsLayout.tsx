@@ -1043,17 +1043,42 @@ export default function DocsLayout() {
             className="w-full"
           />
         </div>
-        {noResults ? (
+        {noResults && (
           <p className="px-2 py-4 text-center text-xs text-secondary-500">No results</p>
-        ) : (
-          <SideNav
-            items={filteredNavItems}
-            title={searchQuery ? undefined : "API Reference"}
-            basePath="/docs/"
-            LinkComponent={DocRouterLink}
-            showLines
-          />
         )}
+        <SideNav
+          items={filteredNavItems}
+          title={searchQuery ? undefined : "API Reference"}
+          basePath="/docs/"
+          LinkComponent={DocRouterLink}
+          showLines
+          mobileDrawerSlot={
+            <>
+              <Input
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search docs…"
+                prefix={<Search size={14} />}
+                suffix={
+                  searchQuery ? (
+                    <button
+                      onClick={() => setSearchQuery("")}
+                      className="flex items-center text-primary-400 hover:text-primary-600 dark:hover:text-primary-300"
+                      aria-label="Clear search"
+                    >
+                      <X size={14} />
+                    </button>
+                  ) : null
+                }
+                inputSize="sm"
+                className="w-full"
+              />
+              {noResults && (
+                <p className="mt-2 text-center text-xs text-secondary-500">No results</p>
+              )}
+            </>
+          }
+        />
       </aside>
 
       {/* ── Docs content ──────────────────── */}

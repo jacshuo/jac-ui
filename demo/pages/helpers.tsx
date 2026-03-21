@@ -1,6 +1,8 @@
 import React from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   CodeBlock,
+  NavLink,
   Table,
   TableHeader,
   TableBody,
@@ -9,6 +11,156 @@ import {
   TableCell,
   type CodeBlockLanguage,
 } from "../../src";
+
+/* ── Cross-navigation helpers ─────────────────────────── */
+
+/** Demo slugs that differ from their doc slug counterparts */
+const DEMO_TO_DOC: Record<string, string> = {
+  linechart: "line-chart",
+  barchart: "bar-chart",
+  piechart: "pie-chart",
+  scatterchart: "scatter-chart",
+};
+
+/** Doc slugs that differ from their demo slug counterparts */
+const DOC_TO_DEMO: Record<string, string> = {
+  "line-chart": "linechart",
+  "bar-chart": "barchart",
+  "pie-chart": "piechart",
+  "scatter-chart": "scatterchart",
+};
+
+const KNOWN_DOC_SLUGS = new Set([
+  "accordion",
+  "alert",
+  "avatar",
+  "badge",
+  "bar-chart",
+  "breadcrumb",
+  "button",
+  "card",
+  "chat",
+  "checkbox",
+  "cine-player",
+  "code-block",
+  "command-palette",
+  "context-menu",
+  "date-time-picker",
+  "dialog",
+  "drawer",
+  "dropdown",
+  "file-explorer",
+  "film-reel",
+  "form",
+  "header",
+  "image-card",
+  "indicator",
+  "input",
+  "label",
+  "line-chart",
+  "list",
+  "masonry",
+  "metric-card",
+  "mini-player",
+  "nav-link",
+  "pagination",
+  "panel",
+  "pie-chart",
+  "progress-bar",
+  "radio",
+  "ribbon-bar",
+  "scatter-chart",
+  "sidenav",
+  "skeleton",
+  "slider",
+  "spin",
+  "stat",
+  "switch",
+  "table",
+  "tabs",
+  "tag",
+  "textbox",
+  "timeline",
+  "toast",
+  "tooltip",
+  "tree",
+  "typewriter-text",
+]);
+
+const KNOWN_DEMO_SLUGS = new Set([
+  "accordion",
+  "alert",
+  "avatar",
+  "badge",
+  "barchart",
+  "breadcrumb",
+  "button",
+  "card",
+  "chat",
+  "checkbox",
+  "cine-player",
+  "code-block",
+  "command-palette",
+  "context-menu",
+  "date-time-picker",
+  "dialog",
+  "drawer",
+  "dropdown",
+  "file-explorer",
+  "film-reel",
+  "form",
+  "header",
+  "image-card",
+  "indicator",
+  "input",
+  "label",
+  "linechart",
+  "list",
+  "masonry",
+  "metric-card",
+  "mini-player",
+  "nav-link",
+  "pagination",
+  "panel",
+  "piechart",
+  "progress-bar",
+  "radio",
+  "ribbon-bar",
+  "scatterchart",
+  "sidenav",
+  "skeleton",
+  "slider",
+  "spin",
+  "stat",
+  "switch",
+  "table",
+  "tabs",
+  "tag",
+  "textbox",
+  "timeline",
+  "toast",
+  "tooltip",
+  "tree",
+  "typewriter-text",
+]);
+
+function useCrossLink(): { href: string; label: string } | null {
+  const { pathname } = useLocation();
+
+  if (pathname.startsWith("/docs/")) {
+    const docSlug = pathname.replace(/^\/docs\//, "").split("/")[0];
+    const demoSlug = DOC_TO_DEMO[docSlug] ?? docSlug;
+    if (KNOWN_DEMO_SLUGS.has(demoSlug)) return { href: `/${demoSlug}`, label: "← Demo" };
+  } else {
+    const demoSlug = pathname.replace(/^\//, "").split("/")[0];
+    const docSlug = DEMO_TO_DOC[demoSlug] ?? demoSlug;
+    if (KNOWN_DOC_SLUGS.has(docSlug)) return { href: `/docs/${docSlug}`, label: "Docs →" };
+  }
+
+  return null;
+}
+
+/* ── Exported helpers ─────────────────────────────────── */
 
 export function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -20,8 +172,28 @@ export function Section({ title, children }: { title: string; children: React.Re
 }
 
 export function PageTitle({ children }: { children: React.ReactNode }) {
+  const cross = useCrossLink();
+  const navigate = useNavigate();
+
   return (
-    <h1 className="mb-6 text-2xl font-bold text-primary-800 dark:text-primary-100">{children}</h1>
+    <div className="mb-6 flex items-start justify-between gap-4">
+      <h1 className="text-2xl font-bold text-primary-800 dark:text-primary-100">{children}</h1>
+      {cross && (
+        <NavLink
+          href={cross.href}
+          size="sm"
+          underline="hover"
+          external={false}
+          className="mt-1.5 shrink-0 rounded-md border border-primary-200 px-2.5 py-1 text-xs font-medium hover:border-primary-400 dark:border-primary-700 dark:hover:border-primary-500"
+          onClick={(e) => {
+            e.preventDefault();
+            navigate(cross.href);
+          }}
+        >
+          {cross.label}
+        </NavLink>
+      )}
+    </div>
   );
 }
 
