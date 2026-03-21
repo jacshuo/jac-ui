@@ -49,6 +49,33 @@ export function Example() {
   );
 }`;
 
+const typesCode = `// Tabs root (context provider)
+type TabsProps = {
+  defaultValue?:  string;                      // uncontrolled
+  value?:         string;                      // controlled
+  onValueChange?: (value: string) => void;
+  intent?:        "line" | "pills" | "underline";  // default: "line"
+  children:       React.ReactNode;
+  className?:     string;
+};
+
+// TabList — React.HTMLAttributes<HTMLDivElement> + { scrollable?: boolean }
+// TabPanels — React.HTMLAttributes<HTMLDivElement> (sliding CSS transform container)
+
+// TabTrigger
+type TabTriggerProps =
+  React.ButtonHTMLAttributes<HTMLButtonElement> & {
+    value: string;  // required — tab identifier; active state from context
+  };
+
+// TabContent
+type TabContentProps =
+  React.HTMLAttributes<HTMLDivElement> & {
+    value: string;  // required — matches corresponding TabTrigger value
+    // Inside TabPanels: always rendered (visibility via CSS transform)
+    // Standalone: conditionally rendered
+  };`;
+
 export default function TabsDoc() {
   return (
     <div className="space-y-8">
@@ -81,6 +108,10 @@ export default function TabsDoc() {
 
       <Section title="Usage">
         <CodeExample code={usageCode} />
+      </Section>
+
+      <Section title="Type Reference">
+        <CodeExample code={typesCode} />
       </Section>
     </div>
   );

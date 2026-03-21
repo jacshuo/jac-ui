@@ -82,6 +82,40 @@ export function Example() {
 const subComponentNote =
   "CardHeader, CardTitle, CardDescription, CardContent, CardFooter — all pass through HTMLAttributes<HTMLDivElement>.";
 
+const typesCode = `import type { HTMLAttributes } from "react";
+import type { VariantProps } from "class-variance-authority";
+
+// Card
+type CardProps =
+  React.HTMLAttributes<HTMLDivElement> &
+  VariantProps<typeof cardVariants>;
+
+// Card sub-components (all accept className + HTMLAttributes<HTMLDivElement>):
+// CardHeader, CardTitle (<h3>), CardDescription (<p>), CardContent, CardFooter
+
+// HorizontalCard
+type HorizontalCardMediaProps = {
+  src?:   string;
+  alt?:   string;
+  icon?:  React.ReactNode;
+  width?: string;           // default: "10rem"
+};
+
+type HorizontalCardProps =
+  Omit<React.HTMLAttributes<HTMLDivElement>, "children"> &
+  VariantProps<typeof cardVariants> & {
+    media:          HorizontalCardMediaProps;  // required
+    mediaPosition?: "left" | "right";          // default: "left"
+    children:       React.ReactNode;
+    stackOnMobile?: boolean;                   // default: false
+  };
+
+// Resolved variant shape (shared by Card and HorizontalCard):
+interface CardVariants {
+  intent?: "default" | "elevated" | "outlined" | "ghost";
+  size?:   "sm" | "md" | "lg";
+}`;
+
 export default function CardDoc() {
   return (
     <div className="space-y-8">
@@ -114,6 +148,10 @@ export default function CardDoc() {
 
       <Section title="HorizontalCard Usage">
         <CodeExample code={horizontalUsageCode} />
+      </Section>
+
+      <Section title="Type Reference">
+        <CodeExample code={typesCode} />
       </Section>
     </div>
   );

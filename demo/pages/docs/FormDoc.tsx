@@ -71,6 +71,75 @@ export function Example() {
   );
 }`;
 
+const typesCode = `// Form — root form container
+interface FormProps {
+  layout?:     "stacked" | "inline" | "grid";    // default: "stacked"
+  columns?:    number;                             // grid columns (layout="grid" only)
+  className?:  string;
+  onSubmit?:   (e: React.FormEvent, fd: FormData) => void;
+  onValues?:   (values: Record<string, FormValue>) => BulkValidationResult | void;
+  children:    React.ReactNode;
+}
+
+// FormItem — wraps a single field with label, hint, and validation
+interface FormItemProps {
+  label?:       string;
+  hint?:        string;
+  name?:        string;           // routes bulk validation errors by name
+  required?:    boolean;
+  onValidate?:  (value: unknown) => ValidationResult | undefined;
+  className?:   string;
+  children:     React.ReactNode;  // first child receives injected id/aria props
+}
+
+// ValidationResult
+interface ValidationResult {
+  result:  boolean;    // true = valid
+  reason?: string;     // error message shown below field
+}
+
+// BulkValidationResult
+type BulkValidationResult = Record<string, ValidationResult>;
+
+// FormSection — visual grouping within the form
+interface FormSectionProps {
+  title?:      string;
+  description?: string;
+  className?:  string;
+  children:    React.ReactNode;
+}`;
+
+const tokenCode = `/* Override Form layout dimensions in your CSS */
+:root {
+  /* Inline label width per size */
+  --form-label-w-sm: 5rem;
+  --form-label-w-md: 7rem;
+  --form-label-w-lg: 9rem;
+
+  /* Gap between label and field per size */
+  --form-item-gap-sm: 0.5rem;
+  --form-item-gap-md: 0.75rem;
+  --form-item-gap-lg: 1rem;
+
+  /* Vertical gap between form rows per size */
+  --form-row-gap-sm: 0.75rem;
+  --form-row-gap-md: 1.25rem;
+  --form-row-gap-lg: 1.75rem;
+
+  /* Hint text font size */
+  --form-hint-text: 0.75rem;
+
+  /* Form header bottom margin */
+  --form-header-mb: 1.5rem;
+
+  /* Footer top padding / gap between footer actions */
+  --form-footer-pt: 1.5rem;
+  --form-footer-gap: 0.5rem;
+
+  /* Container border radius */
+  --form-radius: 0.5rem;
+}`;
+
 export default function FormDoc() {
   return (
     <div className="space-y-8">
@@ -96,6 +165,18 @@ export default function FormDoc() {
 
       <Section title="Usage">
         <CodeExample code={usageCode} />
+      </Section>
+
+      <Section title="Type Reference">
+        <CodeExample code={typesCode} />
+      </Section>
+
+      <Section title="CSS Token Overrides">
+        <p className="mb-3 text-sm text-secondary-600 dark:text-secondary-400">
+          Form exposes layout dimension tokens for label widths, row/item gaps, hint text size, and
+          corner rounding. Override to match your form density preference.
+        </p>
+        <CodeExample code={tokenCode} />
       </Section>
     </div>
   );

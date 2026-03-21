@@ -39,6 +39,19 @@ export function Example() {
   );
 }`;
 
+const typesCode = `export interface ImageCardProps extends React.HTMLAttributes<HTMLDivElement> {
+  src:          string;         // required — image URL
+  alt?:         string;         // default: ""
+  aspectRatio?: string;         // default: "16/9" — CSS aspect-ratio for image area
+}
+
+// Sub-component types (all extend HTMLAttributes and accept className):
+export type ImageCardBodyProps        = React.HTMLAttributes<HTMLDivElement>;
+export type ImageCardTitleProps       = React.HTMLAttributes<HTMLHeadingElement>;  // renders <h3>
+export type ImageCardDescriptionProps = React.HTMLAttributes<HTMLParagraphElement>;
+export type ImageCardActionsProps     = React.HTMLAttributes<HTMLDivElement>;
+// ImageCardActions renders a flex row with top border for action buttons`;
+
 export default function ImageCardDoc() {
   return (
     <div className="space-y-8">
@@ -66,6 +79,10 @@ export default function ImageCardDoc() {
 
       <Section title="Usage">
         <CodeExample code={usageCode} />
+      </Section>
+
+      <Section title="Type Reference">
+        <CodeExample code={typesCode} />
       </Section>
     </div>
   );

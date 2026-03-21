@@ -44,6 +44,24 @@ export function Example() {
   );
 }`;
 
+const typesCode = `export type MasonryItemData = {
+  key?:         React.Key;
+  content:      React.ReactNode;  // required — visual content
+  title?:       string;           // shown in hover overlay
+  description?: string;           // shown in hover overlay
+  actions?:     React.ReactNode;  // buttons in hover overlay
+};
+
+export type MasonryProps =
+  Omit<React.HTMLAttributes<HTMLDivElement>, "onClick"> & {
+    columns?:     number;              // fixed column count; overrides columnWidth when set
+    columnWidth?: number;              // default: 240 — min col width px; auto-calc from container
+    gap?:         number;              // default: 16 — gap between items in px
+    items?:       MasonryItemData[];   // structured items; when provided, children is ignored
+    onItemClick?: (item: MasonryItemData | undefined, index: number) => void;
+    children?:    React.ReactNode;     // free-form children (used when items not provided)
+  };`;
+
 export default function MasonryDoc() {
   return (
     <div className="space-y-8">
@@ -65,6 +83,10 @@ export default function MasonryDoc() {
 
       <Section title="Usage">
         <CodeExample code={usageCode} />
+      </Section>
+
+      <Section title="Type Reference">
+        <CodeExample code={typesCode} />
       </Section>
     </div>
   );

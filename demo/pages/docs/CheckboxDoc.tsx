@@ -2,24 +2,58 @@ import { PageTitle, Section, CodeExample, PropTable, type PropRow } from "../hel
 
 const checkboxProps: PropRow[] = [
   { prop: "checked", type: "boolean", description: "Controlled checked state" },
-  { prop: "defaultChecked", type: "boolean", description: "Uncontrolled initial checked state" },
+  {
+    prop: "defaultChecked",
+    type: "boolean",
+    default: "false",
+    description: "Uncontrolled initial checked state",
+  },
   {
     prop: "indeterminate",
     type: "boolean",
     default: "false",
-    description: "Shows indeterminate (dash) state",
+    description: "Shows dash icon overriding checkmark; overrides checked visually",
   },
-  { prop: "onCheckedChange", type: "(checked: boolean) => void", description: "Change callback" },
-  { prop: "label", type: "string", description: "Label text displayed next to the checkbox" },
+  {
+    prop: "onCheckedChange",
+    type: "(checked: boolean) => void",
+    description: "Fires after toggle",
+  },
+  { prop: "label", type: "string", description: "Accessible label text shown beside the checkbox" },
   {
     prop: "intent",
-    type: `"primary" | "success" | "danger" | "warning"`,
+    type: `"primary" | "secondary" | "success" | "danger" | "warning"`,
     default: `"primary"`,
-    description: "Color intent",
+    description: "Checked indicator fill color",
   },
-  { prop: "size", type: `"sm" | "md" | "lg"`, default: `"md"`, description: "Checkbox size" },
-  { prop: "disabled", type: "boolean", default: "false", description: "Disabled state" },
+  { prop: "size", type: `"sm" | "md" | "lg"`, default: `"md"`, description: "Box dimensions" },
+  {
+    prop: "disabled",
+    type: "boolean",
+    default: "false",
+    description: "Dims and removes pointer events",
+  },
+  { prop: "id", type: "string", description: "Custom id; auto-generated with useId() otherwise" },
 ];
+
+const typesCode = `import type { InputHTMLAttributes } from "react";
+import type { VariantProps } from "class-variance-authority";
+
+export type CheckboxProps =
+  Omit<React.InputHTMLAttributes<HTMLInputElement>, "size" | "type"> &
+  Omit<VariantProps<typeof checkboxVariants>, "checked"> & {
+    checked?: boolean;
+    defaultChecked?: boolean;
+    indeterminate?: boolean;
+    onCheckedChange?: (checked: boolean) => void;
+    label?: string;
+  };
+
+// Resolved variant shape:
+interface CheckboxVariants {
+  intent?: "primary" | "secondary" | "success" | "danger" | "warning";
+  size?:   "sm" | "md" | "lg";
+}`;
 
 const usageCode = `import { Checkbox } from "@jacshuo/onyx";
 import { useState } from "react";
@@ -56,6 +90,10 @@ export default function CheckboxDoc() {
 
       <Section title="Usage">
         <CodeExample code={usageCode} />
+      </Section>
+
+      <Section title="Type Reference">
+        <CodeExample code={typesCode} />
       </Section>
     </div>
   );

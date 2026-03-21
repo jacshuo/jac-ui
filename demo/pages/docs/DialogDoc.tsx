@@ -73,6 +73,37 @@ export function Example() {
   );
 }`;
 
+const typesCode = `// Dialog (provider/context)
+type DialogProps = {
+  open:                boolean;                   // required — controlled
+  onOpenChange:        (open: boolean) => void;   // required
+  modal?:              boolean;                   // default: true — lock scroll + backdrop + Escape
+  closeOnOutsideClick?: boolean;                  // default: false
+  children:            React.ReactNode;
+};
+
+// DialogContent
+type DialogContentProps =
+  React.HTMLAttributes<HTMLDivElement> &
+  VariantProps<typeof dialogContentVariants> & {
+    position?: "center" | "bottom";  // default: "center"; "bottom" = sheet/drawer
+  };
+
+// Sub-components (all accept className + native HTML attrs):
+// DialogHeader (<div>), DialogTitle (<h2>), DialogDescription (<p>),
+// DialogFooter (<div>), DialogClose (<button> — absolute × button)
+
+// Resolved variant shape:
+interface DialogContentVariants {
+  size?: "sm" | "md" | "lg" | "xl" | "full";  // controls max-width
+}
+// Supports stacked/nested dialogs via internal depth stack. Portals to document.body.`;
+
+const tokenCode = `/* Override Dialog bottom-sheet corner radius in your CSS */
+:root {
+  --dialog-sheet-radius: 0.75rem; /* applies when DialogContent position="bottom" */
+}`;
+
 export default function DialogDoc() {
   return (
     <div className="space-y-8">
@@ -104,6 +135,18 @@ export default function DialogDoc() {
 
       <Section title="Usage">
         <CodeExample code={usageCode} />
+      </Section>
+
+      <Section title="Type Reference">
+        <CodeExample code={typesCode} />
+      </Section>
+
+      <Section title="CSS Token Overrides">
+        <p className="mb-3 text-sm text-secondary-600 dark:text-secondary-400">
+          The top corner radius of the bottom-sheet (when <code>position=&ldquo;bottom&rdquo;</code>
+          ) is a CSS custom property. Override to match your design system&apos;s radius scale.
+        </p>
+        <CodeExample code={tokenCode} />
       </Section>
     </div>
   );

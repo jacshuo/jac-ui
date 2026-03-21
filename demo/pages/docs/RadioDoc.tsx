@@ -7,7 +7,7 @@ const radioGroupProps: PropRow[] = [
   { prop: "onValueChange", type: "(value: string) => void", description: "Change callback" },
   {
     prop: "intent",
-    type: `"primary" | "success" | "danger" | "warning"`,
+    type: `"primary" | "secondary" | "success" | "danger" | "warning"`,
     default: `"primary"`,
     description: "Color intent for all radios",
   },
@@ -57,6 +57,28 @@ export function Example() {
   );
 }`;
 
+const typesCode = `export interface RadioGroupProps {
+  name?: string;
+  value?: string;
+  defaultValue?: string;
+  onValueChange?: (value: string) => void;
+  intent?: "primary" | "secondary" | "danger" | "warning" | "success";
+  size?: "sm" | "md" | "lg";
+  disabled?: boolean;
+  orientation?: "vertical" | "horizontal";
+  className?: string;
+  children: React.ReactNode;
+}
+
+export type RadioProps =
+  Omit<React.InputHTMLAttributes<HTMLInputElement>, "size" | "type"> & {
+    value: string;
+    label?: string;
+    intent?: "primary" | "secondary" | "danger" | "warning" | "success";
+    size?: "sm" | "md" | "lg";
+    disabled?: boolean;
+  };`;
+
 export default function RadioDoc() {
   return (
     <div className="space-y-8">
@@ -78,6 +100,10 @@ export default function RadioDoc() {
 
       <Section title="Usage">
         <CodeExample code={usageCode} />
+      </Section>
+
+      <Section title="Type Reference">
+        <CodeExample code={typesCode} />
       </Section>
     </div>
   );

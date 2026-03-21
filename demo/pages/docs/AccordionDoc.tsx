@@ -49,6 +49,58 @@ export function Example() {
   );
 }`;
 
+const typesCode = `import type { HTMLAttributes } from "react";
+import type { VariantProps } from "class-variance-authority";
+
+// Accordion root
+type AccordionProps =
+  React.HTMLAttributes<HTMLDivElement> &
+  VariantProps<typeof accordionVariants> & {
+    type?:          "single" | "multiple";   // default: "single"
+    defaultValue?:  string[];                // uncontrolled initial open items
+    value?:         string[];                // controlled open items
+    onValueChange?: (value: string[]) => void;
+    size?:          "sm" | "md" | "lg";
+  };
+
+// AccordionItem
+type AccordionItemProps =
+  React.HTMLAttributes<HTMLDivElement> & {
+    value: string;  // required — unique identifier
+  };
+
+// AccordionTrigger — React.ButtonHTMLAttributes<HTMLButtonElement>
+// AccordionContent — React.HTMLAttributes<HTMLDivElement>
+
+// Resolved variant shape:
+interface AccordionVariants {
+  intent?: "default" | "bordered" | "ghost";
+  size?:   "sm" | "md" | "lg";
+}`;
+
+const tokenCode = `/* Override Accordion spacing in your CSS */
+:root {
+  /* Trigger vertical padding per size */
+  --accordion-trigger-py-sm: 0.375rem;
+  --accordion-trigger-py-md: 0.75rem;
+  --accordion-trigger-py-lg: 1rem;
+
+  /* Content bottom padding per size */
+  --accordion-content-pb-sm: 0.375rem;
+  --accordion-content-pb-md: 0.75rem;
+  --accordion-content-pb-lg: 1rem;
+
+  /* Trigger font size per size */
+  --accordion-trigger-text-sm: 0.75rem;
+  --accordion-trigger-text-md: 0.875rem;
+  --accordion-trigger-text-lg: 1rem;
+
+  /* Content font size per size */
+  --accordion-content-text-sm: 0.75rem;
+  --accordion-content-text-md: 0.875rem;
+  --accordion-content-text-lg: 1rem;
+}`;
+
 export default function AccordionDoc() {
   return (
     <div className="space-y-8">
@@ -76,6 +128,18 @@ export default function AccordionDoc() {
 
       <Section title="Usage">
         <CodeExample code={usageCode} />
+      </Section>
+
+      <Section title="Type Reference">
+        <CodeExample code={typesCode} />
+      </Section>
+
+      <Section title="CSS Token Overrides">
+        <p className="mb-3 text-sm text-secondary-600 dark:text-secondary-400">
+          Accordion exposes spacing and font-size tokens for each size step. Override to adjust
+          density without changing the <code>size</code> prop.
+        </p>
+        <CodeExample code={tokenCode} />
       </Section>
     </div>
   );

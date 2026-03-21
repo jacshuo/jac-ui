@@ -139,6 +139,33 @@ export function DualAxisExample() {
   );
 }`;
 
+const typesCode = `import type { ChartSeries, AxisConfig } from "@jacshuo/onyx";
+
+// ChartSeries
+interface ChartSeries {
+  id:      string;
+  name:    string;
+  color?:  string;           // defaults to palette color
+  data:    ChartDataPoint[];
+}
+
+// ChartDataPoint
+interface ChartDataPoint {
+  x:       number | string;  // category label or numeric value
+  y:       number;
+  label?:  string;           // custom tooltip label
+}
+
+// AxisConfig
+interface AxisConfig {
+  label?:      string;
+  min?:        number;
+  max?:        number;
+  tickCount?:  number;
+  format?:     (v: number | string) => string;
+  gridLines?:  boolean;
+}`;
+
 export default function LineChartDoc() {
   return (
     <div className="space-y-8">
@@ -158,6 +185,10 @@ export default function LineChartDoc() {
 
       <Section title="Dual Y Axis">
         <CodeExample code={dualAxisCode} />
+      </Section>
+
+      <Section title="Type Reference">
+        <CodeExample code={typesCode} />
       </Section>
     </div>
   );

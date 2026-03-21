@@ -80,6 +80,53 @@ export function Example() {
   );
 }`;
 
+const typesCode = `export interface FileExplorerItem {
+  name:        string;            // required
+  path:        string;            // required — absolute or virtual path
+  type:        "file" | "directory";  // required
+  size?:       number;            // bytes
+  extension?:  string;            // auto-derived from name if omitted
+  modifiedAt?: Date | string;
+  createdAt?:  Date | string;
+  mimeType?:   string;
+  hidden?:     boolean;
+}
+
+export type FileExplorerViewMode  = "list" | "grid";
+export type FileExplorerDockSide  = "left" | "right";
+export type FileExplorerInputMode = "search" | "navigate";
+
+export interface FileExplorerAction {
+  key:     string;
+  label:   string;
+  icon?:   React.ComponentType<{ className?: string }>;
+  onClick: (file: FileExplorerItem) => void;
+}
+
+export interface FileExplorerProps {
+  files:              FileExplorerItem[];  // required
+  title?:             string;              // default: "File Explorer"
+  accent?:            string;              // default: "#8b5cf6"
+  defaultView?:       FileExplorerViewMode;// default: "list"
+  initialPosition?:   { x: number; y: number };
+  initialSize?:       { width: number; height: number };
+  dockable?:          boolean;             // default: false
+  dockSide?:          FileExplorerDockSide;// default: "right"
+  visible?:           boolean;             // default: true
+  onFileOpen?:        (file: FileExplorerItem) => void;
+  onSelectionChange?: (files: FileExplorerItem[]) => void;
+  onNavigate?:        (path: string) => void;
+  onDelete?:          (files: FileExplorerItem[]) => void;
+  onClose?:           () => void;
+  onMinimize?:        () => void;
+  onPathSubmit?:      (path: string) => void;
+  defaultInputMode?:  FileExplorerInputMode; // default: "search"
+  actions?:           FileExplorerAction[];
+  resizable?:         boolean;              // default: true
+  minSize?:           { width: number; height: number }; // default: {400,300}
+  className?:         string;
+}`;
+
 export default function FileExplorerDoc() {
   return (
     <div className="space-y-8">
@@ -101,6 +148,10 @@ export default function FileExplorerDoc() {
 
       <Section title="Usage">
         <CodeExample code={usageCode} />
+      </Section>
+
+      <Section title="Type Reference">
+        <CodeExample code={typesCode} />
       </Section>
     </div>
   );

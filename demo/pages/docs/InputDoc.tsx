@@ -5,35 +5,53 @@ const inputProps: PropRow[] = [
     prop: "state",
     type: `"default" | "error"`,
     default: `"default"`,
-    description: "Validation state — error shows red border",
+    description: "Validation state — error shows red border and ring",
   },
   {
     prop: "inputSize",
     type: `"sm" | "md" | "lg"`,
     default: `"md"`,
-    description: "Input height size",
+    description:
+      "Input height (sm=h-7, md=h-9, lg=h-11). Named inputSize to avoid conflict with HTML size attribute",
   },
   {
     prop: "prefix",
     type: "React.ReactNode",
-    description: "Leading adornment (icon or text) inside the input",
+    description: "Leading adornment with highlighted background panel (icon or text label)",
   },
   {
     prop: "suffix",
     type: "React.ReactNode",
-    description: "Trailing adornment (icon or text) inside the input",
+    description: "Trailing non-interactive adornment inside the input frame",
   },
   {
     prop: "action",
     type: '{ icon: React.ReactNode; onClick: () => void; "aria-label"?: string }',
-    description: "Action button rendered at the end of the input",
+    description: "Clickable icon button at the trailing end",
   },
   {
     prop: "...rest",
     type: "InputHTMLAttributes<HTMLInputElement>",
-    description: "All native input attributes (omits size and prefix)",
+    description: "All native input attributes (size and prefix are omitted to avoid conflicts)",
   },
 ];
+
+const typesCode = `import type { InputHTMLAttributes, ReactNode } from "react";
+
+type InputProps = Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  "size" | "prefix"
+> & {
+  state?:     "default" | "error";
+  inputSize?: "sm" | "md" | "lg";
+  prefix?:    React.ReactNode;
+  suffix?:    React.ReactNode;
+  action?: {
+    icon:          React.ReactNode;
+    onClick:       () => void;
+    "aria-label"?: string;
+  };
+}`;
 
 const usageCode = `import { Input } from "@jacshuo/onyx";
 import { Search } from "lucide-react";
@@ -71,6 +89,10 @@ export default function InputDoc() {
 
       <Section title="Usage">
         <CodeExample code={usageCode} />
+      </Section>
+
+      <Section title="Type Reference">
+        <CodeExample code={typesCode} />
       </Section>
     </div>
   );

@@ -62,7 +62,7 @@ const dropdownButtonProps: PropRow[] = [
   },
   {
     prop: "intent",
-    type: `"primary" | "secondary" | "danger" | "ghost" | "link"`,
+    type: `"primary" | "secondary" | "danger" | "warning" | "ghost" | "outline"`,
     default: `"primary"`,
     description: "Button color intent",
   },
@@ -122,6 +122,75 @@ export function Example() {
   );
 }`;
 
+const typesCode = `export interface DropdownOption {
+  value: string;
+  label?: string;
+  icon?: React.ReactNode;
+  disabled?: boolean;
+  children?: DropdownOption[];
+}
+
+export interface DropdownSingleProps {
+  options: DropdownOption[];
+  multiple?: false;
+  value?: string;
+  defaultValue?: string;
+  onChange?: (value: string, option: DropdownOption) => void;
+  placeholder?: string;
+  disabled?: boolean;
+  editable?: boolean;
+  onAddItem?: (value: string) => void;
+  align?: "left" | "right";
+  size?: "sm" | "md" | "lg";
+  animated?: boolean;
+  name?: string;
+  className?: string;
+}
+
+export interface DropdownMultipleProps {
+  options: DropdownOption[];
+  multiple: true;
+  selected?: string[];
+  defaultSelected?: string[];
+  onSelectionChange?: (selected: string[]) => void;
+  onChange?: (value: string[]) => void;
+  placeholder?: string;
+  disabled?: boolean;
+  editable?: boolean;
+  onAddItem?: (value: string) => void;
+  align?: "left" | "right";
+  size?: "sm" | "md" | "lg";
+  animated?: boolean;
+  name?: string;
+  className?: string;
+}
+
+export type DropdownProps = DropdownSingleProps | DropdownMultipleProps;
+
+export interface DropdownItem {
+  key?: string;
+  label: React.ReactNode;
+  disabled?: boolean;
+  divider?: boolean;
+  onClick?: () => void;
+}
+
+export interface DropdownButtonProps
+  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "children"> {
+  label: React.ReactNode;
+  items: DropdownItem[];
+  align?: "left" | "right";
+  intent?: "primary" | "secondary" | "danger" | "warning" | "ghost" | "outline";
+  size?: "sm" | "md" | "lg";
+  animated?: boolean;
+  chevron?: boolean;
+  editable?: boolean;
+  onAddItem?: (value: string) => void;
+  multiple?: boolean;
+  selected?: string[];
+  onSelectionChange?: (selected: string[]) => void;
+}`;
+
 export default function DropdownDoc() {
   return (
     <div className="space-y-8">
@@ -160,6 +229,10 @@ import { DropdownButton, type DropdownItem } from "@jacshuo/onyx";`}
 
       <Section title="DropdownButton Usage">
         <CodeExample code={dropdownButtonUsageCode} />
+      </Section>
+
+      <Section title="Type Reference">
+        <CodeExample code={typesCode} />
       </Section>
     </div>
   );

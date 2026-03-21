@@ -16,6 +16,8 @@
 @import "../components/Feedback/Alert/Alert.css";
 @import "../components/Feedback/ProgressBar/ProgressBar.css";
 @import "../components/Feedback/Spin/Spin.css";
+@import "../components/Feedback/Skeleton/Skeleton.css";
+@import "../components/Feedback/Toast/Toast.css";
 @import "../components/Forms/Form/Form.css";
 
 @import "./components/FilmReel.css";
@@ -24,6 +26,9 @@
 @import "./components/FileExplorer.css";
 @import "./components/Masonry.css";
 
+@import "../components/Extras/CommandPalette/CommandPalette.css";
+@import "../components/Primitives/Slider/Slider.css";
+@import "../components/Overlay/Drawer/Drawer.css";
 @import "../components/Chart/LineChart/LineChart.css";
 @import "../components/Chart/BarChart/BarChart.css";
 @import "../components/Chart/PieChart/PieChart.css";

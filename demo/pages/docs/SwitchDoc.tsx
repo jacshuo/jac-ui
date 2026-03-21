@@ -1,28 +1,64 @@
 import { PageTitle, Section, CodeExample, PropTable, type PropRow } from "../helpers";
 
 const switchProps: PropRow[] = [
-  { prop: "checked", type: "boolean", description: "Controlled checked state" },
-  { prop: "defaultChecked", type: "boolean", description: "Uncontrolled initial state" },
-  { prop: "onCheckedChange", type: "(checked: boolean) => void", description: "Change callback" },
+  { prop: "checked", type: "boolean", description: "Controlled on/off state" },
+  {
+    prop: "defaultChecked",
+    type: "boolean",
+    default: "false",
+    description: "Uncontrolled initial state",
+  },
+  {
+    prop: "onCheckedChange",
+    type: "(checked: boolean) => void",
+    description: "Fires after toggle",
+  },
   {
     prop: "checkedContent",
     type: "React.ReactNode",
-    description: "Content displayed inside the thumb when ON",
+    description: "Text or icon shown inside the track when ON; triggers auto-sizing track",
   },
   {
     prop: "uncheckedContent",
     type: "React.ReactNode",
-    description: "Content displayed inside the thumb when OFF",
+    description: "Text or icon shown inside the track when OFF",
   },
-  { prop: "label", type: "string", description: "Label text displayed alongside the switch" },
+  { prop: "label", type: "string", description: "Accessible label text beside the switch" },
   {
     prop: "intent",
-    type: `"primary" | "success" | "danger" | "warning"`,
+    type: `"primary" | "secondary" | "success" | "danger" | "warning"`,
     default: `"primary"`,
-    description: "Color intent when checked",
+    description: "Track fill color when ON",
   },
-  { prop: "size", type: `"sm" | "md" | "lg"`, default: `"md"`, description: "Switch size" },
+  {
+    prop: "size",
+    type: `"sm" | "md" | "lg"`,
+    default: `"md"`,
+    description: "Overall track/thumb dimensions",
+  },
+  { prop: "disabled", type: "boolean", description: "Dims and disables interaction" },
+  { prop: "id", type: "string", description: "Custom id; auto-generated with useId() otherwise" },
 ];
+
+const typesCode = `import type { InputHTMLAttributes } from "react";
+import type { VariantProps } from "class-variance-authority";
+
+export type SwitchProps =
+  Omit<React.InputHTMLAttributes<HTMLInputElement>, "size" | "type"> &
+  Omit<VariantProps<typeof switchTrackVariants>, "checked"> & {
+    checked?:          boolean;
+    defaultChecked?:   boolean;
+    onCheckedChange?:  (checked: boolean) => void;
+    checkedContent?:   React.ReactNode;  // label inside track when ON
+    uncheckedContent?: React.ReactNode;  // label inside track when OFF
+    label?:            string;
+  };
+
+// Resolved variant shape:
+interface SwitchVariants {
+  intent?: "primary" | "secondary" | "success" | "danger" | "warning";
+  size?:   "sm" | "md" | "lg";
+}`;
 
 const usageCode = `import { Switch } from "@jacshuo/onyx";
 import { useState } from "react";
@@ -54,6 +90,10 @@ export default function SwitchDoc() {
 
       <Section title="Usage">
         <CodeExample code={usageCode} />
+      </Section>
+
+      <Section title="Type Reference">
+        <CodeExample code={typesCode} />
       </Section>
     </div>
   );

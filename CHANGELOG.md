@@ -6,6 +6,40 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 ---
 
+## [2.1.0] — 2026-03-21
+
+### Added
+
+- **Avatar**: new Primitives component — image or initials fallback, size variants (xs–2xl), intent-coloured ring, status dot (online/away/busy/offline), and group stacking via `AvatarGroup`
+- **Breadcrumb**: new Navigation component — accessible `<nav>` with configurable separator, a `maxItems` collapse-to-ellipsis, and optional icon support
+- **CommandPalette**: new Extras component — full-screen search modal with grouped results, keyboard navigation (↑↓ Enter Esc), fuzzy filtering, shortcut badge, and empty/loading states
+- **ContextMenu**: new Overlay component — right-click / long-press context menu with separator, nested sub-menu, and keyboard dismiss support
+- **Drawer**: new Overlay component — slide-in panel from four sides (`top|bottom|left|right`), controlled open state, modal backdrop, and size variants
+- **MetricCard**: new DataDisplay component — KPI card with value, label, trend arrow (up/down), delta chip, and optional sparkline slot
+- **Pagination**: new Navigation component — page control bar with first/prev/next/last, page-size selector, compact mode, and total-items label
+- **RibbonBar**: new Navigation component — Office-style tabbed toolbar with icon-button groups, separators, and responsive collapse to mini mode
+- **Select**: new Forms component — single and multi-select dropdown with search, grouped options, creatable mode, and value chip rendering
+- **Skeleton**: new Feedback component — content placeholder with pulse animation for text lines, circles, rectangles, and cards; stacks via `SkeletonGroup`
+- **Slider**: new Primitives component — single-thumb and range (dual-thumb) slider with step, marks, formatted tooltip, and vertical orientation
+- **Stat**: new DataDisplay component — simple stat display with large value, label, and optional icon or badge chip
+- **Tag**: new Primitives component — inline lozenge tag with intent variants, close button, and `onRemove` callback
+- **Timeline**: new Extras component — vertical/horizontal event timeline with `active` holo spinning border animation, `complete`/`error` ambient glow, image banner/sidebar (`imagePosition`), mosaic gallery (`images[]`), action buttons (`actions` / `TimelineAction`), and entrance animations via IntersectionObserver
+- **Toast**: new Feedback component — imperative toast via `useToast()`, supporting `success|warning|error|info` intents, configurable position (6 positions), duration, dismiss, and stacking
+
+### Changed
+
+- **Timeline**: `image` prop supports both full-width banner (`imagePosition="top"`) and fixed sidebar (`imagePosition="left"`) layouts
+- **Timeline**: `images[]` renders a responsive mosaic gallery (1→full-width, 2→two-col, 3→left-spanning + two-right, 4→2×2, overflow shows +N tile)
+- **Timeline**: active card holo border uses CSS-registered `@property --tl-angle` + `conic-gradient` mask technique — no element rotation, works on any aspect ratio
+- **Timeline**: all holo and glow colours are overridable via 10 `--tl-*` CSS custom properties in `:root`
+- **docs**: added **CSS Token Overrides** section to 12 API reference pages — Accordion, Alert, Badge, CodeBlock, Dialog, Form, Header, Indicator, List, Table, Tooltip, Tree — documenting every `:root` CSS custom property and its default value
+
+### Fixed
+
+- **TimelineDoc**: rewrote stale API reference; removed `timestamp`, `media`, `badge` (non-existent props); corrected to `date`, `image`/`images`/`svg`, `imagePosition`, `actions`; added `TimelineAction` props table and CSS token section
+
+---
+
 ## [2.0.0] — 2026-03-20
 
 ### Added

@@ -1,0 +1,52 @@
+/* Timeline component-local styles */
+
+/*
+  ── Timeline design tokens ─────────────────────────────────────────────────
+  Override any of these CSS custom properties to retheme the component
+  without touching source code. Place overrides in your global CSS or
+  inside a `.dark` / branded-theme selector.
+*/
+:root {
+  /* Active card: holo aurora + spinning border ─────────────────────────── */
+  --tl-holo-base:   var(--color-primary-600);  /* base sweep (slate-600)   */
+  --tl-holo-mid:    var(--color-primary-400);  /* fade-out (slate-400)     */
+  --tl-holo-indigo: var(--color-indigo-400);   /* first accent (indigo-400)*/
+  --tl-holo-violet: var(--color-violet-300);   /* peak accent (violet-300) */
+  --tl-holo-cyan:   var(--color-cyan-400);     /* shimmer (cyan-400)       */
+
+  /* Ambient glow — complete-status cards ───────────────────────────────── */
+  --tl-glow-complete-1: var(--color-success-600); /* emerald-600 inner sweep */
+  --tl-glow-complete-2: var(--color-success-400); /* emerald-400 mid sweep   */
+
+  /* Ambient glow — error-status cards ─────────────────────────────────── */
+  --tl-glow-error-1: var(--color-danger-600);  /* rose-600 inner sweep     */
+  --tl-glow-error-2: var(--color-danger-400);  /* rose-400 mid sweep       */
+  --tl-glow-error-3: var(--color-danger-300);  /* rose-300 outer edge      */
+}
+
+/*
+  Animates the `from` angle of conic-gradient() directly.
+  This avoids rotating *elements* (which clips at corners on non-square cards);
+  the gradient rotates in-place instead, giving a clean sweep on any aspect ratio.
+*/
+@property --tl-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes tl-holo-spin {
+  to { --tl-angle: 360deg; }
+}
+
+@keyframes tl-breathe {
+  0%, 100% { opacity: 0.42; }
+  50%       { opacity: 0.9; }
+}
+
+/* Slow ambient pulse for non-active status cards */
+@keyframes tl-glow-pulse {
+  0%, 100% { opacity: 0.12; }
+  50%       { opacity: 0.24; }
+}
+

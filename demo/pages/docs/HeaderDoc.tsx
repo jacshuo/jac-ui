@@ -65,6 +65,47 @@ export function Example() {
   );
 }`;
 
+const typesCode = `export interface HeaderNavItem {
+  label:    React.ReactNode;
+  href?:    string;
+  active?:  boolean;
+  onClick?: (e: React.MouseEvent) => void;
+}
+
+export interface HeaderAction {
+  key?:       string;
+  icon:       React.ReactNode;              // required
+  ariaLabel?: string;
+  onClick?:   (e: React.MouseEvent) => void;
+  href?:      string;
+  external?:  boolean;
+}
+
+export interface HeaderProps {
+  brand?:           React.ReactNode;
+  onBrandClick?:    (e: React.MouseEvent) => void;
+  navItems?:        HeaderNavItem[];        // default: []
+  actions?:         HeaderAction[];         // default: []
+  linkComponent?:   React.ComponentType<{ href: string; className?: string; children: React.ReactNode }>;
+  height?:          string;                 // default: "h-12" (Tailwind class)
+  children?:        React.ReactNode;        // rendered between nav and actions
+  mobileMenu?:      boolean;               // default: false
+  navMenuIcon?:     React.ReactNode;       // custom hamburger icon
+  actionsMenuIcon?: React.ReactNode;       // custom actions menu icon
+  className?:       string;
+}`;
+
+const tokenCode = `/* Override Header mobile menu colors in your CSS */
+:root {
+  --header-mobile-bg:     white;                     /* mobile panel background  */
+  --header-mobile-border: var(--color-primary-200);  /* mobile panel border      */
+}
+
+.dark {
+  --header-mobile-bg:     var(--color-primary-900);
+  --header-mobile-border: var(--color-primary-700);
+}`;
+
 export default function HeaderDoc() {
   return (
     <div className="space-y-8">
@@ -90,6 +131,19 @@ export default function HeaderDoc() {
 
       <Section title="Usage">
         <CodeExample code={usageCode} />
+      </Section>
+
+      <Section title="Type Reference">
+        <CodeExample code={typesCode} />
+      </Section>
+
+      <Section title="CSS Token Overrides">
+        <p className="mb-3 text-sm text-secondary-600 dark:text-secondary-400">
+          The mobile menu panel background and border color have automatic dark mode variants.
+          Override both <code>:root</code> and <code>.dark</code> blocks to apply a custom mobile
+          menu palette.
+        </p>
+        <CodeExample code={tokenCode} />
       </Section>
     </div>
   );

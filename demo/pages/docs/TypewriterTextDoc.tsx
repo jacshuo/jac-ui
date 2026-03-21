@@ -168,6 +168,22 @@ export function PolymorphicExample() {
   );
 }`;
 
+const typesCode = `export interface TypewriterTextProps {
+  text: string;
+  mode?: "typewriter" | "stream" | "instant";
+  speed?: number;
+  cursor?: boolean;
+  cursorChar?: string;
+  thinking?: boolean;
+  streaming?: boolean;
+  delay?: number;
+  onComplete?: () => void;
+  as?: "span" | "div" | "p" | "pre" | "code"
+     | "h1" | "h2" | "h3" | "h4" | "h5" | "h6"
+     | "label" | "li";
+  className?: string;
+}`;
+
 export default function TypewriterTextDoc() {
   return (
     <div className="space-y-8">
@@ -224,6 +240,10 @@ export default function TypewriterTextDoc() {
           polymorphic and works with headings, paragraphs, list items, and more.
         </p>
         <CodeExample code={polymorphicCode} />
+      </Section>
+
+      <Section title="Type Reference">
+        <CodeExample code={typesCode} />
       </Section>
     </div>
   );

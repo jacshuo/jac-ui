@@ -142,6 +142,34 @@ export function JitteredExample() {
   );
 }`;
 
+const typesCode = `import type { ChartSeries, AxisConfig } from "@jacshuo/onyx";
+
+// ScatterDataPoint
+interface ScatterDataPoint {
+  x:       number;
+  y:       number;
+  label?:  string;  // tooltip label
+  r?:      number;  // point radius override
+}
+
+// ChartSeries (for ScatterChart)
+interface ChartSeries {
+  id:      string;
+  name:    string;
+  color?:  string;                 // defaults to palette color
+  data:    ScatterDataPoint[];
+}
+
+// AxisConfig
+interface AxisConfig {
+  label?:      string;
+  min?:        number;
+  max?:        number;
+  tickCount?:  number;
+  format?:     (v: number | string) => string;
+  gridLines?:  boolean;
+}`;
+
 export default function ScatterChartDoc() {
   return (
     <div className="space-y-8">
@@ -161,6 +189,10 @@ export default function ScatterChartDoc() {
 
       <Section title="Jitter & Linked Lines">
         <CodeExample code={jitterCode} />
+      </Section>
+
+      <Section title="Type Reference">
+        <CodeExample code={typesCode} />
       </Section>
     </div>
   );

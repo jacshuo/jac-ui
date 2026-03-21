@@ -48,6 +48,24 @@ const hookDescription = `useSpin() returns:
   stop()   → void   — stop spinning
   wrap(promise) → Promise — spin while the promise resolves`;
 
+const typesCode = `export type SpinProps = React.HTMLAttributes<HTMLDivElement> & {
+  spinning?: boolean;
+  tip?: string;
+  size?: "sm" | "md" | "lg";
+  intent?: "primary" | "secondary";
+  children?: React.ReactNode;
+};
+
+// useSpin() hook
+interface UseSpinReturn {
+  spinning: boolean;
+  start: () => void;
+  stop: () => void;
+  wrap: <T>(promise: Promise<T>) => Promise<T>;
+}
+
+export declare function useSpin(): UseSpinReturn;`;
+
 export default function SpinDoc() {
   return (
     <div className="space-y-8">
@@ -67,6 +85,10 @@ export default function SpinDoc() {
 
       <Section title="Usage">
         <CodeExample code={usageCode} />
+      </Section>
+
+      <Section title="Type Reference">
+        <CodeExample code={typesCode} />
       </Section>
     </div>
   );

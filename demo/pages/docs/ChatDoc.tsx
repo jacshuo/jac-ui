@@ -48,6 +48,21 @@ export function Example() {
   );
 }`;
 
+const typesCode = `export interface ChatMessage {
+  id:       string | number;    // required — unique message key
+  sender:   string;             // required — display name
+  avatar?:  string | React.ReactNode;  // URL → <img>; text → circle; ReactNode passed through
+  content:  React.ReactNode;    // required — message body
+  time?:    string;             // timestamp label, e.g. "10:30 AM"
+  self?:    boolean;            // current user — right side in split mode
+}
+
+export interface ChatProps extends React.HTMLAttributes<HTMLDivElement> {
+  messages:    ChatMessage[];    // required
+  mode?:       "split" | "left";  // default: "split"
+  autoScroll?: boolean;           // default: true — scroll to bottom on new messages
+}`;
+
 export default function ChatDoc() {
   return (
     <div className="space-y-8">
@@ -67,6 +82,10 @@ export default function ChatDoc() {
 
       <Section title="Usage">
         <CodeExample code={usageCode} />
+      </Section>
+
+      <Section title="Type Reference">
+        <CodeExample code={typesCode} />
       </Section>
     </div>
   );

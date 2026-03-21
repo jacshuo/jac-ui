@@ -28,6 +28,23 @@ export function Example() {
   );
 }`;
 
+const typesCode = `import type { HTMLAttributes } from "react";
+import type { VariantProps } from "class-variance-authority";
+
+type PanelProps =
+  React.HTMLAttributes<HTMLDivElement> &
+  VariantProps<typeof panelVariants>;
+
+// Sub-components (all accept className + HTMLAttributes<HTMLDivElement>):
+// PanelHeader — wrapper div with bottom border and icon sizing
+// PanelContent — inner content div with muted text
+
+// Resolved variant shape:
+interface PanelVariants {
+  intent?: "default" | "inset" | "elevated";
+  size?:   "sm" | "md" | "lg";
+}`;
+
 export default function PanelDoc() {
   return (
     <div className="space-y-8">
@@ -49,6 +66,10 @@ export default function PanelDoc() {
 
       <Section title="Usage">
         <CodeExample code={usageCode} />
+      </Section>
+
+      <Section title="Type Reference">
+        <CodeExample code={typesCode} />
       </Section>
     </div>
   );

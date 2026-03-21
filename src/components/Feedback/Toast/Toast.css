@@ -1,0 +1,77 @@
+/* ── Toast CSS ──────────────────────────────────────────── */
+
+/* Exit keyframes — directional slide-out */
+@keyframes toast-slide-out-right {
+  from { opacity: 1; transform: translateX(0); }
+  to   { opacity: 0; transform: translateX(110%); }
+}
+
+@keyframes toast-slide-out-left {
+  from { opacity: 1; transform: translateX(0); }
+  to   { opacity: 0; transform: translateX(-110%); }
+}
+
+@keyframes toast-slide-out-up {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-50%); }
+}
+
+@keyframes toast-slide-out-down {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(50%); }
+}
+
+/* Height-collapsing wrapper animation */
+@keyframes toast-height-collapse {
+  0%   { max-height: 320px; }
+  100% { max-height: 0; }
+}
+
+/* ── Item base layout ────────────────────────────────── */
+
+.toast-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  border-radius: 0.5rem;
+  padding: 0.875rem 1rem;
+  width: 20rem;
+  max-width: calc(100vw - 2rem);
+  box-shadow:
+    0 4px 16px rgba(0 0 0 / 0.18),
+    0 1px 4px rgba(0 0 0 / 0.1);
+}
+
+/* ── Wrapper: height-collapse on exit ───────────────── */
+
+.toast-wrapper {
+  overflow: hidden;
+}
+
+.toast-wrapper-exiting {
+  animation: toast-height-collapse 0.32s ease forwards;
+}
+
+/* ── Per-direction item exit animations ─────────────── */
+
+.toast-exit-right .toast-item {
+  animation: toast-slide-out-right 0.32s ease forwards;
+}
+
+.toast-exit-left .toast-item {
+  animation: toast-slide-out-left 0.32s ease forwards;
+}
+
+.toast-exit-up .toast-item {
+  animation: toast-slide-out-up 0.32s ease forwards;
+}
+
+.toast-exit-down .toast-item {
+  animation: toast-slide-out-down 0.32s ease forwards;
+}
+
+/* ── Action button base ──────────────────────────────── */
+
+.toast-action-btn {
+  cursor: pointer;
+}

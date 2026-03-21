@@ -54,3 +54,37 @@ export const alertVariants = cva(
     defaultVariants: { intent: "info" },
   },
 );
+
+export const skeletonVariants = cva("skeleton-base bg-secondary-200 dark:bg-secondary-700", {
+  variants: {
+    variant: {
+      text: "skeleton-text w-full rounded-sm",
+      circular: "rounded-full",
+      rectangular: "rounded-none",
+      rounded: "rounded-md",
+    },
+    animation: {
+      pulse: "animate-pulse",
+      wave: "skeleton-wave",
+      none: "",
+    },
+  },
+  defaultVariants: { variant: "text", animation: "pulse" },
+});
+
+export const toastVariants = cva("border", {
+  variants: {
+    variant: {
+      default:
+        "bg-primary-800 text-primary-50 border-primary-700 dark:bg-primary-100 dark:text-primary-900 dark:border-primary-200",
+      success:
+        "bg-success-500 text-white border-success-600 dark:bg-success-600 dark:border-success-700",
+      danger:
+        "bg-danger-500 text-white border-danger-600 dark:bg-danger-600 dark:border-danger-700",
+      warning:
+        "bg-warning-500 text-warning-900 border-warning-600 dark:bg-warning-600 dark:text-white dark:border-warning-700",
+      info: "bg-primary-500 text-white border-primary-600 dark:bg-primary-600 dark:border-primary-700",
+    },
+  },
+  defaultVariants: { variant: "default" },
+});

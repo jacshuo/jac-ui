@@ -1,0 +1,4 @@
+/* Prevent text selection while dragging */
+.slider-root * {
+  user-select: none;
+}

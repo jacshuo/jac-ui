@@ -59,6 +59,46 @@ export const treeItemVariants = cva(
   },
 );
 
+export const statVariants = cva(
+  "relative rounded-xl border bg-white p-5 shadow-sm transition-shadow hover:shadow-md dark:bg-primary-900",
+  {
+    variants: {
+      intent: {
+        primary: "border-primary-200 dark:border-primary-700",
+        success: "border-success-200 dark:border-success-800",
+        danger: "border-danger-200 dark:border-danger-800",
+        warning: "border-warning-200 dark:border-warning-800",
+      },
+      size: {
+        sm: "p-4",
+        md: "p-5",
+        lg: "p-6",
+      },
+    },
+    defaultVariants: { intent: "primary", size: "md" },
+  },
+);
+
+export const metricCardVariants = cva(
+  "relative overflow-hidden rounded-xl border bg-white p-5 shadow-sm transition-all duration-300 hover:shadow-lg dark:bg-primary-900",
+  {
+    variants: {
+      intent: {
+        primary: "border-primary-200 dark:border-primary-700",
+        success: "border-success-200 dark:border-success-800",
+        danger: "border-danger-200 dark:border-danger-800",
+        warning: "border-warning-200 dark:border-warning-800",
+      },
+      size: {
+        sm: "p-4",
+        md: "p-5",
+        lg: "p-6",
+      },
+    },
+    defaultVariants: { intent: "primary", size: "md" },
+  },
+);
+
 export const codeBlockVariants = cva(
   "overflow-x-auto rounded-lg font-mono [background:var(--color-syntax-bg)] [&_pre]:m-0 [&_pre]:p-4 [&_code]:bg-transparent",
   {

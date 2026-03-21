@@ -76,6 +76,61 @@ export function Example() {
   );
 }`;
 
+const typesCode = `import type { TableHTMLAttributes } from "react";
+import type { VariantProps } from "class-variance-authority";
+
+export type SortDirection = "asc" | "desc";
+export type SortState<K extends string = string> =
+  { column: K; direction: SortDirection } | null;
+export type SelectionMode = "none" | "single" | "multiple";
+
+export type ColumnDef<T, K extends string = string> = {
+  key:             K;
+  header:          React.ReactNode;
+  cell:            (row: T) => React.ReactNode;
+  sortable?:       boolean;
+  compareFn?:      (a: T, b: T) => number;
+  headerClassName?: string;
+  cellClassName?:  string;
+  editable?:       boolean;
+  editValue?:      (row: T) => string;
+  hideBelow?:      "sm" | "md" | "lg";   // responsive column hiding
+};
+
+export type TableEmptyProps = {
+  icon?:      React.ReactNode;
+  text?:      React.ReactNode;
+  className?: string;
+};
+
+// SortableTable props (sub-set):
+// columns, data, sort, onSortChange, defaultSort, rowKey, rowActions, intent, density, empty
+
+// DataTable extends SortableTable and adds:
+// selectionMode, selected, onSelectionChange, editable, onCellEdit, toolbar, onAdd, onDelete
+
+// Low-level primitives (accept className + native HTML attrs):
+// Table, TableHeader, TableBody, TableRow, TableHead, TableCell, TableEmpty
+
+// Resolved variant shape:
+interface TableVariants {
+  intent?:  "default" | "striped" | "bordered";
+  density?: "compact" | "default" | "relaxed";
+}`;
+
+const tokenCode = `/* Override Table cell density in your CSS */
+:root {
+  /* Horizontal padding per density */
+  --table-cell-px-compact: 0.5rem;
+  --table-cell-px-default: 1rem;
+  --table-cell-px-relaxed: 1.5rem;
+
+  /* Vertical padding per density */
+  --table-cell-py-compact: 0.25rem;
+  --table-cell-py-default: 0.75rem;
+  --table-cell-py-relaxed: 1.25rem;
+}`;
+
 export default function TableDoc() {
   return (
     <div className="space-y-8">
@@ -114,6 +169,18 @@ export default function TableDoc() {
 
       <Section title="Usage">
         <CodeExample code={usageCode} />
+      </Section>
+
+      <Section title="Type Reference">
+        <CodeExample code={typesCode} />
+      </Section>
+
+      <Section title="CSS Token Overrides">
+        <p className="mb-3 text-sm text-secondary-600 dark:text-secondary-400">
+          Table cell density is driven by CSS custom properties. Override to fine-tune
+          horizontal/vertical padding for each <code>density</code> level.
+        </p>
+        <CodeExample code={tokenCode} />
       </Section>
     </div>
   );

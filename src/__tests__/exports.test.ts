@@ -96,6 +96,7 @@ describe("Public API exports", () => {
     "AlertDescription",
     "useAlert",
     "configureAlertTopOffset",
+    "Skeleton",
     // Extras
     "FilmReel",
     "MiniPlayer",

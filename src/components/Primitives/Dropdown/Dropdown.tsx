@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ChevronDown, ChevronRight, Check } from "lucide-react";
+import { ChevronDown, ChevronRight, Check, X } from "lucide-react";
 import { cn } from "../../../lib/utils";
 import { inputVariants } from "../../../styles/theme/primitives";
 
@@ -37,6 +37,27 @@ interface DropdownBaseProps {
   size?: "sm" | "md" | "lg";
   /** Enable domino flip-in/flip-out animation for menu items. @default true */
   animated?: boolean;
+  /** HTML name attribute — renders hidden input(s) for native form submission. */
+  name?: string;
+  /** Validation intent. "danger" shows a red error border. @default "default" */
+  intent?: "default" | "danger";
+  /** Show a ✕ button to clear the current selection. @default false */
+  clearable?: boolean;
+  /**
+   * HTML id forwarded to the trigger element.
+   * Injected automatically by FormItem for label + aria wiring.
+   */
+  id?: string;
+  /**
+   * Forwarded to the trigger element for aria-describedby wiring.
+   * Set automatically by FormItem to link hint/validation messages.
+   */
+  "aria-describedby"?: string;
+  /**
+   * Marks the trigger as invalid — applies the error border style.
+   * Injected automatically by FormItem when a validation error is present.
+   */
+  "aria-invalid"?: boolean;
 }
 
 export interface DropdownSingleProps extends DropdownBaseProps {
@@ -69,8 +90,13 @@ export interface DropdownMultipleProps extends DropdownBaseProps {
   value?: never;
   /** Not used in multi mode. */
   defaultValue?: never;
-  /** Not used in multi mode. */
-  onChange?: never;
+  /**
+   * Form-integration callback (multi mode). Called with the new selected
+   * string array on every toggle and on clear. Used by FormItem's onChange
+   * wrapping to trigger per-field validation — do not use for primary
+   * selection handling; prefer `onSelectionChange` for that.
+   */
+  onChange?: (value: string[]) => void;
 }
 
 export type DropdownProps = DropdownSingleProps | DropdownMultipleProps;
@@ -366,6 +392,12 @@ export function Dropdown(props: DropdownProps) {
     className,
     size = "md",
     animated = true,
+    name,
+    intent = "default",
+    clearable = false,
+    id,
+    "aria-describedby": ariaDescribedby,
+    "aria-invalid": ariaInvalid,
   } = props;
 
   const multiple = props.multiple === true;
@@ -470,6 +502,8 @@ export function Dropdown(props: DropdownProps) {
       const next = prev.includes(val) ? prev.filter((v) => v !== val) : [...prev, val];
       if ((props as DropdownMultipleProps).selected === undefined) setInternalSelected(next);
       (props as DropdownMultipleProps).onSelectionChange?.(next);
+      // Also fire onChange so FormItem's onChange-based onValidate can run.
+      (props as DropdownMultipleProps).onChange?.(next);
     },
 
     [multiple, internalSelected, props],
@@ -493,6 +527,23 @@ export function Dropdown(props: DropdownProps) {
     onAddItem?.(value);
     setSearch("");
   }, [search, onAddItem]);
+
+  /* ── Clear selection ────────────────────────────────── */
+  const handleClear = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      if (!multiple) {
+        setInternalValue(undefined);
+        // Fire onChange with empty string to signal cleared state
+        (props as DropdownSingleProps).onChange?.("", undefined as unknown as DropdownOption);
+      } else {
+        setInternalSelected([]);
+        (props as DropdownMultipleProps).onSelectionChange?.([]);
+        (props as DropdownMultipleProps).onChange?.([]);
+      }
+    },
+    [multiple, props],
+  );
 
   const handleInputKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -540,12 +591,22 @@ export function Dropdown(props: DropdownProps) {
   /* ── Need flat menu? (editable, multi, or filtering) ─ */
   const useFlatMenu = multiple || editable;
 
+  const showError = intent === "danger" || ariaInvalid === true;
+  const hasClearableValue = clearable && (multiple ? selectedValues.length > 0 : !!displayLabel);
+
   return (
     <div ref={containerRef} className={cn("relative inline-block min-w-44", className)}>
+      {/* Hidden form inputs for native form submission */}
+      {name && !multiple && <input type="hidden" name={name} value={singleValue ?? ""} />}
+      {name &&
+        multiple &&
+        selectedValues.map((v) => <input key={v} type="hidden" name={`${name}[]`} value={v} />)}
+
       {/* Trigger */}
       <div
+        id={id}
         className={cn(
-          inputVariants({ state: "default", size }),
+          inputVariants({ state: showError ? "error" : "default", size }),
           "flex cursor-pointer items-center gap-1",
           disabled && "pointer-events-none opacity-50",
         )}
@@ -553,6 +614,8 @@ export function Dropdown(props: DropdownProps) {
         role="combobox"
         aria-expanded={open}
         aria-haspopup="listbox"
+        aria-invalid={showError || undefined}
+        aria-describedby={ariaDescribedby}
       >
         {editable ? (
           <input
@@ -590,6 +653,16 @@ export function Dropdown(props: DropdownProps) {
           <span className="rounded-full bg-primary-100 px-1.5 text-xs font-semibold text-primary-700 dark:bg-primary-900 dark:text-primary-300">
             {selectedValues.length}
           </span>
+        )}
+        {hasClearableValue && (
+          <button
+            type="button"
+            aria-label="Clear selection"
+            className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-secondary-400 transition-colors hover:bg-secondary-200 hover:text-secondary-600 dark:hover:bg-secondary-700 dark:hover:text-secondary-300"
+            onClick={handleClear}
+          >
+            <X className="h-3 w-3" />
+          </button>
         )}
         <ChevronDown
           className={cn(

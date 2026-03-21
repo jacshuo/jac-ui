@@ -75,6 +75,36 @@ export function Example() {
   );
 }`;
 
+const typesCode = `export interface MiniPlayerTrack {
+  title:     string;   // required
+  artist?:   string;
+  album?:    string;
+  src:       string;   // required — audio URL (http/blob/file/Electron)
+  cover?:    string;   // album art URL
+  duration?: number;   // seconds; auto-detected if omitted
+}
+
+export type MiniPlayerPosition = "bottom-right" | "bottom-left" | "top-right" | "top-left";
+export type MiniPlayerEntrance = "bottom" | "top" | "left" | "right";
+
+export interface MiniPlayerProps {
+  playlist:         MiniPlayerTrack[];  // required
+  initialTrack?:    number;             // default: 0
+  position?:        MiniPlayerPosition; // default: "bottom-right"
+  entrance?:        MiniPlayerEntrance; // default: derived from position
+  theme?:           "dark" | "light";   // default: follows parent dark mode
+  docked?:          boolean;            // default: false — dock to edge, reveal on hover
+  visible?:         boolean;            // controlled visibility
+  onVisibleChange?: (v: boolean) => void;
+  onTrackChange?:   (index: number, track: MiniPlayerTrack) => void;
+  onLike?:          (index: number, track: MiniPlayerTrack, liked: boolean) => void;
+  autoPlay?:        boolean;            // default: true
+  shuffle?:         boolean;            // default: false
+  loop?:            boolean;            // default: false — single-track loop
+  accent?:          string;             // default: "#8b5cf6" — CSS color
+  className?:       string;
+}`;
+
 export default function MiniPlayerDoc() {
   return (
     <div className="space-y-8">
@@ -96,6 +126,10 @@ export default function MiniPlayerDoc() {
 
       <Section title="Usage">
         <CodeExample code={usageCode} />
+      </Section>
+
+      <Section title="Type Reference">
+        <CodeExample code={typesCode} />
       </Section>
     </div>
   );

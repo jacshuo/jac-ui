@@ -5,22 +5,46 @@ const textBoxProps: PropRow[] = [
     prop: "state",
     type: `"default" | "error"`,
     default: `"default"`,
-    description: "Validation state",
+    description:
+      "Border/ring visual state. error turns red and also activates when maxWords exceeded",
   },
-  { prop: "size", type: `"sm" | "md" | "lg"`, default: `"md"`, description: "TextBox size" },
+  {
+    prop: "size",
+    type: `"sm" | "md" | "lg"`,
+    default: `"md"`,
+    description: "Padding, text size, and min-height",
+  },
   {
     prop: "showWordCount",
     type: "boolean",
     default: "false",
-    description: "Show word count below the textarea",
+    description: "Show live word-count label below the textarea",
   },
-  { prop: "maxWords", type: "number", description: "Maximum word limit (enables count display)" },
+  {
+    prop: "maxWords",
+    type: "number",
+    description:
+      "Word limit; counter turns red and state becomes error when exceeded. Supports mixed CJK + Latin (each CJK char = 1 word)",
+  },
   {
     prop: "...rest",
     type: "TextareaHTMLAttributes<HTMLTextAreaElement>",
-    description: "All native textarea attributes (omits size)",
+    description:
+      "All native textarea attributes: value, defaultValue, onChange, placeholder, disabled, rows, etc. (size is omitted)",
   },
 ];
+
+const typesCode = `import type { TextareaHTMLAttributes } from "react";
+
+export type TextBoxProps =
+  Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, "size"> & {
+    state?:         "default" | "error";
+    size?:          "sm" | "md" | "lg";
+    showWordCount?: boolean;
+    maxWords?:      number;
+  };
+// maxWords turns state to "error" and counter red when exceeded
+// Supports mixed CJK + Latin word counting (each CJK char = 1 word)`;
 
 const usageCode = `import { TextBox } from "@jacshuo/onyx";
 
@@ -54,6 +78,10 @@ export default function TextBoxDoc() {
 
       <Section title="Usage">
         <CodeExample code={usageCode} />
+      </Section>
+
+      <Section title="Type Reference">
+        <CodeExample code={typesCode} />
       </Section>
     </div>
   );

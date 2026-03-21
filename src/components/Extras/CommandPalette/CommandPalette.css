@@ -1,0 +1,65 @@
+/* ── Backdrop ─────────────────────────────────────────── */
+
+.cmd-backdrop {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(2px);
+  animation: cmd-backdrop-in 120ms ease-out both;
+}
+
+@keyframes cmd-backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ── Panel ────────────────────────────────────────────── */
+
+.cmd-panel {
+  animation: cmd-panel-in 180ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes cmd-panel-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* ── Items ────────────────────────────────────────────── */
+
+.cmd-item {
+  cursor: default;
+  user-select: none;
+  transition: background-color 80ms ease, color 80ms ease;
+}
+
+/* ── Results scrollbar ────────────────────────────────── */
+
+#cmd-results {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-primary-300) transparent;
+}
+
+#cmd-results::-webkit-scrollbar {
+  width: 4px;
+}
+
+#cmd-results::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#cmd-results::-webkit-scrollbar-thumb {
+  background: var(--color-primary-300);
+  border-radius: 2px;
+}
+
+.dark #cmd-results::-webkit-scrollbar-thumb {
+  background: var(--color-primary-700);
+}

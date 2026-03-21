@@ -5,6 +5,15 @@ export { FileExplorer } from "./FileExplorer";
 export { Masonry } from "./Masonry";
 export { TypewriterText } from "./TypewriterText";
 export type { TypewriterTextProps } from "./TypewriterText";
+export { CommandPalette } from "./CommandPalette";
+export type { CommandPaletteProps, CommandItem, CommandGroup } from "./CommandPalette";
+export {
+  Timeline,
+  type TimelineProps,
+  type TimelineItem,
+  type TimelineOrientation,
+  type TimelineStatus,
+} from "./Timeline";
 
 import { FilmReel } from "./FilmReel";
 import { MiniPlayer } from "./MiniPlayer";
@@ -12,7 +21,18 @@ import { CinePlayer } from "./CinePlayer";
 import { FileExplorer } from "./FileExplorer";
 import { Masonry } from "./Masonry";
 import { TypewriterText } from "./TypewriterText";
+import { CommandPalette } from "./CommandPalette";
+import { Timeline } from "./Timeline";
 
-export const Extras = { FilmReel, MiniPlayer, CinePlayer, FileExplorer, Masonry, TypewriterText };
+export const Extras = {
+  FilmReel,
+  MiniPlayer,
+  CinePlayer,
+  FileExplorer,
+  Masonry,
+  TypewriterText,
+  CommandPalette,
+  Timeline,
+};
 
 export default Extras;

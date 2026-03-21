@@ -48,6 +48,47 @@ export function Example() {
   );
 }`;
 
+const typesCode = `import type { HTMLAttributes, LiHTMLAttributes } from "react";
+import type { VariantProps } from "class-variance-authority";
+
+type ListProps =
+  React.HTMLAttributes<HTMLUListElement> &
+  VariantProps<typeof listVariants> & {
+    size?: "sm" | "md" | "lg";
+  };
+
+export type ListItemProps =
+  React.LiHTMLAttributes<HTMLLIElement> & {
+    actions?: React.ReactNode;   // buttons on the right (shown on hover; always visible on touch)
+  };
+
+// Resolved variant shape:
+interface ListVariants {
+  intent?: "default" | "bordered" | "hover";
+  size?:   "sm" | "md" | "lg";
+}`;
+
+const tokenCode = `/* Override List item sizing in your CSS */
+:root {
+  /* Vertical padding per size */
+  --list-item-py-sm: 0.25rem;
+  --list-item-py-md: 0.375rem;
+  --list-item-py-lg: 0.5rem;
+
+  /* Font size per size */
+  --list-item-text-sm: 0.75rem;
+  --list-item-text-md: 0.875rem;
+  --list-item-text-lg: 1rem;
+
+  /* Icon size per size */
+  --list-item-icon-sm: 0.75rem;
+  --list-item-icon-md: 0.875rem;
+  --list-item-icon-lg: 1rem;
+
+  /* Minimum touch target height for row action buttons */
+  --row-action-touch-min: 2.25rem;
+}`;
+
 export default function ListDoc() {
   return (
     <div className="space-y-8">
@@ -67,6 +108,18 @@ export default function ListDoc() {
 
       <Section title="Usage">
         <CodeExample code={usageCode} />
+      </Section>
+
+      <Section title="Type Reference">
+        <CodeExample code={typesCode} />
+      </Section>
+
+      <Section title="CSS Token Overrides">
+        <p className="mb-3 text-sm text-secondary-600 dark:text-secondary-400">
+          List exposes item spacing and typography tokens for each size step. Override to adjust
+          density independently of the <code>size</code> prop.
+        </p>
+        <CodeExample code={tokenCode} />
       </Section>
     </div>
   );

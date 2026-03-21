@@ -84,6 +84,44 @@ export function Example() {
   );
 }`;
 
+const typesCode = `export interface FilmReelPhoto {
+  src:          string;   // required — image URL
+  alt?:         string;
+  title?:       string;
+  description?: string;
+  metadata?: {
+    camera?:    string;
+    lens?:      string;
+    aperture?:  string;
+    shutter?:   string;
+    iso?:       string;
+    date?:      string;
+    location?:  string;
+    [key: string]: string | undefined;
+  };
+}
+
+export interface FilmReelAction {
+  key:         string;            // required
+  icon:        React.ReactNode;   // required
+  activeIcon?: React.ReactNode;   // icon when toggled on
+  label:       string;            // required — accessible label
+  toggle?:     boolean;           // stateful toggle action
+}
+
+export type FilmReelLayout = "strip" | "sheet" | "stack";
+
+export interface FilmReelProps {
+  photos:       FilmReelPhoto[];  // required
+  layout?:      FilmReelLayout;   // default: "strip"
+  actions?:     FilmReelAction[]; // default: like/dislike/bookmark/share/download
+  onAction?:    (action: string, photo: FilmReelPhoto, index: number) => void;
+  showGrain?:   boolean;          // default: true — film grain on hover
+  sheetTitle?:  string;           // "sheet" layout left header
+  sheetLabel?:  string;           // "sheet" layout right label
+  className?:   string;
+}`;
+
 export default function FilmReelDoc() {
   return (
     <div className="space-y-8">
@@ -109,6 +147,10 @@ export default function FilmReelDoc() {
 
       <Section title="Usage">
         <CodeExample code={usageCode} />
+      </Section>
+
+      <Section title="Type Reference">
+        <CodeExample code={typesCode} />
       </Section>
     </div>
   );

@@ -260,3 +260,123 @@ export const switchTrackVariants = cva("", {
   ],
   defaultVariants: { intent: "primary", size: "md", checked: "off" },
 });
+
+export const avatarVariants = cva(
+  "bg-primary-200 text-primary-700 dark:bg-primary-700 dark:text-primary-200",
+  {
+    variants: {
+      size: {
+        xs: "h-6 w-6 text-[10px]",
+        sm: "h-8 w-8 text-xs",
+        md: "h-10 w-10 text-sm",
+        lg: "h-12 w-12 text-base",
+        xl: "h-16 w-16 text-lg",
+      },
+      shape: {
+        circular: "rounded-full",
+        rounded: "rounded-lg",
+        square: "rounded-none",
+      },
+    },
+    defaultVariants: { size: "md", shape: "circular" },
+  },
+);
+
+export const sliderVariants = cva("relative flex w-full touch-none select-none items-center", {
+  variants: {
+    intent: {
+      primary: "[&_.slider-fill]:bg-primary-500 [&_.slider-thumb]:border-primary-500",
+      secondary: "[&_.slider-fill]:bg-secondary-500 [&_.slider-thumb]:border-secondary-500",
+      success: "[&_.slider-fill]:bg-success-500 [&_.slider-thumb]:border-success-500",
+      danger: "[&_.slider-fill]:bg-danger-500 [&_.slider-thumb]:border-danger-500",
+      warning: "[&_.slider-fill]:bg-warning-500 [&_.slider-thumb]:border-warning-500",
+    },
+    size: {
+      sm: "h-4",
+      md: "h-5",
+      lg: "h-6",
+    },
+  },
+  defaultVariants: { intent: "primary", size: "md" },
+});
+
+export const tagVariants = cva(
+  "inline-flex items-center gap-1 rounded-full font-medium select-none transition-colors [&_svg]:shrink-0",
+  {
+    variants: {
+      intent: {
+        primary: "bg-primary-100 text-primary-700 dark:bg-primary-800 dark:text-primary-200",
+        secondary:
+          "bg-secondary-100 text-secondary-700 dark:bg-secondary-800 dark:text-secondary-200",
+        success: "bg-success-100 text-success-700 dark:bg-success-900/40 dark:text-success-300",
+        danger: "bg-danger-100 text-danger-700 dark:bg-danger-900/40 dark:text-danger-300",
+        warning: "bg-warning-100 text-warning-700 dark:bg-warning-900/40 dark:text-warning-300",
+        info: "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300",
+      },
+      size: {
+        sm: "h-5 px-2 text-[0.6875rem] gap-0.5",
+        md: "h-6 px-2.5 text-xs gap-1",
+        lg: "h-7 px-3 text-sm gap-1",
+      },
+      variant: {
+        solid: "",
+        outline: "bg-transparent border",
+        soft: "",
+      },
+    },
+    compoundVariants: [
+      {
+        intent: "primary",
+        variant: "outline",
+        class: "border-primary-300 text-primary-700 dark:border-primary-600 dark:text-primary-300",
+      },
+      {
+        intent: "secondary",
+        variant: "outline",
+        class:
+          "border-secondary-300 text-secondary-700 dark:border-secondary-600 dark:text-secondary-300",
+      },
+      {
+        intent: "success",
+        variant: "outline",
+        class: "border-success-400 text-success-700 dark:border-success-600 dark:text-success-300",
+      },
+      {
+        intent: "danger",
+        variant: "outline",
+        class: "border-danger-400 text-danger-700 dark:border-danger-600 dark:text-danger-300",
+      },
+      {
+        intent: "warning",
+        variant: "outline",
+        class: "border-warning-400 text-warning-700 dark:border-warning-600 dark:text-warning-300",
+      },
+      {
+        intent: "info",
+        variant: "outline",
+        class: "border-blue-400 text-blue-700 dark:border-blue-600 dark:text-blue-300",
+      },
+    ],
+    defaultVariants: { intent: "primary", size: "md", variant: "solid" },
+  },
+);
+
+export const selectVariants = cva(
+  "relative w-full cursor-pointer rounded-md border bg-white text-sm transition-colors dark:bg-primary-900",
+  {
+    variants: {
+      intent: {
+        default:
+          "border-primary-300 text-primary-900 hover:border-primary-400 focus-within:border-primary-500 focus-within:ring-2 focus-within:ring-primary-500/20 dark:border-primary-600 dark:text-primary-100 dark:hover:border-primary-500 dark:focus-within:border-primary-400",
+        danger:
+          "border-danger-500 text-primary-900 focus-within:ring-2 focus-within:ring-danger-500/20 dark:border-danger-500 dark:text-primary-100",
+      },
+      size: {
+        sm: "h-7 px-2 text-xs",
+        md: "h-9 px-3 text-sm",
+        lg: "h-11 px-4 text-base",
+      },
+    },
+    defaultVariants: { intent: "default", size: "md" },
+  },
+);

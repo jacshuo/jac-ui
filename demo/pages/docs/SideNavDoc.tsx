@@ -111,6 +111,43 @@ export function Example() {
   );
 }`;
 
+const typesCode = `export type SideNavCollapseMode = "expanded" | "icons" | "mini";
+
+export interface SideNavItem {
+  key?:         string;
+  label:        string;             // required
+  path?:        string;             // renders a link when provided
+  children?:    SideNavItem[];      // nested items (collapsible group)
+  icon?:        React.ReactNode;
+  defaultOpen?: boolean;
+}
+
+export type SideNavLinkComponentProps = {
+  to:       string;
+  className: string | ((props: { isActive: boolean }) => string);
+  style?:   React.CSSProperties;
+  children: React.ReactNode;
+};
+
+export interface SideNavProps extends React.HTMLAttributes<HTMLElement> {
+  items:                  SideNavItem[];          // required
+  title?:                 string;
+  basePath?:              string;                 // default: "/"
+  onItemClick?:           (item: SideNavItem, fullPath: string) => void;
+  LinkComponent?:         React.ComponentType<SideNavLinkComponentProps>;
+  collapsible?:           boolean;
+  collapseMode?:          SideNavCollapseMode;    // controlled
+  defaultCollapseMode?:   SideNavCollapseMode;    // default: "expanded"
+  onCollapseModeChange?:  (mode: SideNavCollapseMode) => void;
+  showLines?:             boolean;                // default: true
+  expandedKeys?:          Set<string>;
+  defaultExpandedKeys?:   Set<string> | "all";
+  onExpandedKeysChange?:  (keys: Set<string>) => void;
+  responsive?:            boolean;                // default: true — floating mobile drawer
+  mobileBreakpoint?:      number;                 // default: 768 px
+  mobileTopOffset?:       number;                 // default: 48 — set to header height
+}`;
+
 export default function SideNavDoc() {
   return (
     <div className="space-y-8">
@@ -132,6 +169,10 @@ export default function SideNavDoc() {
 
       <Section title="Usage">
         <CodeExample code={usageCode} />
+      </Section>
+
+      <Section title="Type Reference">
+        <CodeExample code={typesCode} />
       </Section>
     </div>
   );

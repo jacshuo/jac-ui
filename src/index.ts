@@ -62,6 +62,7 @@ export {
   dialogContentVariants,
   tooltipVariants,
   alertVariants,
+  skeletonVariants,
   navLinkVariants,
   codeBlockVariants,
   progressBarVariants,
@@ -70,6 +71,12 @@ export {
   checkboxVariants,
   radioVariants,
   indicatorVariants,
+  tagVariants,
+  statVariants,
+  metricCardVariants,
+  toastVariants,
+  avatarVariants,
+  sliderVariants,
 } from "./styles/theme";
 
 // ─── Primitives
@@ -87,6 +94,7 @@ export {
   type DropdownButtonProps,
 } from "./components/Primitives/DropdownButton/index";
 export { Badge } from "./components/Primitives/Badge/index";
+export { Tag, type TagProps } from "./components/Primitives/Tag/index";
 export { Indicator, type IndicatorProps } from "./components/Primitives/Indicator/index";
 export { Label } from "./components/Primitives/Label/index";
 export { Input } from "./components/Primitives/Input/index";
@@ -99,6 +107,18 @@ export {
   type RadioProps,
   type RadioGroupProps,
 } from "./components/Primitives/Radio/index";
+export {
+  Avatar,
+  AvatarGroup,
+  type AvatarProps,
+  type AvatarGroupProps,
+} from "./components/Primitives/Avatar/index";
+export {
+  Slider,
+  SliderRange,
+  type SliderProps,
+  type SliderRangeProps,
+} from "./components/Primitives/Slider/index";
 
 // ─── Layout
 export {
@@ -145,6 +165,12 @@ export {
   type CodeBlockLanguage,
   type CodeBlockProps,
 } from "./components/DataDisplay/CodeBlock/index";
+export { Stat, type StatProps, type StatTrend } from "./components/DataDisplay/Stat/index";
+export {
+  MetricCard,
+  type MetricCardProps,
+  type MetricCardTrend,
+} from "./components/DataDisplay/MetricCard/index";
 
 // ─── Navigation
 export {
@@ -161,6 +187,20 @@ export {
   type HeaderAction,
 } from "./components/Navigation/Header/index";
 export { NavLink } from "./components/Navigation/NavLink/index";
+export {
+  Breadcrumb,
+  type BreadcrumbProps,
+  type BreadcrumbItem,
+} from "./components/Navigation/Breadcrumb/index";
+export { Pagination, type PaginationProps } from "./components/Navigation/Pagination/index";
+export {
+  RibbonBar,
+  type RibbonBarProps,
+  type RibbonMode,
+  type RibbonItem,
+  type RibbonGroup,
+  type RibbonTab,
+} from "./components/Navigation/RibbonBar/index";
 
 // ─── Disclosure
 export {
@@ -188,6 +228,23 @@ export {
   DialogClose,
 } from "./components/Overlay/Dialog/index";
 export { Tooltip } from "./components/Overlay/Tooltip/index";
+export {
+  ContextMenu,
+  type ContextMenuItem,
+  type ContextMenuProps,
+} from "./components/Overlay/ContextMenu/index";
+export {
+  Drawer,
+  DrawerHeader,
+  DrawerBody,
+  DrawerFooter,
+  DrawerClose,
+  type DrawerProps,
+  type DrawerSide,
+  type DrawerHeaderProps,
+  type DrawerBodyProps,
+  type DrawerFooterProps,
+} from "./components/Overlay/Drawer/index";
 
 // ─── Feedback
 export {
@@ -203,6 +260,19 @@ export {
 } from "./components/Feedback/Alert/index";
 export { ProgressBar, type ProgressBarProps } from "./components/Feedback/ProgressBar/index";
 export { Spin, useSpin, type SpinProps } from "./components/Feedback/Spin/index";
+export { Skeleton, type SkeletonProps } from "./components/Feedback/Skeleton/index";
+export {
+  ToastProvider,
+  ToastContext,
+  useToast,
+  type ToastProps,
+  type ToastOptions,
+  type ToastVariant,
+  type ToastPosition,
+  type ToastAction,
+  type ToastContextValue,
+  type ToastProviderProps,
+} from "./components/Feedback/Toast/index";
 
 // ─── Extras
 export {
@@ -245,6 +315,20 @@ export {
 } from "./components/Extras/Masonry/index";
 
 export { TypewriterText, type TypewriterTextProps } from "./components/Extras/TypewriterText/index";
+export {
+  CommandPalette,
+  type CommandPaletteProps,
+  type CommandItem,
+  type CommandGroup,
+} from "./components/Extras/CommandPalette/index";
+export {
+  Timeline,
+  type TimelineAction,
+  type TimelineProps,
+  type TimelineItem,
+  type TimelineOrientation,
+  type TimelineStatus,
+} from "./components/Extras/Timeline/index";
 
 // ─── Form
 export {

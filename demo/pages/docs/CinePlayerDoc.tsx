@@ -49,6 +49,31 @@ export function Example() {
   );
 }`;
 
+const typesCode = `export interface CinePlayerMedia {
+  title:      string;   // required
+  subtitle?:  string;
+  type?:      string;   // media type tag, e.g. "movie", "episode" (used for sorting)
+  src:        string;   // required — video URL (http/blob/file)
+  poster?:    string;   // thumbnail/poster URL
+  duration?:  number;   // seconds; auto-detected if omitted
+}
+
+export type CinePlayerSortKey = "title" | "type" | "duration";
+
+export interface CinePlayerProps {
+  playlist:       CinePlayerMedia[];  // required
+  initialTrack?:  number;             // default: 0
+  autoPlay?:      boolean;            // default: false
+  shuffle?:       boolean;            // default: false
+  loop?:          boolean;            // default: false
+  onTrackChange?: (index: number, media: CinePlayerMedia) => void;
+  onPlayChange?:  (playing: boolean) => void;
+  accent?:        string;             // default: "#8b5cf6" — CSS color for seek bar
+  className?:     string;
+}
+// Features: full-screen, cinema mode, playlist panel with sort,
+// buffered seek bar, controls auto-hide`;
+
 export default function CinePlayerDoc() {
   return (
     <div className="space-y-8">
@@ -70,6 +95,10 @@ export default function CinePlayerDoc() {
 
       <Section title="Usage">
         <CodeExample code={usageCode} />
+      </Section>
+
+      <Section title="Type Reference">
+        <CodeExample code={typesCode} />
       </Section>
     </div>
   );
