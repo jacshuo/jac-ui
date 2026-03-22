@@ -1,4 +1,5 @@
 import { Marked, type Tokens } from "marked";
+import katex from "katex";
 
 /* ── ImageOff SVG (matches lucide-react image-off icon) ──────────────────── */
 const IMAGE_OFF_SVG =
@@ -73,10 +74,87 @@ localMarked.use({
  * Parse Markdown to sanitised HTML, safe for use with `dangerouslySetInnerHTML`.
  *
  * - Uses a local `Marked` instance (does not touch the global singleton).
+ * - LaTeX math expressions are extracted BEFORE Marked parses (so Marked never
+ *   sees `_` or `\` inside math), then restored as KaTeX HTML afterwards.
  * - Images are wrapped in a `<figure>` with a hidden error-state overlay.
  * - The output is sanitised with a lightweight allowlist approach.
+ *
+ * Streaming safety: only COMPLETE (closed) LaTeX expressions are extracted and
+ * rendered. Incomplete expressions during streaming pass through as raw text
+ * and are rendered naturally once the closing delimiter arrives.
  */
 export function renderMarkdown(text: string): string {
-  const html = localMarked.parse(text, { async: false }) as string;
-  return sanitizeHtml(html);
+  // 1. Extract LaTeX before Marked sees it (protects math from Markdown processing)
+  const { result: protected_, store } = extractLatex(text);
+  // 2. Parse Markdown
+  const html = localMarked.parse(protected_, { async: false }) as string;
+  // 3. Sanitize Marked's HTML output
+  const sanitized = sanitizeHtml(html);
+  // 4. Restore LaTeX as KaTeX-rendered HTML (KaTeX output is intrinsically safe)
+  return restoreLatex(sanitized, store);
+}
+
+/* ── LaTeX extraction → KaTeX rendering ─────────────────────────────────── */
+
+interface LatexEntry {
+  src: string;
+  display: boolean;
+}
+
+/**
+ * Extracts complete LaTeX math expressions and replaces them with HTML-comment
+ * placeholders that Marked passes through verbatim.
+ *
+ * Supported delimiters (block first, then inline):
+ *   $$...$$      \[...\]   — display / block math
+ *   \(...\)      $...$     — inline math
+ */
+function extractLatex(text: string): { result: string; store: LatexEntry[] } {
+  const store: LatexEntry[] = [];
+  const result = text
+    // Display math: $$...$$ (must check before single $)
+    .replace(/\$\$([\s\S]+?)\$\$/g, (_, src) => {
+      const i = store.push({ src, display: true }) - 1;
+      return `<!--LATEX_${i}-->`;
+    })
+    // Display math: \[...\]
+    .replace(/\\\[([\s\S]+?)\\\]/g, (_, src) => {
+      const i = store.push({ src, display: true }) - 1;
+      return `<!--LATEX_${i}-->`;
+    })
+    // Inline math: \(...\)
+    .replace(/\\\(([\s\S]+?)\\\)/g, (_, src) => {
+      const i = store.push({ src, display: false }) - 1;
+      return `<!--LATEX_${i}-->`;
+    })
+    // Inline math: $...$ (no newlines inside; avoid matching $$)
+    .replace(/(?<!\$)\$(?!\$)((?:[^\n$\\]|\\[^\n])+?)\$(?!\$)/g, (_, src) => {
+      const i = store.push({ src, display: false }) - 1;
+      return `<!--LATEX_${i}-->`;
+    });
+  return { result, store };
+}
+
+/**
+ * Replaces HTML-comment placeholders with KaTeX-rendered HTML.
+ * Falls back to monospace raw LaTeX if KaTeX throws.
+ */
+function restoreLatex(html: string, store: LatexEntry[]): string {
+  if (store.length === 0) return html;
+  return html.replace(/<!--LATEX_(\d+)-->/g, (match, idx) => {
+    const entry = store[Number(idx)];
+    if (!entry) return match;
+    try {
+      return katex.renderToString(entry.src, {
+        displayMode: entry.display,
+        throwOnError: false,
+        output: "html",
+        trust: false,
+      });
+    } catch {
+      return entry.display
+        ? `<span class="tw-latex-raw">\\[${entry.src}\\]</span>`
+        : `<code class="tw-latex-raw">$${entry.src}$</code>`;
+    }
+  });
 }
