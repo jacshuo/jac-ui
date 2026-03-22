@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 import type { TypewriterTextProps } from "./types";
+import { renderMarkdown } from "./markdown";
 import "./TypewriterText.css";
 
 /**
@@ -29,11 +30,15 @@ export function TypewriterText({
   onComplete,
   as: Tag = "span",
   className,
+  rich = false,
 }: TypewriterTextProps) {
   const [displayed, setDisplayed] = useState<string>(mode === "instant" ? text : "");
   const [animating, setAnimating] = useState(false);
   const [done, setDone] = useState(mode === "instant");
   const [exiting, setExiting] = useState(false);
+
+  // Container ref for rich mode — used to wire up image error handlers.
+  const richRef = useRef<HTMLDivElement>(null);
 
   // Tracks how many characters were already animated in stream mode
   const streamPosRef = useRef(0);
@@ -154,6 +159,25 @@ export function TypewriterText({
     }
   }, [streaming, animating, mode]);
 
+  // ── Rich mode: image error handling ─────────────────────────────────────────
+  // After each render, find all .tw-rich-img elements and imperatively attach
+  // `error` listeners so we can toggle the CSS error-state class on the figure.
+  useEffect(() => {
+    if (!rich || !richRef.current) return;
+    const imgs = Array.from(richRef.current.querySelectorAll<HTMLImageElement>(".tw-rich-img"));
+    const handlers = imgs.map((img) => {
+      const onError = () => {
+        const figure = img.closest<HTMLElement>(".tw-rich-img-wrap");
+        if (figure) figure.classList.add("tw-rich-img-wrap--error");
+      };
+      img.addEventListener("error", onError, { once: true });
+      return { img, onError };
+    });
+    return () => {
+      handlers.forEach(({ img, onError }) => img.removeEventListener("error", onError));
+    };
+  }, [displayed, rich]);
+
   // ── Cursor visibility logic ──────────────────────────────────────────────────
   // thinking → blinking (overrides everything)
   // animating → solid
@@ -178,6 +202,25 @@ export function TypewriterText({
 
   const Element = Tag as React.ElementType;
 
+  // ── Rich mode render (Markdown → HTML) ───────────────────────────────────────
+  if (rich) {
+    return (
+      <div role="region" className={cn(className)}>
+        <div
+          ref={richRef}
+          className="tw-rich-prose"
+          dangerouslySetInnerHTML={{ __html: renderMarkdown(displayed) }}
+        />
+        {showCursor && (
+          <span className={cn("tw-cursor", cursorClass)} aria-hidden="true">
+            {cursorChar}
+          </span>
+        )}
+      </div>
+    );
+  }
+
+  // ── Plain text render ────────────────────────────────────────────────────────
   return (
     <Element className={cn(className)}>
       {/* Zero-width space keeps line-height correct when only cursor is shown */}

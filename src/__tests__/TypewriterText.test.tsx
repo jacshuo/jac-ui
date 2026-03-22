@@ -235,3 +235,60 @@ describe("TypewriterText — exports", () => {
     expect(typeof mod.TypewriterText).toBe("function");
   });
 });
+
+// ── Rich mode ─────────────────────────────────────────────────────────────────
+
+describe("TypewriterText — rich mode", () => {
+  it("rich=false renders plain text (no HTML parsing)", () => {
+    const { container } = render(
+      <TypewriterText text="**bold** text" mode="instant" rich={false} />,
+    );
+    // In plain mode, ** characters appear as-is; no <strong> element rendered
+    expect(container.querySelector("strong")).toBeNull();
+    expect(container.textContent).toContain("**bold** text");
+  });
+
+  it("rich=true with instant mode renders <strong> for **bold**", () => {
+    const { container } = render(<TypewriterText text="**bold**" mode="instant" rich={true} />);
+    expect(container.querySelector("strong")).not.toBeNull();
+    expect(container.querySelector("strong")?.textContent).toBe("bold");
+  });
+
+  it("rich=true renders <img> with correct attributes for image markdown", () => {
+    const { container } = render(
+      <TypewriterText text="![alt text](https://example.com/img.jpg)" mode="instant" rich={true} />,
+    );
+    const img = container.querySelector("img");
+    expect(img).not.toBeNull();
+    expect(img?.getAttribute("src")).toBe("https://example.com/img.jpg");
+    expect(img?.getAttribute("alt")).toBe("alt text");
+    expect(img?.getAttribute("loading")).toBe("lazy");
+  });
+
+  it("rich=true wraps the output in a <div role='region'>", () => {
+    const { container } = render(
+      <TypewriterText text="hello" mode="instant" rich={true} as="span" />,
+    );
+    // The `as` prop is ignored in rich mode; always a div with role="region"
+    const region = container.querySelector("[role='region']");
+    expect(region).not.toBeNull();
+    expect(region?.tagName.toLowerCase()).toBe("div");
+  });
+
+  it("rich=true sanitizes XSS — <script> tag is stripped from output", () => {
+    const xssInput = "<script>alert(1)</script> safe text";
+    const { container } = render(<TypewriterText text={xssInput} mode="instant" rich={true} />);
+    expect(container.querySelector("script")).toBeNull();
+    expect(container.innerHTML).not.toContain("<script");
+  });
+
+  it("rich=true sanitizes on* event handlers in raw HTML", () => {
+    const xssInput = '<img src="x" onerror="alert(1)">';
+    const { container } = render(<TypewriterText text={xssInput} mode="instant" rich={true} />);
+    // The onerror attribute must be stripped
+    const imgs = container.querySelectorAll("img");
+    imgs.forEach((img) => {
+      expect(img.getAttribute("onerror")).toBeNull();
+    });
+  });
+});

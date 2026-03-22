@@ -422,6 +422,138 @@ function ThinkingDemo() {
   );
 }
 
+/* ── Demo section: rich mode (Markdown + image rendering) ── */
+
+const RICH_MARKDOWN = `# Rich Mode Demo
+
+**TypewriterText** now supports full *Markdown* rendering via the \`rich\` prop.
+
+> Set \`rich={true}\` to render animated streaming output as polished prose — headings, code, blockquotes, lists, and images all animate naturally alongside the text.
+
+## What you get
+
+- **Bold text** and *italic emphasis* out of the box
+- \`inline code\` for technical terms
+- Full fenced code blocks:
+
+\`\`\`typescript
+function streamMarkdown(text: string) {
+  return (
+    <TypewriterText
+      text={text}
+      mode="stream"
+      rich
+      streaming={isStreaming}
+    />
+  );
+}
+\`\`\`
+
+---
+
+And here's a sample image that fades in with a gentle entrance animation once its position in the stream is reached:
+
+![Scenic mountain landscape](https://picsum.photos/seed/onyxui/640/280)`;
+
+function useRichStream(fullText: string, chunkInterval = 22) {
+  const [text, setText] = useState("");
+  const [thinking, setThinking] = useState(false);
+  const [streaming, setStreaming] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const stop = useCallback(() => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+  }, []);
+
+  const start = useCallback(() => {
+    stop();
+    setText("");
+    setThinking(true);
+    setStreaming(false);
+    let pos = 0;
+
+    timeoutRef.current = setTimeout(() => {
+      setThinking(false);
+      setStreaming(true);
+
+      timerRef.current = setInterval(() => {
+        const chunkSize = 2 + Math.floor(Math.random() * 4);
+        pos = Math.min(pos + chunkSize, fullText.length);
+        setText(fullText.slice(0, pos));
+
+        if (pos >= fullText.length) {
+          clearInterval(timerRef.current!);
+          timerRef.current = null;
+          timeoutRef.current = setTimeout(() => setStreaming(false), 400);
+        }
+      }, chunkInterval);
+    }, 1200);
+  }, [stop, fullText, chunkInterval]);
+
+  useEffect(() => () => stop(), [stop]);
+
+  return { text, thinking, streaming, start };
+}
+
+function RichModeDemo() {
+  const { text, thinking, streaming, start } = useRichStream(RICH_MARKDOWN);
+  const [started, setStarted] = useState(false);
+
+  function handleStart() {
+    setStarted(true);
+    start();
+  }
+
+  return (
+    <div className="rounded-xl border border-primary-200 bg-white dark:border-primary-700/50 dark:bg-primary-900 overflow-hidden shadow-sm">
+      {/* Header */}
+      <div className="flex items-center justify-between border-b border-primary-100 px-4 py-2.5 dark:border-primary-700/50">
+        <p className="text-[10px] font-semibold uppercase tracking-widest text-primary-300 dark:text-primary-600 select-none">
+          rich=&#123;true&#125; — Markdown + image rendering
+        </p>
+        <span className="rounded-full bg-primary-100 px-2 py-0.5 text-[10px] font-medium text-primary-500 dark:bg-primary-800 dark:text-primary-400">
+          stream mode
+        </span>
+      </div>
+
+      {/* Content area */}
+      <div className="min-h-64 p-5">
+        {!started && !text ? (
+          <p className="py-6 text-center text-sm text-primary-300 dark:text-primary-600">
+            Click{" "}
+            <strong className="font-medium text-primary-500 dark:text-primary-400">
+              Start Streaming
+            </strong>{" "}
+            to watch Markdown render character-by-character
+          </p>
+        ) : (
+          <TypewriterText
+            text={text}
+            mode="stream"
+            speed={120}
+            cursor
+            thinking={thinking}
+            streaming={streaming}
+            rich
+          />
+        )}
+      </div>
+
+      {/* Footer */}
+      <div className="flex justify-end gap-2 border-t border-primary-100 px-4 py-3 dark:border-primary-700/50">
+        <button
+          onClick={handleStart}
+          className="rounded-lg bg-primary-500 px-5 py-1.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-primary-600 dark:bg-primary-600 dark:hover:bg-primary-500"
+        >
+          {started ? "↺ Replay" : "Start Streaming"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 /* ── Code examples ──────────────────────────────────────── */
 
 const streamCode = `import { TypewriterText } from "@jacshuo/onyx";
@@ -497,6 +629,19 @@ export default function TypewriterTextPage() {
           animation, and cursor lifecycle.
         </p>
         <AIChatDemo />
+      </Section>
+
+      <Section title="Rich Mode (Markdown & Images)">
+        <p className="mb-4 text-sm text-primary-600 dark:text-primary-400">
+          Set{" "}
+          <code className="rounded bg-primary-100 px-1.5 py-0.5 text-xs font-mono text-primary-700 dark:bg-primary-800 dark:text-primary-200">
+            {"rich={true}"}
+          </code>{" "}
+          to render the animated text as full Markdown. Headings, code blocks, blockquotes, lists,
+          and images all render with polished prose styles. Images fade in when reached and display
+          a graceful placeholder if they fail to load.
+        </p>
+        <RichModeDemo />
       </Section>
 
       <Section title="Typewriter Mode">

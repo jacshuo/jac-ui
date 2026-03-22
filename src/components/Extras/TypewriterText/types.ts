@@ -46,4 +46,12 @@ export interface TypewriterTextProps {
     | "label"
     | "li";
   className?: string;
+  /**
+   * Enable Markdown / HTML rendering.
+   * When `true`, the animated text is parsed as Markdown and rendered as HTML.
+   * Images are displayed as `<img>` blocks with a fade-in animation.
+   * The wrapper element is always `<div role="region">`, regardless of the `as` prop.
+   * @default false
+   */
+  rich?: boolean;
 }
